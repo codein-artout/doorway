@@ -61,6 +61,18 @@ importers:
         specifier: workspace:*
         version: link:../content
 
+  packages/sim:
+    dependencies:
+      '@doorway/bots':
+        specifier: workspace:*
+        version: link:../bots
+      '@doorway/content':
+        specifier: workspace:*
+        version: link:../content
+      '@doorway/engine':
+        specifier: workspace:*
+        version: link:../engine
+
 packages:
 
   '@esbuild/aix-ppc64@0.28.2':
