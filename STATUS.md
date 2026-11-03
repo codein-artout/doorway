@@ -1,6 +1,6 @@
 # STATUS — Doorway overnight build
 
-**Current milestone:** done — all milestones M1–M15 complete; PR open into `main`.
+**Current milestone:** done — all milestones M1–M15 complete; PR open into `master` (the repo has no `main`): https://github.com/codein-artout/doorway/pull/1
 
 ## Finished milestones
 | # | What | Commit |

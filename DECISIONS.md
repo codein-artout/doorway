@@ -121,3 +121,6 @@ Every judgement call made while building, with date, decision, why and alternati
 
 ### D-SIM-7 — Tweak selection (2026-11-03)
 - **Decision:** tweaks are chosen by fixed rules over the S4 rows (and S4C when present): 4p tiles that widen the first-vs-last loss gap without raising lookahead's S4C win rate; 3p/2p tiles that narrow the strategy spread by ≥ 2 pts; a Full life bonus that raises sets' share of points without widening the spread; dropping the experience cap when "no cap" is indistinguishable from the default. Each suggestion prints the exact rows it relies on.
+
+### D-ENV-4 — PR base branch (2026-11-03)
+- **Decision:** the prompt says "PR into `main`", but the repository's only base branch is `master`, so the PR targets `master`.
