@@ -1,0 +1,192 @@
+{
+  "$comment": "Bot strategies. kind = random | greedy | weighted | lookahead. Weighted bots score every legal move as \u03a3 weight \u00d7 feature (features in src/features.ts). Params: targetDomains (specialists), rushIfBestPpyBelow (rush when the best quest's points/year is under it), neverRush (1 = rush only when forced), avgYears (years per future quest, for projecting the kept window), discardMin (min deny value to bother discarding).",
+  "random": {
+    "label": "Random",
+    "kind": "random"
+  },
+  "greedy": {
+    "label": "Greedy",
+    "kind": "greedy"
+  },
+  "specialist": {
+    "label": "Specialist",
+    "kind": "weighted",
+    "params": {
+      "targetDomains": 2,
+      "avgYears": 3
+    },
+    "weights": {
+      "ppy": 2.0,
+      "points": 0.3,
+      "cost": -0.15,
+      "expGain": 1.5,
+      "passionDelta": 0.6,
+      "reflectionDelta": 0.6,
+      "projDelta": 0.25,
+      "targetDomain": 1.6,
+      "power": 0.6,
+      "extraTurn": 0.4,
+      "oncePowerSpent": -0.3,
+      "rush": -1.2,
+      "rushDeny": 0.4,
+      "rushSwap": 0.3
+    }
+  },
+  "generalist": {
+    "label": "Generalist",
+    "kind": "weighted",
+    "params": {
+      "avgYears": 3.2
+    },
+    "weights": {
+      "ppy": 2.0,
+      "points": 0.3,
+      "cost": -0.15,
+      "setDelta": 0.45,
+      "missingDomain": 1.0,
+      "projDelta": 0.3,
+      "power": 0.5,
+      "extraTurn": 0.4,
+      "oncePowerSpent": -0.3,
+      "rush": -1.2,
+      "rushDeny": 0.4,
+      "rushSwap": 0.3
+    }
+  },
+  "early_leaver": {
+    "label": "Early leaver",
+    "kind": "weighted",
+    "params": {
+      "rushIfBestPpyBelow": 0.6,
+      "avgYears": 3.5
+    },
+    "weights": {
+      "ppy": 1.2,
+      "points": 0.9,
+      "cost": 0.15,
+      "projDelta": 0.35,
+      "power": 0.2,
+      "rush": 0.2,
+      "rushDeny": 0.5,
+      "rushSwap": 0.3
+    }
+  },
+  "late_bloomer": {
+    "label": "Late bloomer",
+    "kind": "weighted",
+    "params": {
+      "neverRush": 1,
+      "avgYears": 3
+    },
+    "weights": {
+      "ppy": 1.0,
+      "points": -0.4,
+      "late": 1.0,
+      "cost": -0.3,
+      "extraTurn": 1.5,
+      "expGain": 0.8,
+      "projDelta": 0.5,
+      "passionDelta": 0.2,
+      "setDelta": 0.15,
+      "power": 0.6,
+      "oncePowerSpent": -0.3,
+      "rush": -3
+    }
+  },
+  "tempo": {
+    "label": "Tempo",
+    "kind": "weighted",
+    "params": {
+      "avgYears": 2.8
+    },
+    "weights": {
+      "ppy": 1.6,
+      "points": 0.2,
+      "cost": -0.6,
+      "extraTurn": 2.2,
+      "expGain": 1.0,
+      "projDelta": 0.2,
+      "power": 0.5,
+      "oncePowerSpent": -0.3,
+      "rush": -1.5,
+      "rushDeny": 0.3,
+      "rushSwap": 0.3
+    }
+  },
+  "rusher": {
+    "label": "Rusher",
+    "kind": "weighted",
+    "params": {
+      "rushIfBestPpyBelow": 0.5,
+      "avgYears": 3.5,
+      "discardMin": 0.3
+    },
+    "weights": {
+      "ppy": 1.5,
+      "points": 0.6,
+      "cost": 0.15,
+      "projDelta": 0.3,
+      "deny": 0.4,
+      "power": 0.3,
+      "rush": 1.4,
+      "rushDeny": 1.5,
+      "rushSwap": 0.3,
+      "ageUnlock": 0.3
+    }
+  },
+  "set_collector": {
+    "label": "Set collector",
+    "kind": "weighted",
+    "params": {
+      "avgYears": 3.2
+    },
+    "weights": {
+      "ppy": 1.4,
+      "points": 0.2,
+      "cost": -0.15,
+      "setDelta": 0.9,
+      "missingDomain": 0.6,
+      "projDelta": 0.5,
+      "power": 0.4,
+      "extraTurn": 0.4,
+      "oncePowerSpent": -0.3,
+      "rush": -1.2,
+      "rushDeny": 0.3,
+      "rushSwap": 0.4
+    }
+  },
+  "passion_specialist": {
+    "label": "Passion specialist",
+    "kind": "weighted",
+    "params": {
+      "targetDomains": 1,
+      "avgYears": 3
+    },
+    "weights": {
+      "ppy": 1.4,
+      "points": 0.2,
+      "cost": -0.1,
+      "expGain": 1.2,
+      "passionDelta": 1.3,
+      "reflectionDelta": 0.7,
+      "projDelta": 0.3,
+      "targetDomain": 2.0,
+      "power": 0.5,
+      "extraTurn": 0.3,
+      "oncePowerSpent": -0.3,
+      "rush": -1.2,
+      "rushDeny": 0.3,
+      "rushSwap": 0.8
+    }
+  },
+  "lookahead": {
+    "label": "Lookahead",
+    "kind": "lookahead",
+    "params": {
+      "determinizations": 16,
+      "rolloutsPerMove": 1,
+      "maxCandidates": 6,
+      "rolloutPolicy": 0
+    }
+  }
+}

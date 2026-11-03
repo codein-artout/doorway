@@ -23,7 +23,7 @@ const solo1 = (pos: number, extra: Parameters<typeof scen>[1] = {}) =>
   });
 
 describe('Milestones and swaps (rulebook §8, R3, R7, R8, R22, R23)', () => {
-  it('RB-8.1 R23: landing on or passing a Milestone the first time offers a swap of two adjacent discs', () => {
+  it('RB-8.1 RB-5.A7 R23: landing on or passing a Milestone the first time offers a swap of two adjacent discs', () => {
     let s = solo1(8, {
       market: { young: ['PK-Y1', 'GD-Y1', 'GR-Y1'] },
       players: { p1: { tower: ['PU-Y1', 'OR-Y1'] } },
