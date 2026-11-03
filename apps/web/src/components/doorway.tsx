@@ -128,7 +128,10 @@ function Rows({
               <span className="truncate text-[13px] font-bold">{c.name}</span>
               <span className="sr-only">{`, disc ${i + 1}, ${DOMAIN[c.color].name}${kept ? ', kept' : ', stays behind'}. Start the stretch here.`}</span>
             </button>
-            <span className="hidden text-xs md:block" style={{ color: kept ? 'var(--text)' : 'var(--muted)' }}>
+            <span
+              className="hidden text-xs md:block"
+              style={{ color: kept ? 'var(--text)' : 'var(--muted)' }}
+            >
               {note}
             </span>
             <span className="text-right font-mono text-[13px] font-bold">{c.points} pt</span>
@@ -379,7 +382,11 @@ export function DoorwaySelect({
           <span className="flex-1 text-xs text-muted">
             points with discs {start + 1}–{end + 1}
           </span>
-          <button type="button" onClick={lock} className="min-h-[48px] cursor-pointer rounded-xl border-none bg-door px-4 font-bold text-ink">
+          <button
+            type="button"
+            onClick={lock}
+            className="min-h-[48px] cursor-pointer rounded-xl border-none bg-door px-4 font-bold text-ink"
+          >
             Walk through
           </button>
         </div>
