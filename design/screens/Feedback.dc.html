@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Playtest feedback</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#12131F}
+a{color:#F7EBD0}a:hover{color:#FFFFFF}
+button,select{font:inherit}
+button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #F7EBD0;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; min-height: 1240px; background: #12131F; color: #ECE8DF; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 15px; line-height: 1.45; padding: 0 0 32px">
+  <nav aria-label="Designer tools" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; padding: 14px 28px; border-bottom: 1px solid #2C2F45">
+    <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; margin-right: 10px">Doorway · Designer</span>
+    <a href="SimDashboard.dc.html" style="min-height: 40px; display: inline-flex; align-items: center; padding: 0 12px; color: #A9A8B8; text-decoration: none">Analysis</a>
+    <a href="Sandbox.dc.html" style="min-height: 40px; display: inline-flex; align-items: center; padding: 0 12px; color: #A9A8B8; text-decoration: none">Sandbox</a>
+    <a href="Feedback.dc.html" aria-current="page" style="min-height: 40px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 10px; background: #24273B; color: #ECE8DF; text-decoration: none; font-weight: 700">Playtest feedback</a>
+    <div style="flex: 1"></div>
+    <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #A9A8B8">
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #A9A8B8; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M6 11h12v9H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3"></path></svg>
+      Private · dashboard password
+    </span>
+    <button type="button" style="min-height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid #34374F; background: transparent; color: #ECE8DF; cursor: pointer">Export CSV</button>
+  </nav>
+
+  <div style="margin: 16px 28px 0; padding: 10px 14px; border-radius: 10px; border: 1px dashed #5FD3E6; font-size: 13px">Layout reference with sample entries. Real data arrives once friends play.</div>
+
+  <header style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 24px; padding: 20px 28px 8px">
+    <div style="flex: 1 1 480px">
+      <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 36px; letter-spacing: -0.015em">How it's landing with people</h1>
+      <p style="margin: 4px 0 0; color: #A9A8B8">Human games only, compared against the "ready to print" targets.</p>
+    </div>
+    <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #A9A8B8">Ruleset
+      <select style="min-height: 44px; border-radius: 10px; background: #1B1D2E; color: #ECE8DF; border: 1px solid #34374F; padding: 0 10px"><option>v0.2-default</option><option>All</option></select>
+    </label>
+  </header>
+
+  <section aria-label="Targets" style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; padding: 10px 28px">
+    <sc-for list="{{kpis}}" as="k" hint-placeholder-count="6">
+      <div style="padding: 16px; border-radius: 14px; background: #1B1D2E; border: 1px solid #34374F">
+        <div style="font-size: 12px; color: #A9A8B8">{{k.label}}</div>
+        <div style="font: 800 28px 'Bricolage Grotesque', sans-serif; margin: 2px 0">{{k.value}}</div>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 12px"><span style="width: 8px; height: 8px; border-radius: 50%; background: {{k.dot}}"></span>{{k.target}}</div>
+      </div>
+    </sc-for>
+  </section>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 16px; padding: 8px 28px; align-items: flex-start">
+    <section aria-label="Flagged moments" style="flex: 1 1 640px; min-width: 0; padding: 20px; border-radius: 16px; background: #1B1D2E; border: 1px solid #5FD3E6">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px">
+        <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px">"Something feels off"</h2>
+        <span style="font-size: 13px; color: #A9A8B8">each opens the replay at that exact move</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px">
+        <sc-for list="{{flags}}" as="f" hint-placeholder-count="4">
+          <article style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 16px; padding: 14px; border-radius: 12px; background: #12131F">
+            <div>
+              <div style="font-size: 12px; color: #A9A8B8">{{f.who}} · game {{f.game}} · turn {{f.turn}} · {{f.when}}</div>
+              <p style="margin: 4px 0 0">{{f.text}}</p>
+              <div style="margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap">
+                <sc-for list="{{f.tags}}" as="t" hint-placeholder-count="2"><span style="font: 700 11px 'JetBrains Mono', monospace; padding: 3px 8px; border-radius: 999px; background: #24273B">{{t.t}}</span></sc-for>
+              </div>
+            </div>
+            <a href="Main.dc.html" style="align-self: center; display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid #F7EBD0; text-decoration: none; white-space: nowrap">Replay at move {{f.move}}</a>
+          </article>
+        </sc-for>
+      </div>
+    </section>
+
+    <section aria-label="Survey results" style="flex: 1 1 420px; min-width: 0; padding: 20px; border-radius: 16px; background: #1B1D2E; border: 1px solid #34374F">
+      <h2 style="margin: 0 0 12px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px">Survey</h2>
+      <sc-for list="{{dists}}" as="d" hint-placeholder-count="3">
+        <div style="margin-bottom: 16px">
+          <div style="display: flex; justify-content: space-between; font-size: 13px"><b>{{d.label}}</b><span style="font-family: 'JetBrains Mono', monospace">avg {{d.avg}}</span></div>
+          <div style="display: flex; gap: 6px; align-items: flex-end; height: 64px; margin-top: 6px">
+            <sc-for list="{{d.bars}}" as="b" hint-placeholder-count="5">
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 64px; gap: 2px">
+                <span style="font: 500 10px 'JetBrains Mono', monospace; color: #A9A8B8">{{b.n}}</span>
+                <span style="width: 100%; height: {{b.h}}; background: #F7EBD0; border-radius: 3px"></span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; gap: 6px; font: 500 11px 'JetBrains Mono', monospace; color: #A9A8B8; margin-top: 2px">
+            <sc-for list="{{d.bars}}" as="b" hint-placeholder-count="5"><span style="flex: 1; text-align: center">{{b.l}}</span></sc-for>
+          </div>
+        </div>
+      </sc-for>
+      <h3 style="margin: 4px 0 8px; font-size: 14px">Most confusing moments</h3>
+      <ul style="margin: 0; padding-left: 18px; font-size: 13px; display: flex; flex-direction: column; gap: 6px">
+        <li>[sample] "Why the same person moved three times in a row."</li>
+        <li>[sample] "Whether I could take a Young card once I was Old."</li>
+        <li>[sample] "What the Milestone swap was for."</li>
+      </ul>
+    </section>
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 16px; padding: 8px 28px; align-items: flex-start">
+    <section aria-label="Humans versus bots" style="flex: 1 1 520px; min-width: 0; padding: 20px; border-radius: 16px; background: #1B1D2E; border: 1px solid #34374F">
+      <h2 style="margin: 0 0 4px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px">People vs bots</h2>
+      <p style="margin: 0 0 12px; font-size: 13px; color: #A9A8B8">Same ruleset, same player counts. Closest bot style is matched from each person's picks.</p>
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) 90px 90px; gap: 8px 12px; font-size: 13px">
+        <span style="font-size: 12px; color: #A9A8B8">Measure</span><span style="font-size: 12px; color: #A9A8B8; text-align: right">People</span><span style="font-size: 12px; color: #A9A8B8; text-align: right">Bots</span>
+        <sc-for list="{{hvb}}" as="r" hint-placeholder-count="6">
+          <span>{{r.m}}</span><span style="text-align: right; font-family: 'JetBrains Mono', monospace">{{r.h}}</span><span style="text-align: right; font-family: 'JetBrains Mono', monospace">{{r.b}}</span>
+        </sc-for>
+      </div>
+    </section>
+
+    <section aria-label="Recent games" style="flex: 1 1 520px; min-width: 0; padding: 20px; border-radius: 16px; background: #1B1D2E; border: 1px solid #34374F">
+      <h2 style="margin: 0 0 12px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px">Recent games</h2>
+      <div style="display: flex; flex-direction: column">
+        <sc-for list="{{games}}" as="g" hint-placeholder-count="5">
+          <div style="display: grid; grid-template-columns: 70px minmax(0, 1fr) 80px auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid #23253A; font-size: 13px">
+            <span style="font-family: 'JetBrains Mono', monospace">{{g.id}}</span>
+            <span>{{g.players}}<br><span style="color: #A9A8B8">winner {{g.winner}} · {{g.len}}</span></span>
+            <span style="font-family: 'JetBrains Mono', monospace; color: #A9A8B8">{{g.flags}} flags</span>
+            <a href="Main.dc.html" style="min-height: 40px; display: inline-flex; align-items: center">Replay</a>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    function bars(ns, labels) { var max = Math.max.apply(null, ns); return ns.map(function (n, i) { return { n: n, l: labels[i], h: Math.max(3, Math.round(n / max * 48)) + 'px' }; }); }
+    return {
+      kpis: [
+        { label: 'Human games', value: '[n]', target: 'goal: 10+ logged', dot: '#A9A8B8' },
+        { label: 'Median length (4p)', value: '[m] min', target: 'target 50–65', dot: '#57C785' },
+        { label: 'Would play again', value: '[x]%', target: 'target ≥ 80%', dot: '#E9B949' },
+        { label: 'Fun', value: '[x] / 5', target: 'avg of all surveys', dot: '#A9A8B8' },
+        { label: 'Flags per game', value: '[x]', target: 'target ≤ 2 (last 10)', dot: '#57C785' },
+        { label: 'Styles that won', value: '[n]', target: 'target ≥ 3 different', dot: '#E7766E' }
+      ],
+      flags: [
+        { who: 'Meera', game: 'K7QX2P', turn: 23, move: 41, when: 'yesterday 22:14', text: '[sample] I thought it was my go — Arun moved twice in a row.', tags: [{ t: 'TURN ORDER' }, { t: 'phone' }] },
+        { who: 'Rahul', game: 'P2MN8D', turn: 31, move: 58, when: 'yesterday 21:40', text: "[sample] The Old card says Too young but I'm on 27.", tags: [{ t: 'AGES' }] },
+        { who: 'Priya', game: 'K7QX2P', turn: 40, move: 77, when: 'yesterday 22:51', text: '[sample] Picking my stretch took forever on my phone.', tags: [{ t: 'DOORWAY UI' }, { t: 'phone' }] },
+        { who: 'Sana', game: 'B9TT4Q', turn: 12, move: 19, when: '2 days ago', text: '[sample] Rush felt pointless here.', tags: [{ t: 'RUSH' }] }
+      ],
+      dists: [
+        { label: 'Fun (1–5)', avg: '[x]', bars: bars([1, 2, 5, 9, 6], ['1', '2', '3', '4', '5']) },
+        { label: 'Clarity (1–5)', avg: '[x]', bars: bars([2, 4, 8, 6, 3], ['1', '2', '3', '4', '5']) },
+        { label: 'Would play again', avg: '—', bars: bars([16, 5, 2], ['Yes', 'Maybe', 'No']) }
+      ],
+      hvb: [
+        { m: 'Rushes per player per game', h: '[x]', b: '[x]' },
+        { m: 'Discs lost at the Doorway', h: '[x]', b: '[x]' },
+        { m: 'Average final score', h: '[x]', b: '[x]' },
+        { m: 'Back-to-back turns per player', h: '[x]', b: '[x]' },
+        { m: 'Picked the best stretch', h: '[x]%', b: '100%' },
+        { m: 'Seconds per decision (median)', h: '[x]', b: '—' }
+      ],
+      games: [
+        { id: 'K7QX2P', players: 'Priya, Meera, 2 bots', winner: 'Kavi (bot)', len: '58 min', flags: 2 },
+        { id: 'P2MN8D', players: 'Rahul, Sana, Priya', winner: 'Sana', len: '47 min', flags: 1 },
+        { id: 'B9TT4Q', players: 'Sana vs bot', winner: 'bot', len: '31 min', flags: 1 },
+        { id: 'H4LW2A', players: 'Priya, 3 bots', winner: 'Priya', len: '22 min', flags: 0 }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

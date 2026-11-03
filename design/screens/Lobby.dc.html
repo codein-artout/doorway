@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lobby — play with friends</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#12131F}
+a{color:#F7EBD0}a:hover{color:#FFFFFF}
+button,input,select{font:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #F7EBD0;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; min-height: 1080px; background: #12131F; color: #ECE8DF; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 15px; line-height: 1.45; padding: 28px">
+
+  <header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-bottom: 26px">
+    <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px">Doorway</span>
+    <span style="font-size: 13px; color: #A9A8B8">playtest table</span>
+    <div style="flex: 1"></div>
+    <div role="group" aria-label="Preview as" style="display: inline-flex; padding: 4px; border-radius: 999px; background: #1B1D2E; border: 1px solid #34374F">
+      <button type="button" onClick="{{asHost}}" aria-pressed="{{isHost}}" style="min-height: 40px; padding: 0 16px; border-radius: 999px; border: none; background: {{hostBg}}; color: {{hostFg}}; cursor: pointer; font-weight: 700">Host view</button>
+      <button type="button" onClick="{{asFriend}}" aria-pressed="{{isFriend}}" style="min-height: 40px; padding: 0 16px; border-radius: 999px; border: none; background: {{friendBg}}; color: {{friendFg}}; cursor: pointer; font-weight: 700">Friend opens the link</button>
+    </div>
+  </header>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+    <div style="flex: 1 1 640px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+
+      <sc-if value="{{isFriend}}" hint-placeholder-val="{{ false }}">
+        <section aria-label="Join this table" style="padding: 28px; border-radius: 20px; background: #1B1D2E; border: 1px solid #F7EBD0">
+          <div style="font: 700 12px 'JetBrains Mono', monospace; letter-spacing: 0.06em; color: #A9A8B8; text-transform: uppercase">Room K7QX2P</div>
+          <h1 style="margin: 6px 0 8px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; line-height: 1.05; letter-spacing: -0.015em">Priya saved you a seat.</h1>
+          <p style="margin: 0 0 20px; max-width: 520px; color: #A9A8B8">A board game about one life and the stretch of it you get to keep. About an hour. No account needed.</p>
+          <sc-if value="{{notJoined}}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end">
+              <label style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 6px">
+                <span style="font-weight: 700">Your nickname</span>
+                <input type="text" value="{{nick}}" onInput="{{typeNick}}" maxlength="20" placeholder="e.g. Meera" style="min-height: 52px; padding: 0 16px; border-radius: 14px; border: 1px solid #34374F; background: #12131F; color: #ECE8DF; font-size: 18px">
+              </label>
+              <button type="button" onClick="{{join}}" style="min-height: 52px; padding: 0 26px; border-radius: 14px; border: none; background: #F7EBD0; color: #12131F; font-weight: 700; font-size: 17px; cursor: pointer">Take a seat</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{joined}}" hint-placeholder-val="{{ false }}">
+            <div role="status" style="padding: 14px 16px; border-radius: 14px; background: #24273B">You're in as <b>{{nickShown}}</b>, seat 3. Priya will start the game. If your phone sleeps, open the same link to come back to your seat.</div>
+          </sc-if>
+          <p style="margin: 16px 0 0; font-size: 13px; color: #A9A8B8">We keep your nickname and your game moves. Nothing else.</p>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{isHost}}" hint-placeholder-val="{{ true }}">
+        <section aria-label="Invite" style="padding: 24px; border-radius: 20px; background: #1B1D2E; border: 1px solid #34374F">
+          <h1 style="margin: 0 0 4px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 34px; letter-spacing: -0.01em">Your table is open.</h1>
+          <p style="margin: 0 0 16px; color: #A9A8B8">Send the link. Friends join with just a nickname. Empty seats can be bots.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch">
+            <div style="flex: 1 1 360px; display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; border-radius: 14px; background: #12131F; border: 1px solid #34374F; font-family: 'JetBrains Mono', monospace; font-size: 15px; overflow: hidden">
+              <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">doorway.vercel.app/r/K7QX2P</span>
+            </div>
+            <button type="button" onClick="{{copy}}" style="min-height: 52px; padding: 0 22px; border-radius: 14px; border: none; background: #F7EBD0; color: #12131F; font-weight: 700; cursor: pointer">{{copyLabel}}</button>
+            <div style="display: flex; flex-direction: column; justify-content: center; padding: 0 14px; border-radius: 14px; border: 1px dashed #34374F">
+              <span style="font-size: 11px; color: #A9A8B8">or join with code</span>
+              <span style="font: 700 20px 'JetBrains Mono', monospace; letter-spacing: 0.12em">K7QX2P</span>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <section aria-label="Seats" style="padding: 22px 24px; border-radius: 20px; background: #1B1D2E; border: 1px solid #34374F">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px">
+          <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px">Seats</h2>
+          <span style="font-size: 13px; color: #A9A8B8">Seat 1 starts on top of the stack at space 0</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <sc-for list="{{seats}}" as="s" hint-placeholder-count="4">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: {{s.bg}}; border: 1px {{s.borderStyle}} {{s.border}}">
+              <span style="font: 700 12px 'JetBrains Mono', monospace; color: #A9A8B8; width: 46px">Seat {{s.n}}</span>
+              <span style="width: 34px; height: 34px; border-radius: 50%; background: {{s.tokenBg}}; color: #12131F; display: grid; place-items: center; font: 700 14px 'JetBrains Mono', monospace; outline: {{s.outline}}; outline-offset: 2px">{{s.initial}}</span>
+              <div style="flex: 1 1 160px; min-width: 0">
+                <div style="font-weight: 700">{{s.name}}</div>
+                <div style="font-size: 12px; color: {{s.subColor}}">{{s.sub}}</div>
+              </div>
+              <sc-if value="{{s.isBot}}" hint-placeholder-val="{{ false }}">
+                <label style="display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: #A9A8B8">Strategy
+                  <select onChange="{{s.setStrategy}}" style="min-height: 40px; border-radius: 10px; background: #12131F; color: #ECE8DF; border: 1px solid #34374F; padding: 0 8px">
+                    <sc-for list="{{s.strategies}}" as="o" hint-placeholder-count="4"><option value="{{o.v}}" selected="{{o.on}}">{{o.v}}</option></sc-for>
+                  </select>
+                </label>
+                <label style="display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: #A9A8B8">Skill
+                  <select style="min-height: 40px; border-radius: 10px; background: #12131F; color: #ECE8DF; border: 1px solid #34374F; padding: 0 8px"><option>Casual (makes mistakes)</option><option selected>Normal</option><option>Sharp</option></select>
+                </label>
+                <button type="button" onClick="{{s.remove}}" style="min-height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid #34374F; background: transparent; color: #ECE8DF; cursor: pointer">Open seat</button>
+              </sc-if>
+              <sc-if value="{{s.isOpen}}" hint-placeholder-val="{{ false }}">
+                <button type="button" onClick="{{s.fill}}" style="min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #F7EBD0; background: transparent; color: #F7EBD0; font-weight: 700; cursor: pointer">Fill with a bot</button>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; align-items: flex-end">
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #A9A8B8">Ruleset
+            <select style="min-height: 44px; border-radius: 10px; background: #12131F; color: #ECE8DF; border: 1px solid #34374F; padding: 0 10px"><option>v0.2-default</option><option>v0.2-wide-doorway (10/7/5/3)</option></select>
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #A9A8B8">Bot speed
+            <select style="min-height: 44px; border-radius: 10px; background: #12131F; color: #ECE8DF; border: 1px solid #34374F; padding: 0 10px"><option>Slow (2s)</option><option selected>Normal (1s)</option><option>Instant</option></select>
+          </label>
+          <label style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 14px"><input type="checkbox" style="width: 18px; height: 18px"> Blind test (hide best-stretch hint)</label>
+          <div style="flex: 1"></div>
+          <button type="button" disabled="{{cantStart}}" style="min-height: 52px; padding: 0 28px; border-radius: 14px; border: none; background: #F7EBD0; color: #12131F; font-weight: 700; font-size: 17px; cursor: pointer; opacity: {{startOpacity}}">{{startLabel}}</button>
+        </div>
+      </section>
+    </div>
+
+    <aside aria-label="How to play" style="flex: 1 1 400px; max-width: 520px; min-width: 0; padding: 24px; border-radius: 20px; background: #171928; border: 1px solid #2C2F45">
+      <h2 style="margin: 0 0 4px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px">How to play, in five breaths</h2>
+      <p style="margin: 0 0 18px; font-size: 13px; color: #A9A8B8">You'll pick up the rest as you go.</p>
+      <ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 16px">
+        <li style="display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; align-items: center">
+          <span aria-hidden="true" style="height: 40px; border-radius: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; overflow: hidden"><span style="background: #1F2A44"></span><span style="background: #2A2745"></span><span style="background: #352838"></span></span>
+          <span><b>One life, 40 years.</b> Your pawn walks a path from Young to Old. At the end is the Doorway.</span>
+        </li>
+        <li style="display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; align-items: center">
+          <span aria-hidden="true" style="display: flex; flex-direction: column; gap: 2px; align-items: center"><span style="width: 44px; height: 12px; border-radius: 6px; background: #F07AA8"></span><span style="width: 44px; height: 12px; border-radius: 6px; background: #E9B949"></span><span style="width: 44px; height: 12px; border-radius: 6px; background: #57C785"></span></span>
+          <span><b>Quest.</b> Spend years on a card, move that far, and stack its memory disc on top of your tower.</span>
+        </li>
+        <li style="display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; align-items: center">
+          <span aria-hidden="true" style="display: flex; gap: 6px; justify-content: center; align-items: flex-end"><span style="width: 18px; height: 18px; border-radius: 50%; background: #ECE8DF; box-shadow: 0 0 0 3px #F7EBD0"></span><span style="width: 18px; height: 18px; border-radius: 50%; background: #6B6E8A"></span></span>
+          <span><b>Furthest back goes next.</b> No rounds. Cheap quests can earn you several turns in a row.</span>
+        </li>
+        <li style="display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; align-items: center">
+          <span aria-hidden="true" style="font: 800 22px 'Bricolage Grotesque', sans-serif; text-align: center; color: #F7EBD0">→|</span>
+          <span><b>Or rush.</b> Jump just past the nearest pawn ahead. No memory, but you're closer to the Doorway.</span>
+        </li>
+        <li style="display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; align-items: center">
+          <span aria-hidden="true" style="width: 40px; height: 48px; margin: 0 auto; border-radius: 20px 20px 4px 4px; background: #F7EBD0"></span>
+          <span><b>Keep one stretch.</b> Arrive early and you carry more (9 · 8 · 7 · 6). Points come only from the unbroken stretch you keep.</span>
+        </li>
+      </ol>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px">
+        <button type="button" style="min-height: 48px; padding: 0 20px; border-radius: 12px; border: 1px solid #F7EBD0; background: transparent; color: #F7EBD0; font-weight: 700; cursor: pointer">Play the 2-minute tutorial</button>
+        <button type="button" style="min-height: 48px; padding: 0 16px; border-radius: 12px; border: none; background: transparent; color: #A9A8B8; text-decoration: underline; cursor: pointer">Full rules</button>
+      </div>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1080}}'>
+var STRATS = ['Random', 'Greedy', 'Specialist', 'Generalist', 'Early leaver', 'Late bloomer', 'Tempo', 'Rusher', 'Set collector', 'Passion specialist', 'Lookahead'];
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'host', copied: false, nick: '', joined: false,
+      seats: [
+        { kind: 'host', name: 'Priya' },
+        { kind: 'friend', name: 'Meera' },
+        { kind: 'open' },
+        { kind: 'bot', strategy: 'Tempo' }
+      ] };
+  }
+  renderVals() {
+    var self = this, s = this.state;
+    function setSeat(i, val) { var seats = s.seats.slice(); seats[i] = val; self.setState({ seats: seats }); }
+    var seats = s.seats.map(function (seat, i) {
+      var isBot = seat.kind === 'bot', isOpen = seat.kind === 'open';
+      var joinedNick = s.joined && i === 2 && isOpen;
+      var name = isBot ? 'Bot · ' + seat.strategy : isOpen ? (joinedNick ? (s.nick || 'Guest') : 'Open seat') : seat.name;
+      var sub = seat.kind === 'host' ? 'Host · you' : seat.kind === 'friend' ? 'Joined 2 min ago · online' : isBot ? 'Plays through the same rules engine' : joinedNick ? 'Just joined · online' : 'Waiting for a friend';
+      return {
+        n: i + 1, name: name, sub: sub, subColor: isOpen && !joinedNick ? '#A9A8B8' : '#A9A8B8',
+        initial: isBot ? 'B' : isOpen ? (joinedNick ? (s.nick || 'G').charAt(0).toUpperCase() : '·') : seat.name.charAt(0),
+        tokenBg: isOpen && !joinedNick ? '#34374F' : '#ECE8DF', outline: isBot ? '2px dashed #A9A8B8' : 'none',
+        bg: isOpen && !joinedNick ? 'transparent' : '#24273B', border: isOpen && !joinedNick ? '#4A4D66' : '#34374F', borderStyle: isOpen && !joinedNick ? 'dashed' : 'solid',
+        isBot: isBot, isOpen: isOpen && !joinedNick,
+        strategies: STRATS.map(function (v) { return { v: v, on: v === seat.strategy }; }),
+        setStrategy: function (e) { setSeat(i, { kind: 'bot', strategy: e.target.value }); },
+        remove: function () { setSeat(i, { kind: 'open' }); },
+        fill: function () { setSeat(i, { kind: 'bot', strategy: 'Greedy' }); }
+      };
+    });
+    var filled = s.seats.filter(function (x) { return x.kind !== 'open'; }).length + (s.joined ? 1 : 0);
+    var isHost = s.view === 'host';
+    return {
+      seats: seats, isHost: isHost, isFriend: !isHost,
+      hostBg: isHost ? '#F7EBD0' : 'transparent', hostFg: isHost ? '#12131F' : '#ECE8DF',
+      friendBg: !isHost ? '#F7EBD0' : 'transparent', friendFg: !isHost ? '#12131F' : '#ECE8DF',
+      asHost: function () { self.setState({ view: 'host' }); }, asFriend: function () { self.setState({ view: 'friend' }); },
+      copyLabel: s.copied ? 'Copied' : 'Copy link', copy: function () { self.setState({ copied: true }); },
+      nick: s.nick, nickShown: s.nick || 'Guest', typeNick: function (e) { self.setState({ nick: e.target.value }); },
+      joined: s.joined, notJoined: !s.joined, join: function () { self.setState({ joined: true }); },
+      cantStart: filled < 2, startOpacity: filled < 2 ? 0.45 : 1,
+      startLabel: filled < 4 ? 'Start with ' + filled + ' players' : 'Start the game'
+    };
+  }
+}
+</script>
+</body>
+</html>

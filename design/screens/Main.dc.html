@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Game table</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#12131F}
+a{color:#F7EBD0}a:hover{color:#FFFFFF}
+:root{--ink:#12131F;--surface:#1B1D2E;--surface-2:#24273B;--line:#34374F;--text:#ECE8DF;--muted:#A9A8B8;--door:#F7EBD0;--young:#1F2A44;--middle:#2A2745;--old:#352838}
+@keyframes eyb-pulse{0%,100%{box-shadow:0 0 0 0 rgba(247,235,208,.6)}50%{box-shadow:0 0 0 7px rgba(247,235,208,0)}}
+@keyframes eyb-dot{0%,80%,100%{opacity:.25}40%{opacity:1}}
+@keyframes eyb-drop{0%{transform:translateY(-36px);opacity:0}70%{transform:translateY(3px);opacity:1}100%{transform:none}}
+@keyframes eyb-glow{0%,100%{box-shadow:0 0 28px rgba(247,235,208,.28)}50%{box-shadow:0 0 44px rgba(247,235,208,.45)}}
+.eyb-pulse{animation:eyb-pulse 1.6s ease-in-out infinite}
+.eyb-dot{animation:eyb-dot 1.2s infinite}
+.eyb-dot2{animation:eyb-dot 1.2s .2s infinite}
+.eyb-dot3{animation:eyb-dot 1.2s .4s infinite}
+.eyb-drop{animation:eyb-drop .42s cubic-bezier(.2,.9,.3,1)}
+.eyb-glow{animation:eyb-glow 3.2s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.eyb-pulse,.eyb-dot,.eyb-dot2,.eyb-dot3,.eyb-drop,.eyb-glow{animation:none}}
+button,select,input,textarea{font:inherit}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #F7EBD0;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; min-height: 1180px; background: #12131F; color: #ECE8DF; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 15px; line-height: 1.45; padding-bottom: 28px">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding: 14px 28px; border-bottom: 1px solid #2C2F45">
+  <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px">
+    <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 21px; letter-spacing: -0.01em">Doorway</span>
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A9A8B8">ROOM K7QX2P · 4 players · ruleset v0.2-default</span>
+  </div>
+  <div style="flex: 1"></div>
+  <button type="button" onClick="{{toggleRules}}" aria-expanded="{{rulesOpen}}" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid #34374F; background: #1B1D2E; color: #ECE8DF; cursor: pointer">Rules</button>
+  <button type="button" onClick="{{toggleFlag}}" aria-expanded="{{flagOpen}}" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid #5FD3E6; background: #1B1D2E; color: #ECE8DF; cursor: pointer; display: inline-flex; align-items: center; gap: 8px">
+    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #5FD3E6; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M5 21V4M5 4h11l-2 4 2 4H5"></path></svg>
+    Something feels off
+  </button>
+</header>
+
+<sc-if value="{{flagOpen}}" hint-placeholder-val="{{ false }}">
+  <div style="margin: 12px 28px 0; padding: 16px; border-radius: 14px; background: #24273B; border: 1px solid #5FD3E6; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
+    <sc-if value="{{flagSent}}" hint-placeholder-val="{{ false }}">
+      <p style="margin: 0; flex: 1 1 100%">Thanks — saved with this exact game state (turn {{turn}}). CIAO will see it next to the replay.</p>
+    </sc-if>
+    <sc-if value="{{flagNotSent}}" hint-placeholder-val="{{ true }}">
+      <label style="flex: 1 1 420px; display: flex; flex-direction: column; gap: 6px">
+        <span style="font-weight: 700">What feels off right now?</span>
+        <textarea rows="2" placeholder="e.g. I didn't expect Arun to go before me" style="resize: vertical; padding: 10px 12px; border-radius: 10px; border: 1px solid #34374F; background: #12131F; color: #ECE8DF"></textarea>
+        <span style="font-size: 13px; color: #A9A8B8">We attach the board, the move list and whose turn it is. Nothing else.</span>
+      </label>
+      <button type="button" onClick="{{sendFlag}}" style="min-height: 44px; padding: 0 18px; border-radius: 999px; border: none; background: #F7EBD0; color: #12131F; font-weight: 700; cursor: pointer">Send with game state</button>
+    </sc-if>
+  </div>
+</sc-if>
+
+<section aria-label="Life track" style="padding: 18px 28px 6px">
+  <div style="display: flex; gap: 10px; align-items: stretch">
+    <div style="flex: 1; min-width: 0; overflow-x: auto">
+      <div style="min-width: 900px">
+        <div style="display: grid; grid-template-columns: repeat(40, minmax(0, 1fr)); gap: 2px; margin-bottom: 6px; font-size: 12px; color: #A9A8B8">
+          <div style="grid-column: span 14; display: flex; justify-content: space-between; border-bottom: 2px solid #3B4A72; padding-bottom: 3px"><span style="color: #ECE8DF; font-weight: 700">Young</span><span>0–13</span></div>
+          <div style="grid-column: span 14; display: flex; justify-content: space-between; border-bottom: 2px solid #4C4478; padding-bottom: 3px"><span style="color: #ECE8DF; font-weight: 700">Middle</span><span>14–27</span></div>
+          <div style="grid-column: span 12; display: flex; justify-content: space-between; border-bottom: 2px solid #5E4559; padding-bottom: 3px"><span style="color: #ECE8DF; font-weight: 700">Old</span><span>28–39</span></div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(40, minmax(0, 1fr)); gap: 2px">
+          <sc-for list="{{cells}}" as="cell" hint-placeholder-count="40">
+            <div style="height: 116px; border-radius: 5px; background: {{cell.bg}}; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 4px 0 5px; box-sizing: border-box">
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; margin-bottom: 6px">
+                <sc-if value="{{cell.ghost}}" hint-placeholder-val="{{ false }}">
+                  <span title="You would land here" style="width: 24px; height: 24px; border-radius: 50%; border: 2px dashed #F7EBD0; box-sizing: border-box; display: grid; place-items: center; font: 700 11px 'JetBrains Mono', monospace; color: #F7EBD0">P</span>
+                </sc-if>
+                <sc-for list="{{cell.pawns}}" as="p" hint-placeholder-count="0">
+                  <span class="{{p.cls}}" title="{{p.title}}" style="width: 24px; height: 24px; border-radius: 50%; background: #ECE8DF; color: #12131F; display: grid; place-items: center; font: 700 11px 'JetBrains Mono', monospace; outline: {{p.outline}}; outline-offset: 2px">{{p.initial}}</span>
+                </sc-for>
+              </div>
+              <sc-if value="{{cell.milestone}}" hint-placeholder-val="{{ false }}">
+                <span title="Milestone: swap two adjacent discs" style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid #F7EBD0; box-sizing: border-box; display: grid; place-items: center; font: 700 10px 'JetBrains Mono', monospace; color: #F7EBD0">{{cell.n}}</span>
+              </sc-if>
+              <sc-if value="{{cell.plain}}" hint-placeholder-val="{{ true }}">
+                <span style="font: 500 10px 'JetBrains Mono', monospace; color: #A9A8B8; height: 22px; display: grid; place-items: center">{{cell.n}}</span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+    <div style="width: 118px; flex: none; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px">
+      <span style="font-size: 12px; color: #A9A8B8">space 40</span>
+      <div class="eyb-glow" style="width: 100px; height: 116px; border-radius: 50px 50px 6px 6px; background: #F7EBD0; color: #12131F; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 12px; box-sizing: border-box; gap: 6px">
+        <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #12131F; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M6 21V10a6 6 0 0 1 12 0v11M3 21h18M14.5 14.5h.01"></path></svg>
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 15px">Doorway</span>
+      </div>
+    </div>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center; margin-top: 12px; font-size: 13px; color: #A9A8B8">
+    <span style="display: inline-flex; align-items: center; gap: 8px"><span style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #F7EBD0; box-sizing: border-box"></span>Milestone: swap two adjacent discs, once each</span>
+    <span style="display: inline-flex; align-items: center; gap: 8px"><span style="width: 16px; height: 16px; border-radius: 50%; background: #ECE8DF; outline: 2px dashed #A9A8B8; outline-offset: 2px"></span>Bot pawn</span>
+    <div style="flex: 1"></div>
+    <span style="color: #ECE8DF; font-weight: 700">Doorway tiles · 4 players</span>
+    <sc-for list="{{tiles}}" as="t" hint-placeholder-count="4">
+      <span style="display: inline-flex; align-items: baseline; gap: 6px; padding: 6px 10px; border-radius: 8px; background: {{t.bg}}; color: {{t.fg}}; border: 1px solid #F7EBD0"><span style="font-size: 12px">{{t.place}}</span><b style="font-family: 'JetBrains Mono', monospace; font-size: 15px">{{t.keep}}</b><span style="font-size: 12px">discs</span></span>
+    </sc-for>
+  </div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; padding: 14px 28px 0; align-items: flex-start">
+
+  <aside aria-label="Turn order and players" style="flex: 1 1 280px; max-width: 330px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; align-items: baseline; justify-content: space-between">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px">Who moves next</h2>
+      <span style="font-size: 12px; color: #A9A8B8">furthest back first</span>
+    </div>
+    <sc-for list="{{queue}}" as="q" hint-placeholder-count="4">
+      <div style="padding: 12px 14px; border-radius: 14px; background: {{q.bg}}; border: 1px solid {{q.border}}; display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; gap: 10px">
+          <span class="{{q.tokenCls}}" style="width: 30px; height: 30px; flex: none; border-radius: 50%; background: #ECE8DF; color: #12131F; display: grid; place-items: center; font: 700 13px 'JetBrains Mono', monospace; outline: {{q.outline}}; outline-offset: 2px">{{q.initial}}</span>
+          <div style="min-width: 0; flex: 1">
+            <div style="font-weight: 700">{{q.name}} <span style="font-weight: 400; font-size: 12px; color: #A9A8B8">· {{q.badge}}</span></div>
+            <div style="font-size: 12px; color: #A9A8B8">Space {{q.pos}} · {{q.age}} · {{q.count}} discs</div>
+          </div>
+          <span style="font: 700 11px 'JetBrains Mono', monospace; padding: 4px 8px; border-radius: 999px; background: {{q.slotBg}}; color: {{q.slotFg}}">{{q.slot}}</span>
+        </div>
+        <sc-if value="{{q.thinking}}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #F7EBD0">
+            <span style="display: inline-flex; gap: 3px"><span class="eyb-dot" style="width: 6px; height: 6px; border-radius: 50%; background: #F7EBD0"></span><span class="eyb-dot2" style="width: 6px; height: 6px; border-radius: 50%; background: #F7EBD0"></span><span class="eyb-dot3" style="width: 6px; height: 6px; border-radius: 50%; background: #F7EBD0"></span></span>
+            Thinking — weighing {{q.options}} legal moves
+          </div>
+        </sc-if>
+        <sc-if value="{{q.waiting}}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="font-size: 13px; color: #F7EBD0">Choosing a move…</div>
+        </sc-if>
+        <div style="display: flex; align-items: center; gap: 3px; flex-wrap: wrap" aria-label="{{q.towerLabel}}">
+          <span style="font-size: 11px; color: #A9A8B8; margin-right: 4px">base</span>
+          <sc-for list="{{q.discs}}" as="d" hint-placeholder-count="5">
+            <span title="{{d.title}}" style="width: 22px; height: 22px; border-radius: 50%; background: {{d.color}}; display: grid; place-items: center">
+              <svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #12131F; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round"><path d="{{d.icon}}"></path></svg>
+            </span>
+          </sc-for>
+          <span style="font-size: 11px; color: #A9A8B8; margin-left: 4px">top</span>
+        </div>
+        <div style="font-size: 12px; color: #A9A8B8">{{q.discounts}}</div>
+      </div>
+    </sc-for>
+
+    <div style="padding: 14px; border-radius: 14px; background: #1B1D2E; border: 1px solid #34374F">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px">
+        <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px">Move log</h2>
+        <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #A9A8B8">Bot speed
+          <select style="min-height: 32px; border-radius: 8px; background: #12131F; color: #ECE8DF; border: 1px solid #34374F; padding: 0 6px"><option>Slow</option><option selected>Normal</option><option>Instant</option></select>
+        </label>
+      </div>
+      <ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 13px">
+        <sc-for list="{{log}}" as="l" hint-placeholder-count="5">
+          <li style="color: {{l.color}}">{{l.text}}</li>
+        </sc-for>
+      </ol>
+    </div>
+  </aside>
+
+  <main style="flex: 999 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+    <div style="padding: 18px 20px; border-radius: 16px; background: #1B1D2E; border: 1px solid {{bannerBorder}}; display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+      <div style="flex: 1 1 360px; min-width: 0">
+        <div style="font: 700 12px 'JetBrains Mono', monospace; letter-spacing: 0.06em; color: #A9A8B8; text-transform: uppercase">{{bannerEyebrow}}</div>
+        <h1 style="margin: 2px 0 4px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; letter-spacing: -0.01em; line-height: 1.1">{{bannerTitle}}</h1>
+        <p style="margin: 0; color: #ECE8DF">{{bannerWhy}}</p>
+      </div>
+      <button type="button" onClick="{{toggleWhy}}" aria-expanded="{{showWhy}}" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid #34374F; background: #24273B; color: #ECE8DF; cursor: pointer">Why is it {{whyWho}} turn?</button>
+      <sc-if value="{{showWhy}}" hint-placeholder-val="{{ false }}">
+        <div style="flex: 1 1 100%; padding: 12px 14px; border-radius: 12px; background: #12131F; font-size: 14px; display: flex; flex-direction: column; gap: 4px">
+          <span>There are no rounds. Whoever is furthest back on the track moves next — even several times in a row.</span>
+          <span>If pawns share a space, the one on top goes first. A pawn that lands on an occupied space goes on top.</span>
+          <span style="color: #A9A8B8">Right now: {{whyOrder}}</span>
+        </div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{rulesOpen}}" hint-placeholder-val="{{ false }}">
+      <div style="padding: 16px 18px; border-radius: 16px; background: #24273B; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px; font-size: 14px">
+        <div><b>Quest</b> — take a card your age or younger, pay its years (minus discounts, minimum 1), move, put its disc on top.</div>
+        <div><b>Rush</b> — jump to just past the nearest pawn ahead (or 3 spaces). You may discard one market card first.</div>
+        <div><b>Experience</b> — every 2 discs of a domain make that domain 1 year cheaper (up to −4).</div>
+        <div><b>Milestones 10 · 20 · 30</b> — swap two adjacent discs in your tower.</div>
+        <div><b>Doorway</b> — keep one unbroken stretch: 9 / 8 / 7 / 6 discs by arrival order.</div>
+        <div><b>Score</b> — card points + 6 per full set of five + longest run (3 / 6 / 10) + Reflection.</div>
+      </div>
+    </sc-if>
+
+    <section aria-label="Quest market" style="padding: 16px 18px 18px; border-radius: 16px; background: #171928; border: 1px solid #2C2F45">
+      <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px">
+        <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px">Quests</h2>
+        <span style="font-size: 13px; color: #A9A8B8">{{marketHint}}</span>
+      </div>
+      <sc-for list="{{rows}}" as="row" hint-placeholder-count="3">
+        <div style="display: grid; grid-template-columns: 92px repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px">
+          <div style="display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 8px 10px; border-radius: 10px; background: {{row.bg}}">
+            <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 16px">{{row.label}}</span>
+            <span style="font: 500 11px 'JetBrains Mono', monospace; color: #A9A8B8">{{row.range}}</span>
+            <span style="font-size: 12px; color: {{row.gateColor}}">{{row.gate}}</span>
+          </div>
+          <sc-for list="{{row.cards}}" as="c" hint-placeholder-count="3">
+            <button type="button" onClick="{{c.pick}}" disabled="{{c.disabled}}" aria-pressed="{{c.pressed}}" aria-label="{{c.aria}}" style="text-align: left; display: flex; flex-direction: column; gap: 7px; padding: 12px; border-radius: 12px; background: #1F2134; border: 2px {{c.borderStyle}} {{c.border}}; color: #ECE8DF; opacity: {{c.opacity}}; cursor: {{c.cursor}}; min-height: 176px; box-sizing: border-box">
+              <span style="display: flex; align-items: center; gap: 8px; width: 100%">
+                <span style="width: 28px; height: 28px; border-radius: 50%; background: {{c.color}}; display: grid; place-items: center; flex: none">
+                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #12131F; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round"><path d="{{c.icon}}"></path></svg>
+                </span>
+                <span style="font-size: 12px; color: #A9A8B8">{{c.domName}} · {{c.code}}</span>
+                <span style="margin-left: auto; font: 500 11px 'JetBrains Mono', monospace; color: #A9A8B8">{{c.id}}</span>
+              </span>
+              <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 16px; line-height: 1.2">{{c.name}}</span>
+              <span style="display: flex; gap: 14px; font-family: 'JetBrains Mono', monospace; font-size: 13px">
+                <span><sc-if value="{{c.discounted}}" hint-placeholder-val="{{ false }}"><s style="color: #A9A8B8">{{c.years}}</s> → </sc-if><b style="font-size: 16px">{{c.cost}}</b> yrs</span>
+                <span><b style="font-size: 16px">{{c.pts}}</b> pts</span>
+              </span>
+              <sc-if value="{{c.hasReq}}" hint-placeholder-val="{{ false }}">
+                <span style="font-size: 12px; padding: 3px 8px; border-radius: 6px; background: #12131F; align-self: flex-start">{{c.req}}</span>
+              </sc-if>
+              <sc-if value="{{c.hasText}}" hint-placeholder-val="{{ false }}">
+                <span style="font-size: 13px; color: #ECE8DF; line-height: 1.35">{{c.text}}</span>
+              </sc-if>
+              <span style="margin-top: auto; font-size: 12px; font-weight: 700; color: {{c.statusColor}}">{{c.status}}</span>
+            </button>
+          </sc-for>
+          <sc-if value="{{row.hasDeck}}" hint-placeholder-val="{{ true }}">
+            <div style="border-radius: 12px; border: 1px dashed #34374F; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px; color: #A9A8B8; font-size: 13px; min-height: 176px">
+              <span style="font: 700 22px 'JetBrains Mono', monospace; color: #ECE8DF">{{row.deck}}</span>
+              <span>left in the {{row.label}} deck</span>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </section>
+
+    <div style="padding: 16px; border-radius: 16px; background: #1B1D2E; border: 1px solid #34374F; display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: center">
+      <div role="group" aria-label="Choose your action" style="display: flex; gap: 8px">
+        <button type="button" onClick="{{chooseQuest}}" aria-pressed="{{questMode}}" disabled="{{notMyTurn}}" style="min-height: 48px; padding: 0 18px; border-radius: 12px; border: 2px solid {{questBorder}}; background: #24273B; color: #ECE8DF; font-weight: 700; cursor: pointer">Quest</button>
+        <button type="button" onClick="{{chooseRush}}" aria-pressed="{{rushMode}}" disabled="{{notMyTurn}}" style="min-height: 48px; padding: 0 18px; border-radius: 12px; border: 2px solid {{rushBorder}}; background: #24273B; color: #ECE8DF; font-weight: 700; cursor: pointer">Rush → {{rushTarget}}</button>
+      </div>
+      <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #ECE8DF; min-height: 44px">
+        <input type="checkbox" checked="{{useYes}}" onChange="{{toggleYes}}" disabled="{{notMyTurn}}" style="width: 18px; height: 18px">
+        <span><b>Say yes more</b> <span style="color: #A9A8B8">· once · ignore a requirement</span></span>
+      </label>
+      <div role="status" style="flex: 1 1 280px; min-width: 0; font-size: 14px">
+        <div style="font-weight: 700">{{previewText}}</div>
+        <div style="color: #F7EBD0">{{previewNext}}</div>
+      </div>
+      <button type="button" onClick="{{undo}}" disabled="{{cantUndo}}" style="min-height: 48px; padding: 0 16px; border-radius: 12px; border: 1px solid #34374F; background: transparent; color: #ECE8DF; cursor: pointer; opacity: {{undoOpacity}}">Undo</button>
+      <button type="button" onClick="{{confirm}}" disabled="{{confirmDisabled}}" style="min-height: 48px; padding: 0 22px; border-radius: 12px; border: none; background: #F7EBD0; color: #12131F; font-weight: 700; font-size: 16px; cursor: pointer; opacity: {{confirmOpacity}}">{{confirmLabel}}</button>
+    </div>
+  </main>
+
+  <aside aria-label="Your life" style="flex: 1 1 290px; max-width: 340px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+    <section style="padding: 16px; border-radius: 16px; background: #1B1D2E; border: 1px solid #34374F">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px">
+        <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px">Your life</h2>
+        <span style="font: 500 12px 'JetBrains Mono', monospace; color: #A9A8B8">space {{myPos}} · {{myAge}}</span>
+      </div>
+      <p style="margin: 4px 0 12px; font-size: 13px; color: #A9A8B8">{{toDoor}} years to the Doorway. Newest memory on top.</p>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <sc-for list="{{myTower}}" as="d" hint-placeholder-count="4">
+          <div class="{{d.cls}}" style="display: flex; align-items: center; gap: 10px">
+            <span style="font: 500 11px 'JetBrains Mono', monospace; color: #A9A8B8; width: 16px; text-align: right">{{d.n}}</span>
+            <span style="width: 64px; height: 24px; border-radius: 12px; background: {{d.color}}; display: flex; align-items: center; justify-content: center; gap: 4px; box-shadow: inset 0 -3px 0 rgba(0,0,0,.18); flex: none">
+              <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #12131F; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round"><path d="{{d.icon}}"></path></svg>
+              <span style="font: 700 11px 'JetBrains Mono', monospace; color: #12131F">{{d.code}}</span>
+            </span>
+            <span style="font-size: 13px; min-width: 0; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{d.name}}</span>
+            <span style="font: 700 12px 'JetBrains Mono', monospace">{{d.pts}}</span>
+          </div>
+        </sc-for>
+        <div style="margin: 4px 0 0 26px; width: 76px; height: 8px; border-radius: 3px; background: #4A4D66"></div>
+      </div>
+      <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px; font-size: 13px">
+        <div><span style="color: #A9A8B8">Experience</span><br>{{myDiscounts}}</div>
+        <div><span style="color: #A9A8B8">Powers</span><br>Say yes more — {{yesState}}</div>
+      </div>
+    </section>
+    <section style="padding: 16px; border-radius: 16px; background: #1B1D2E; border: 1px solid #F7EBD0">
+      <h2 style="margin: 0 0 4px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px">If you walked through now</h2>
+      <p style="margin: 0 0 10px; font-size: 13px; color: #A9A8B8">{{fitText}}</p>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; text-align: center">
+        <div style="padding: 8px 4px; border-radius: 10px; background: #12131F"><div style="font: 700 18px 'JetBrains Mono', monospace">{{sc.cards}}</div><div style="font-size: 11px; color: #A9A8B8">Cards</div></div>
+        <div style="padding: 8px 4px; border-radius: 10px; background: #12131F"><div style="font: 700 18px 'JetBrains Mono', monospace">{{sc.sets}}</div><div style="font-size: 11px; color: #A9A8B8">Full life</div></div>
+        <div style="padding: 8px 4px; border-radius: 10px; background: #12131F"><div style="font: 700 18px 'JetBrains Mono', monospace">{{sc.passion}}</div><div style="font-size: 11px; color: #A9A8B8">Passion</div></div>
+        <div style="padding: 8px 4px; border-radius: 10px; background: #12131F"><div style="font: 700 18px 'JetBrains Mono', monospace">{{sc.refl}}</div><div style="font-size: 11px; color: #A9A8B8">Reflection</div></div>
+      </div>
+      <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: baseline"><span style="color: #A9A8B8; font-size: 13px">Total</span><span style="font: 800 28px 'Bricolage Grotesque', sans-serif">{{sc.total}}</span></div>
+    </section>
+  </aside>
+</div>
+
+<footer style="display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: space-between; padding: 18px 28px 0; font-size: 12px; color: #A9A8B8">
+  <span>We keep your nickname and your game moves. Nothing else.</span>
+  <button type="button" onClick="{{reset}}" style="background: none; border: none; color: #F7EBD0; text-decoration: underline; cursor: pointer; min-height: 32px">Reset demo</button>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"palette":{"editor":"enum","options":["standard","colorblind-safe"],"default":"standard"},"$preview":{"width":1440,"height":1180}}'>
+var ICONS = {
+  pink: 'M12 20.5s-7.5-4.6-7.5-10.4A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2.5c0 5.8-7.5 10.4-7.5 10.4z',
+  gold: 'M5 5h8.5L16 7.5 13.5 10H5zM9.5 10v10',
+  green: 'M12 2.5l6 7.5-6 8-6-8zM12 18c0 2-2.5 2-2.5 3.5',
+  orange: 'M3.5 11.5L12 4.5l8.5 7M6 10v10h12V10M10 20v-5h4v5',
+  purple: 'M12 3l2.5 5.4 5.9.6-4.4 4 1.3 5.8L12 15.9l-5.3 2.9L8 13l-4.4-4 5.9-.6z'
+};
+var PALETTES = {
+  standard: { pink: '#F07AA8', gold: '#E9B949', green: '#57C785', orange: '#F08A3C', purple: '#A48BFF' },
+  'colorblind-safe': { pink: '#CC79A7', gold: '#F0E442', green: '#009E73', orange: '#E69F00', purple: '#56B4E9' }
+};
+var DOMS = {
+  pink: { name: 'Love', code: 'Lv' }, gold: { name: 'Work', code: 'Wk' }, green: { name: 'Play', code: 'Pl' },
+  orange: { name: 'Family', code: 'Fm' }, purple: { name: 'Wonder', code: 'Wd' }
+};
+var DOM_ORDER = ['pink', 'gold', 'green', 'orange', 'purple'];
+function C(name, dom, age, years, pts, extra) { var c = { name: name, dom: dom, age: age, years: years, pts: pts }; if (extra) { for (var k in extra) c[k] = extra[k]; } return c; }
+var CARDS = {
+  'PK-Y1': C('First crush', 'pink', 'young', 2, 1), 'PK-Y2': C('Write a terrible love letter', 'pink', 'young', 2, 1),
+  'PK-Y3': C('Dance badly at a wedding', 'pink', 'young', 3, 2), 'PK-Y4': C('Have your heart broken', 'pink', 'young', 3, 2),
+  'PK-Y5': C('Fall in love', 'pink', 'young', 4, 3), 'PK-M2': C('Move in together', 'pink', 'middle', 4, 3),
+  'PK-O2': C('Grow old with someone', 'pink', 'old', 5, 4, { reqDom: 'pink', reqN: 2 }),
+  'GD-Y1': C('First job', 'gold', 'young', 2, 1), 'GD-Y2': C('Get fired from a cafe', 'gold', 'young', 2, 1),
+  'GD-Y3': C('Learn a trade', 'gold', 'young', 3, 2), 'GD-Y4': C('Pull an all-nighter that mattered', 'gold', 'young', 3, 2),
+  'GD-Y5': C('Make your first real money', 'gold', 'young', 4, 3),
+  'GD-M1': C('Make enough to slow down', 'gold', 'middle', 3, 2, { text: 'Power: Your Love quests cost 1 year less.' }),
+  'GD-M2': C('Get very good at something', 'gold', 'middle', 5, 3, { reqDom: 'gold', reqN: 1 }),
+  'GR-Y1': C('Build a fort', 'green', 'young', 2, 1), 'GR-Y2': C('Keep a diary', 'green', 'young', 2, 1, { text: 'Power: Immediately swap two adjacent discs in your tower.' }),
+  'GR-Y3': C('Learn an instrument', 'green', 'young', 3, 2), 'GR-Y4': C("Join a team you're bad on", 'green', 'young', 3, 2),
+  'GR-Y5': C("Win something that doesn't matter", 'green', 'young', 4, 3),
+  'GR-M2': C('Learn to rest', 'green', 'middle', 3, 1, { text: 'Power: Whenever you Rush, move 1 extra space.' }),
+  'GR-M3': C('Get good at something useless', 'green', 'middle', 4, 3),
+  'GR-O1': C('Take up something new at sixty', 'green', 'old', 5, 3),
+  'OR-Y1': C('Call your mother', 'orange', 'young', 2, 1), 'OR-Y2': C('Fight with your sibling', 'orange', 'young', 2, 1),
+  'OR-Y3': C('Make a best friend', 'orange', 'young', 3, 2), 'OR-Y4': C('Leave home', 'orange', 'young', 3, 2),
+  'OR-Y5': C('Be there when it mattered', 'orange', 'young', 4, 3),
+  'OR-M2': C('Old friends', 'orange', 'middle', 4, 2, { text: 'Power: Once per game, take a quest one age older than you.' }),
+  'OR-O3': C('Leave something behind', 'orange', 'old', 6, 4, { reqDom: 'orange', reqN: 2, text: 'Reflection: +1 per kept Family disc.' }),
+  'PU-Y1': C('See the sea', 'purple', 'young', 2, 1), 'PU-Y2': C('Say yes more', 'purple', 'young', 2, 1, { text: "Power: Once per game, ignore one quest's requirement." }),
+  'PU-Y3': C('Stay up for a meteor shower', 'purple', 'young', 3, 2), 'PU-Y4': C('Get lost in a city', 'purple', 'young', 3, 2),
+  'PU-Y5': C('Travel alone', 'purple', 'young', 4, 3), 'PU-M2': C('Live somewhere new', 'purple', 'middle', 5, 3),
+  'PU-M3': C('Change your mind about something big', 'purple', 'middle', 4, 3),
+  'PU-O1': C('Stand somewhere very old', 'purple', 'old', 4, 3, { reqDom: 'purple', reqN: 1 })
+};
+var PLAYERS = {
+  P: { name: 'Priya', initial: 'P', kind: 'you', badge: 'You' },
+  A: { name: 'Arun', initial: 'A', kind: 'bot', badge: 'Bot · Tempo' },
+  M: { name: 'Meera', initial: 'M', kind: 'friend', badge: 'Friend' },
+  K: { name: 'Kavi', initial: 'K', kind: 'bot', badge: 'Bot · Specialist' }
+};
+var AGE_NAME = { young: 'Young', middle: 'Middle', old: 'Old' };
+var AGE_START = { young: 0, middle: 14, old: 28 };
+var AGE_RANK = { young: 0, middle: 1, old: 2 };
+var PASSION = function (run) { return run >= 5 ? 10 : run === 4 ? 6 : run === 3 ? 3 : 0; };
+
+function ageOf(pos) { return pos >= 28 ? 'old' : pos >= 14 ? 'middle' : 'young'; }
+function initialState() {
+  return {
+    pos: { P: 11, A: 14, M: 17, K: 20 },
+    stacks: { 11: ['P'], 14: ['A'], 17: ['M'], 20: ['K'] },
+    towers: {
+      P: ['PU-Y2', 'PK-Y5', 'GD-Y1', 'PK-Y4'],
+      A: ['GR-Y2', 'GR-Y1', 'OR-Y1', 'GR-Y3', 'OR-Y2', 'PK-Y1'],
+      M: ['PU-Y5', 'PU-Y4', 'GD-Y5', 'PU-M3'],
+      K: ['GD-Y3', 'GD-Y2', 'OR-Y4', 'GD-M2', 'GD-M1']
+    },
+    market: { young: ['GD-Y4', 'PK-Y3', 'OR-Y5'], middle: ['PU-M2', 'GR-M2'], old: ['PK-O2', 'OR-O3'] },
+    decks: { young: ['PU-Y3', 'GR-Y5', 'OR-Y3', 'PU-Y1', 'GR-Y4', 'PK-Y2'], middle: ['OR-M2', 'PK-M2', 'GR-M3'], old: ['PU-O1', 'GR-O1'] },
+    hidden: { young: 0, middle: 12, old: 11 },
+    log: [
+      'Kavi took Make enough to slow down (3 → 2 years) and moved to 20.',
+      'Meera rushed from 11 to 14, then took Change your mind about something big.',
+      'Arun crossed Milestone 10 and kept his tower as it was.',
+      'You crossed Milestone 10 and skipped the swap.'
+    ],
+    turn: 23, sel: null, discard: null, useYes: false, yesUsed: false,
+    showWhy: false, rulesOpen: false, flagOpen: false, flagSent: false,
+    lastNew: null, again: false, history: []
+  };
+}
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function current(pos, stacks) {
+  var min = 99;
+  Object.keys(pos).forEach(function (id) { if (pos[id] < 40 && pos[id] < min) min = pos[id]; });
+  if (min === 99) return null;
+  var st = stacks[min] || [];
+  return st[st.length - 1];
+}
+function moveTo(pos, stacks, id, to) {
+  var p = clone(pos), s = clone(stacks);
+  var from = p[id];
+  s[from] = (s[from] || []).filter(function (x) { return x !== id; });
+  if (!s[from].length) delete s[from];
+  var t = Math.min(40, to);
+  p[id] = t;
+  s[t] = (s[t] || []).concat([id]);
+  return { pos: p, stacks: s };
+}
+function countDom(tower, dom) { return tower.filter(function (id) { return CARDS[id].dom === dom; }).length; }
+function expOf(tower, dom) { return Math.min(4, Math.floor(countDom(tower, dom) / 2)); }
+function costOf(tower, id) { var c = CARDS[id]; return Math.max(1, c.years - expOf(tower, c.dom)); }
+function rushTargetOf(pos, me) {
+  var best = null;
+  Object.keys(pos).forEach(function (id) { if (id !== me && pos[id] > pos[me] && pos[id] < 40 && (best === null || pos[id] < best)) best = pos[id]; });
+  return best === null ? Math.min(40, pos[me] + 3) : best + 1;
+}
+function scoreOf(tower) {
+  var cards = 0, counts = {}, run = 0, best = 0, prev = null;
+  tower.forEach(function (id) {
+    var c = CARDS[id]; cards += c.pts; counts[c.dom] = (counts[c.dom] || 0) + 1;
+    run = c.dom === prev ? run + 1 : 1; prev = c.dom; if (run > best) best = run;
+  });
+  var sets = Math.min.apply(null, DOM_ORDER.map(function (d) { return counts[d] || 0; }));
+  var refl = 0;
+  tower.forEach(function (id) { if (id === 'OR-O3') refl += counts.orange || 0; });
+  var r = { cards: cards, sets: sets * 6, passion: PASSION(best), refl: refl };
+  r.total = r.cards + r.sets + r.passion + r.refl;
+  return r;
+}
+function queueOf(pos, stacks) {
+  return Object.keys(pos).filter(function (id) { return pos[id] < 40; }).sort(function (a, b) {
+    if (pos[a] !== pos[b]) return pos[a] - pos[b];
+    var st = stacks[pos[a]] || [];
+    return st.indexOf(b) - st.indexOf(a);
+  });
+}
+
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = initialState(); }
+
+  snapshot() { var s = clone(this.state); s.history = []; return s; }
+
+  renderVals() {
+    var self = this, s = this.state;
+    var pal = PALETTES[this.props.palette] || PALETTES.standard;
+    var me = 'P';
+    var cur = current(s.pos, s.stacks);
+    var myTurn = cur === me;
+    var myPos = s.pos.P;
+    var myAge = ageOf(myPos);
+    var tower = s.towers.P;
+    var rushT = rushTargetOf(s.pos, me);
+
+    var landing = null;
+    if (myTurn && s.sel === 'rush') landing = rushT;
+    else if (myTurn && s.sel) landing = Math.min(40, myPos + costOf(tower, s.sel));
+    var nextAfter = null, after = null;
+    if (landing !== null) { after = moveTo(s.pos, s.stacks, me, landing); nextAfter = current(after.pos, after.stacks); }
+
+    function nextLine() {
+      if (landing === null) return '';
+      if (landing >= 40) return 'You reach the Doorway and take the top tile.';
+      if (nextAfter === me) {
+        var shared = (after.stacks[landing] || []).length > 1;
+        if (shared) {
+          var under = after.stacks[landing][after.stacks[landing].length - 2];
+          return 'You land on ' + PLAYERS[under].name + ' and go on top — you move again.';
+        }
+        return "You're still furthest back — you move again.";
+      }
+      return PLAYERS[nextAfter].name + ' (space ' + after.pos[nextAfter] + ') moves next.';
+    }
+
+    var previewText = '', previewNext = '';
+    if (!myTurn) { previewText = 'Not your turn yet.'; previewNext = PLAYERS[cur] ? PLAYERS[cur].name + ' is furthest back.' : ''; }
+    else if (!s.sel) { previewText = 'Pick a quest card, or Rush.'; previewNext = 'Rushing now lands you on ' + rushT + '.'; }
+    else if (s.sel === 'rush') {
+      previewText = 'Rush ' + myPos + ' → ' + rushT + (s.discard ? ', discarding ' + CARDS[s.discard].name + '.' : '. Tap a card to discard it first (optional).');
+      previewNext = nextLine();
+    } else {
+      var c0 = CARDS[s.sel], k0 = costOf(tower, s.sel), e0 = expOf(tower, c0.dom);
+      previewText = c0.name + ': ' + (e0 ? c0.years + ' → ' + k0 + ' years (' + DOMS[c0.dom].name + ' −' + e0 + ')' : k0 + ' years') + '. You move ' + myPos + ' → ' + landing + '.';
+      previewNext = nextLine();
+    }
+
+    var cells = [];
+    for (var i = 0; i < 40; i++) {
+      var st = (s.stacks[i] || []).slice().reverse();
+      var band = i >= 28 ? 'var(--old)' : i >= 14 ? 'var(--middle)' : 'var(--young)';
+      var isM = i === 10 || i === 20 || i === 30;
+      cells.push({
+        n: i, bg: band, milestone: isM, plain: !isM, ghost: landing === i,
+        pawns: st.map(function (id) {
+          var pl = PLAYERS[id];
+          return { initial: pl.initial, title: pl.name + ' — space ' + i, cls: id === cur ? 'eyb-pulse' : '', outline: pl.kind === 'bot' ? '2px dashed #A9A8B8' : 'none' };
+        })
+      });
+    }
+
+    var arrivedCount = Object.keys(s.pos).filter(function (id) { return s.pos[id] >= 40; }).length;
+    var tiles = [['1st', 9], ['2nd', 8], ['3rd', 7], ['4th', 6]].map(function (t, idx) {
+      var taken = idx < arrivedCount;
+      return { place: t[0], keep: t[1], bg: taken ? 'transparent' : '#F7EBD0', fg: taken ? '#A9A8B8' : '#12131F' };
+    });
+
+    var q = queueOf(s.pos, s.stacks);
+    var slotNames = ['Now', 'Next', '3rd', '4th'];
+    var queue = q.map(function (id, idx) {
+      var pl = PLAYERS[id], tw = s.towers[id];
+      var disc = DOM_ORDER.filter(function (d) { return expOf(tw, d) > 0; }).map(function (d) { return DOMS[d].name + ' −' + expOf(tw, d); });
+      var isCur = id === cur;
+      return {
+        name: pl.name, badge: pl.badge, initial: pl.initial, pos: s.pos[id], age: AGE_NAME[ageOf(s.pos[id])], count: tw.length,
+        slot: slotNames[idx], slotBg: isCur ? '#F7EBD0' : '#24273B', slotFg: isCur ? '#12131F' : '#ECE8DF',
+        bg: isCur ? '#24273B' : '#1B1D2E', border: isCur ? '#F7EBD0' : '#34374F',
+        tokenCls: isCur ? 'eyb-pulse' : '', outline: pl.kind === 'bot' ? '2px dashed #A9A8B8' : 'none',
+        thinking: isCur && pl.kind === 'bot', waiting: isCur && pl.kind === 'friend', options: 6,
+        discs: tw.map(function (cid) { var c = CARDS[cid]; return { color: pal[c.dom], icon: ICONS[c.dom], title: DOMS[c.dom].name + ': ' + c.name }; }),
+        towerLabel: pl.name + "'s tower, base to top: " + tw.map(function (cid) { return DOMS[CARDS[cid].dom].name; }).join(', '),
+        discounts: disc.length ? 'Experience: ' + disc.join(' · ') : 'No experience discounts yet'
+      };
+    });
+
+    function cardVals(id, slot) {
+      var c = CARDS[id], k = costOf(tower, id), e = expOf(tower, c.dom);
+      var ageOk = AGE_RANK[c.age] <= AGE_RANK[myAge];
+      var reqOk = !c.reqDom || countDom(tower, c.reqDom) >= c.reqN || (s.useYes && !s.yesUsed);
+      var legal = myTurn && ageOk && reqOk;
+      var rushMode = s.sel === 'rush';
+      var selected = s.sel === id, discarding = s.discard === id;
+      var status, statusColor = '#A9A8B8';
+      if (!myTurn) status = 'Waiting for your turn';
+      else if (rushMode) { status = discarding ? 'Will be discarded' : 'Tap to discard'; statusColor = discarding ? '#5FD3E6' : '#A9A8B8'; }
+      else if (!ageOk) status = 'Too young — ' + AGE_NAME[c.age] + ' from space ' + AGE_START[c.age];
+      else if (!reqOk) status = 'Needs ' + c.reqN + ' ' + DOMS[c.reqDom].name;
+      else { status = 'Lands on ' + Math.min(40, myPos + k); statusColor = '#F7EBD0'; }
+      var clickable = myTurn && (rushMode || legal);
+      return {
+        id: id, name: c.name, color: pal[c.dom], icon: ICONS[c.dom], domName: DOMS[c.dom].name, code: DOMS[c.dom].code,
+        years: c.years, cost: k, discounted: e > 0, pts: c.pts,
+        hasReq: !!c.reqDom, req: c.reqDom ? 'Needs ' + c.reqN + ' ' + DOMS[c.reqDom].name : '',
+        hasText: !!c.text, text: c.text || '',
+        status: status, statusColor: statusColor,
+        disabled: !clickable, pressed: selected || discarding,
+        opacity: clickable ? 1 : 0.5, cursor: clickable ? 'pointer' : 'not-allowed',
+        border: selected ? '#F7EBD0' : discarding ? '#5FD3E6' : '#2C2F45', borderStyle: discarding ? 'dashed' : 'solid',
+        aria: c.name + ', ' + DOMS[c.dom].name + ', ' + k + ' years, ' + c.pts + ' points. ' + status,
+        pick: function () {
+          if (!clickable) return;
+          if (rushMode) self.setState({ discard: s.discard === id ? null : id });
+          else self.setState({ sel: s.sel === id ? null : id });
+        }
+      };
+    }
+    var rows = ['young', 'middle', 'old'].map(function (age) {
+      var cards = s.market[age].filter(function (x) { return x; }).map(cardVals);
+      var ok = AGE_RANK[age] <= AGE_RANK[myAge];
+      return {
+        label: AGE_NAME[age], range: age === 'young' ? '0–13' : age === 'middle' ? '14–27' : '28–39',
+        gate: ok ? 'open to you' : 'opens at ' + AGE_START[age], gateColor: ok ? '#F7EBD0' : '#A9A8B8',
+        bg: age === 'young' ? 'var(--young)' : age === 'middle' ? 'var(--middle)' : 'var(--old)',
+        cards: cards, hasDeck: cards.length < 3, deck: s.decks[age].length + s.hidden[age]
+      };
+    });
+
+    var myTower = tower.slice().reverse().map(function (id, idx) {
+      var c = CARDS[id];
+      return { n: tower.length - idx, color: pal[c.dom], icon: ICONS[c.dom], code: DOMS[c.dom].code, name: c.name, pts: c.pts + ' pt', cls: id === s.lastNew ? 'eyb-drop' : '' };
+    });
+    var myDisc = DOM_ORDER.filter(function (d) { return expOf(tower, d) > 0; }).map(function (d) { return DOMS[d].name + ' −' + expOf(tower, d) + ' (' + countDom(tower, d) + ' discs)'; });
+    var sc = scoreOf(tower);
+
+    var bannerTitle, bannerEyebrow, bannerWhy, whyWho;
+    if (myTurn) {
+      bannerEyebrow = 'Turn ' + s.turn + ' · your move';
+      bannerTitle = s.again ? 'You go again, Priya.' : 'Your turn, Priya.';
+      var nxt = q[1];
+      bannerWhy = "You're furthest back, on space " + myPos + '.' + (nxt ? ' ' + PLAYERS[nxt].name + ' is next, at ' + s.pos[nxt] + '.' : '');
+      whyWho = 'my';
+    } else if (cur) {
+      var pc = PLAYERS[cur];
+      bannerEyebrow = 'Turn ' + s.turn + ' · ' + (pc.kind === 'bot' ? 'bot move' : 'friend move');
+      bannerTitle = pc.kind === 'bot' ? pc.name + ' is thinking…' : pc.name + ' is choosing…';
+      bannerWhy = pc.name + ' is furthest back now, on space ' + s.pos[cur] + '. You are at ' + myPos + '.';
+      whyWho = pc.name + "'s";
+    } else {
+      bannerEyebrow = 'Game over'; bannerTitle = 'Everyone is through the Doorway.'; bannerWhy = ''; whyWho = 'nobody';
+    }
+
+    return {
+      cells: cells, tiles: tiles, queue: queue, rows: rows, myTower: myTower,
+      log: s.log.slice(0, 7).map(function (t, idx) { return { text: t, color: idx === 0 ? '#ECE8DF' : '#A9A8B8' }; }),
+      turn: s.turn, myPos: myPos, myAge: AGE_NAME[myAge], toDoor: 40 - myPos,
+      myDiscounts: myDisc.length ? myDisc.join(' · ') : 'None yet — 2 discs of a domain = 1 year off',
+      yesState: s.yesUsed ? 'used' : s.useYes ? 'armed for this quest' : 'ready (once per game)',
+      fitText: 'Your ' + tower.length + ' discs fit inside even the smallest tile (6). The cut comes later.',
+      sc: sc,
+      bannerTitle: bannerTitle, bannerEyebrow: bannerEyebrow, bannerWhy: bannerWhy, whyWho: whyWho,
+      bannerBorder: myTurn ? '#F7EBD0' : '#34374F',
+      whyOrder: q.map(function (id) { return PLAYERS[id].name + ' ' + s.pos[id]; }).join(' → '),
+      marketHint: s.sel === 'rush' ? 'Rushing: you may discard one card before you move.' : 'Take one your age or younger. Costs include your discounts.',
+      showWhy: s.showWhy, rulesOpen: s.rulesOpen, flagOpen: s.flagOpen, flagSent: s.flagSent, flagNotSent: !s.flagSent,
+      notMyTurn: !myTurn, questMode: myTurn && s.sel !== 'rush', rushMode: s.sel === 'rush',
+      questBorder: myTurn && s.sel && s.sel !== 'rush' ? '#F7EBD0' : '#34374F',
+      rushBorder: s.sel === 'rush' ? '#F7EBD0' : '#34374F',
+      rushTarget: rushT, useYes: s.useYes,
+      previewText: previewText, previewNext: previewNext,
+      confirmLabel: s.sel === 'rush' ? 'Rush to ' + rushT : s.sel ? 'Take this quest' : 'Choose a move',
+      confirmDisabled: !myTurn || !s.sel, confirmOpacity: myTurn && s.sel ? 1 : 0.45,
+      cantUndo: !s.history.length, undoOpacity: s.history.length ? 1 : 0.45,
+      toggleWhy: function () { self.setState({ showWhy: !s.showWhy }); },
+      toggleRules: function () { self.setState({ rulesOpen: !s.rulesOpen }); },
+      toggleFlag: function () { self.setState({ flagOpen: !s.flagOpen, flagSent: false }); },
+      sendFlag: function () { self.setState({ flagSent: true }); },
+      toggleYes: function () { if (!s.yesUsed) self.setState({ useYes: !s.useYes }); },
+      chooseQuest: function () { self.setState({ sel: null, discard: null }); },
+      chooseRush: function () { self.setState({ sel: s.sel === 'rush' ? null : 'rush', discard: null }); },
+      undo: function () { if (!s.history.length) return; var h = s.history.slice(); var prev = h.pop(); prev.history = h; self.setState(prev); },
+      reset: function () { self.setState(initialState()); },
+      confirm: function () {
+        if (!myTurn || !s.sel) return;
+        var snap = self.snapshot();
+        var market = clone(s.market), decks = clone(s.decks), towers = clone(s.towers), log = s.log.slice(), m, yesUsed = s.yesUsed;
+        function refill(id) {
+          var age = CARDS[id].age, idx = market[age].indexOf(id);
+          market[age][idx] = decks[age].length ? decks[age].shift() : null;
+        }
+        if (s.sel === 'rush') {
+          if (s.discard) { log.unshift('You discarded ' + CARDS[s.discard].name + ' from the market.'); refill(s.discard); }
+          m = moveTo(s.pos, s.stacks, me, rushT);
+          log.unshift('You rushed ' + myPos + ' → ' + rushT + '.');
+        } else {
+          var c = CARDS[s.sel], k = costOf(tower, s.sel);
+          if (c.reqDom && countDom(tower, c.reqDom) < c.reqN) yesUsed = true;
+          towers.P.push(s.sel);
+          refill(s.sel);
+          m = moveTo(s.pos, s.stacks, me, myPos + k);
+          log.unshift('You took ' + c.name + ' (' + k + (k === 1 ? ' year' : ' years') + ') and moved to ' + m.pos.P + '.');
+        }
+        var nx = current(m.pos, m.stacks);
+        if (nx !== me) log.unshift(PLAYERS[nx].name + ' is furthest back now and moves next.');
+        var hist = s.history.concat([snap]);
+        self.setState({ pos: m.pos, stacks: m.stacks, market: market, decks: decks, towers: towers, log: log, turn: s.turn + 1, sel: null, discard: null, useYes: false, yesUsed: yesUsed, lastNew: s.sel === 'rush' ? null : s.sel, again: nx === me, history: hist, showWhy: false });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

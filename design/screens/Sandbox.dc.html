@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Designer sandbox</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#12131F}
+a{color:#F7EBD0}a:hover{color:#FFFFFF}
+@keyframes eyb-bar{from{width:0}to{width:100%}}
+.eyb-bar{animation:eyb-bar 1.6s linear forwards}
+@media (prefers-reduced-motion: reduce){.eyb-bar{animation:none;width:100%}}
+button,select,input{font:inherit}
+button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid #F7EBD0;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; min-height: 1240px; background: #12131F; color: #ECE8DF; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 15px; line-height: 1.45; padding: 0 0 32px">
+  <nav aria-label="Designer tools" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; padding: 14px 28px; border-bottom: 1px solid #2C2F45">
+    <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; margin-right: 10px">Doorway · Designer</span>
+    <a href="SimDashboard.dc.html" style="min-height: 40px; display: inline-flex; align-items: center; padding: 0 12px; color: #A9A8B8; text-decoration: none">Analysis</a>
+    <a href="Sandbox.dc.html" aria-current="page" style="min-height: 40px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 10px; background: #24273B; color: #ECE8DF; text-decoration: none; font-weight: 700">Sandbox</a>
+    <a href="Feedback.dc.html" style="min-height: 40px; display: inline-flex; align-items: center; padding: 0 12px; color: #A9A8B8; text-decoration: none">Playtest feedback</a>
+  </nav>
+
+  <header style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 24px; padding: 22px 28px 10px">
+    <div style="flex: 1 1 520px">
+      <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 36px; letter-spacing: -0.015em">Sandbox</h1>
+      <p style="margin: 4px 0 0; color: #A9A8B8">Turn a dial, run the bots, compare with the baseline. Nothing reaches real games until you save it as a new ruleset.</p>
+    </div>
+    <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #A9A8B8">Baseline
+      <select style="min-height: 44px; border-radius: 10px; background: #1B1D2E; color: #ECE8DF; border: 1px solid #34374F; padding: 0 10px"><option>v0.2-default</option></select>
+    </label>
+    <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #A9A8B8">New ruleset name
+      <input type="text" value="v0.2-variant-a" style="min-height: 44px; border-radius: 10px; background: #1B1D2E; color: #ECE8DF; border: 1px solid #34374F; padding: 0 12px; font-family: 'JetBrains Mono', monospace">
+    </label>
+  </header>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 18px; padding: 8px 28px; align-items: flex-start">
+    <section aria-label="Ruleset dials" style="flex: 1 1 620px; min-width: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
+      <sc-for list="{{groups}}" as="g" hint-placeholder-count="6">
+        <fieldset style="margin: 0; padding: 16px 18px; border-radius: 16px; background: #1B1D2E; border: 1px solid #34374F; min-width: 0">
+          <legend style="padding: 0 6px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px">{{g.name}}</legend>
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <sc-for list="{{g.params}}" as="p" hint-placeholder-count="3">
+              <div style="display: flex; align-items: center; gap: 10px">
+                <div style="flex: 1; min-width: 0">
+                  <div style="font: 700 12px 'JetBrains Mono', monospace">{{p.key}}</div>
+                  <div style="font-size: 12px; color: #A9A8B8">{{p.note}}</div>
+                </div>
+                <div style="display: inline-flex; align-items: center; border-radius: 10px; border: 1px solid {{p.border}}; overflow: hidden">
+                  <button type="button" onClick="{{p.dec}}" aria-label="{{p.decLabel}}" style="width: 40px; height: 40px; border: none; background: #24273B; color: #ECE8DF; cursor: pointer; font-size: 18px">−</button>
+                  <span style="min-width: 44px; text-align: center; font: 700 16px 'JetBrains Mono', monospace; color: {{p.valColor}}">{{p.value}}</span>
+                  <button type="button" onClick="{{p.inc}}" aria-label="{{p.incLabel}}" style="width: 40px; height: 40px; border: none; background: #24273B; color: #ECE8DF; cursor: pointer; font-size: 18px">+</button>
+                </div>
+                <span style="width: 64px; font: 500 11px 'JetBrains Mono', monospace; color: #A9A8B8">{{p.baseText}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </fieldset>
+      </sc-for>
+      <div style="grid-column: span 2; padding: 14px 18px; border-radius: 14px; background: #171928; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; font-size: 13px">
+        <span style="color: #A9A8B8">Cards live in <code style="font-family: 'JetBrains Mono', monospace; color: #ECE8DF">cards.json</code> — edit any of the 60 in the card editor.</span>
+        <a href="#" style="font-weight: 700">Open card editor →</a>
+      </div>
+    </section>
+
+    <aside aria-label="Run and compare" style="flex: 1 1 440px; max-width: 560px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+      <section style="padding: 18px; border-radius: 16px; background: #1B1D2E; border: 1px solid {{diffBorder}}">
+        <h2 style="margin: 0 0 8px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px">Changes from baseline</h2>
+        <sc-if value="{{noDiff}}" hint-placeholder-val="{{ false }}">
+          <p style="margin: 0; font-size: 13px; color: #A9A8B8">None yet. Use the − / + dials.</p>
+        </sc-if>
+        <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; font: 500 13px 'JetBrains Mono', monospace">
+          <sc-for list="{{diff}}" as="d" hint-placeholder-count="2">
+            <li>{{d.key}}: <span style="color: #A9A8B8; text-decoration: line-through">{{d.from}}</span> → <b style="color: #F7EBD0">{{d.to}}</b></li>
+          </sc-for>
+        </ul>
+      </section>
+
+      <section style="padding: 18px; border-radius: 16px; background: #1B1D2E; border: 1px solid #34374F">
+        <h2 style="margin: 0 0 12px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px">Run the bots</h2>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #A9A8B8">Players
+            <select style="min-height: 44px; border-radius: 10px; background: #12131F; color: #ECE8DF; border: 1px solid #34374F; padding: 0 8px"><option>4</option><option>3</option><option>2</option><option>2, 3 and 4</option></select>
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #A9A8B8">Games per side
+            <select style="min-height: 44px; border-radius: 10px; background: #12131F; color: #ECE8DF; border: 1px solid #34374F; padding: 0 8px"><option>1,000 (quick)</option><option selected>10,000</option><option>50,000</option></select>
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #A9A8B8; grid-column: span 2">Bot mix
+            <select style="min-height: 44px; border-radius: 10px; background: #12131F; color: #ECE8DF; border: 1px solid #34374F; padding: 0 8px"><option>All strategies, rotating seats</option><option>Four archetypes (spec)</option><option>Lookahead vs field</option></select>
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #A9A8B8">Seed
+            <input type="text" value="doorway-2026" style="min-height: 44px; border-radius: 10px; background: #12131F; color: #ECE8DF; border: 1px solid #34374F; padding: 0 10px; font-family: 'JetBrains Mono', monospace">
+          </label>
+          <div style="display: flex; align-items: flex-end">
+            <button type="button" onClick="{{run}}" disabled="{{running}}" style="width: 100%; min-height: 44px; border-radius: 12px; border: none; background: #F7EBD0; color: #12131F; font-weight: 700; cursor: pointer">{{runLabel}}</button>
+          </div>
+        </div>
+        <sc-if value="{{running}}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top: 12px">
+            <div style="height: 8px; border-radius: 4px; background: #12131F; overflow: hidden"><div class="eyb-bar" style="height: 100%; background: #F7EBD0"></div></div>
+            <p style="margin: 6px 0 0; font-size: 12px; color: #A9A8B8">Running baseline and variant on the same seeds, 8 worker threads…</p>
+          </div>
+        </sc-if>
+      </section>
+
+      <sc-if value="{{done}}" hint-placeholder-val="{{ true }}">
+        <section aria-label="Comparison" style="padding: 18px; border-radius: 16px; background: #1B1D2E; border: 1px solid #F7EBD0">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px">
+            <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px">Variant vs baseline</h2>
+            <span style="font-size: 12px; color: #A9A8B8">placeholder values</span>
+          </div>
+          <div style="margin-top: 10px; display: grid; grid-template-columns: minmax(0, 1fr) 70px 70px 70px; gap: 6px 10px; font-size: 13px">
+            <span style="color: #A9A8B8; font-size: 12px">Metric</span><span style="color: #A9A8B8; font-size: 12px; text-align: right">Base</span><span style="color: #A9A8B8; font-size: 12px; text-align: right">Variant</span><span style="color: #A9A8B8; font-size: 12px; text-align: right">Change</span>
+            <sc-for list="{{compare}}" as="m" hint-placeholder-count="6">
+              <span>{{m.name}}</span>
+              <span style="text-align: right; font-family: 'JetBrains Mono', monospace">{{m.base}}</span>
+              <span style="text-align: right; font-family: 'JetBrains Mono', monospace">{{m.variant}}</span>
+              <span style="text-align: right; font: 700 13px 'JetBrains Mono', monospace; color: {{m.color}}">{{m.delta}}</span>
+            </sc-for>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px">
+            <button type="button" style="min-height: 44px; padding: 0 16px; border-radius: 12px; border: none; background: #F7EBD0; color: #12131F; font-weight: 700; cursor: pointer">Save as new ruleset</button>
+            <button type="button" style="min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #34374F; background: transparent; color: #ECE8DF; cursor: pointer">Play it at a table</button>
+            <a href="SimDashboard.dc.html" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 8px">Full report →</a>
+          </div>
+        </section>
+      </sc-if>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+var PARAMS = [
+  { g: 'Track and time', key: 'trackLength', v: 40, min: 30, max: 50, note: 'spaces to the Doorway' },
+  { g: 'Track and time', key: 'milestones', v: 3, min: 0, max: 4, note: 'count, evenly spaced (10/20/30)' },
+  { g: 'Market', key: 'market.young', v: 3, min: 1, max: 4, note: 'face-up Young cards' },
+  { g: 'Market', key: 'market.middle', v: 2, min: 1, max: 4, note: 'face-up Middle cards' },
+  { g: 'Market', key: 'market.old', v: 2, min: 1, max: 4, note: 'face-up Old cards' },
+  { g: 'Costs and experience', key: 'experienceStep', v: 2, min: 1, max: 4, note: 'discs per −1 year' },
+  { g: 'Costs and experience', key: 'experienceCap', v: 4, min: 0, max: 6, note: 'largest discount (RULINGS R1)' },
+  { g: 'Costs and experience', key: 'minCost', v: 1, min: 0, max: 3, note: 'cheapest a quest can be' },
+  { g: 'Rush', key: 'rushNoPawnAhead', v: 3, min: 1, max: 6, note: 'spaces when no pawn is ahead' },
+  { g: 'Rush', key: 'rushDiscard', v: 1, min: 0, max: 1, note: '1 = may discard a market card' },
+  { g: 'Doorway (4 players)', key: 'doorway.4p.1st', v: 9, min: 1, max: 14, note: 'discs kept, 1st arrival' },
+  { g: 'Doorway (4 players)', key: 'doorway.4p.2nd', v: 8, min: 1, max: 14, note: '2nd arrival' },
+  { g: 'Doorway (4 players)', key: 'doorway.4p.3rd', v: 7, min: 1, max: 14, note: '3rd arrival' },
+  { g: 'Doorway (4 players)', key: 'doorway.4p.4th', v: 6, min: 1, max: 14, note: '4th arrival' },
+  { g: 'Scoring', key: 'fullLifeBonus', v: 6, min: 0, max: 12, note: 'per set of all five' },
+  { g: 'Scoring', key: 'passion.3', v: 3, min: 0, max: 10, note: 'run of 3' },
+  { g: 'Scoring', key: 'passion.4', v: 6, min: 0, max: 14, note: 'run of 4' },
+  { g: 'Scoring', key: 'passion.5+', v: 10, min: 0, max: 20, note: 'run of 5 or more' },
+  { g: 'Scoring', key: 'reflectionPerDisc', v: 1, min: 0, max: 3, note: 'per kept disc of its domain' }
+];
+var GROUPS = ['Track and time', 'Market', 'Costs and experience', 'Rush', 'Doorway (4 players)', 'Scoring'];
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    var vals = {};
+    PARAMS.forEach(function (p) { vals[p.key] = p.v; });
+    vals['doorway.4p.1st'] = 10; vals['doorway.4p.2nd'] = 7; vals['doorway.4p.3rd'] = 5; vals['doorway.4p.4th'] = 3;
+    this.state = { vals: vals, running: false, done: true };
+  }
+  renderVals() {
+    var self = this, s = this.state;
+    function set(key, v) { var vals = Object.assign({}, s.vals); vals[key] = v; self.setState({ vals: vals, done: false }); }
+    var groups = GROUPS.map(function (g) {
+      return { name: g, params: PARAMS.filter(function (p) { return p.g === g; }).map(function (p) {
+        var v = s.vals[p.key], changed = v !== p.v;
+        return { key: p.key, note: p.note, value: v, baseText: changed ? 'was ' + p.v : 'default',
+          border: changed ? '#F7EBD0' : '#34374F', valColor: changed ? '#F7EBD0' : '#ECE8DF',
+          decLabel: 'Decrease ' + p.key, incLabel: 'Increase ' + p.key,
+          dec: function () { if (v > p.min) set(p.key, v - 1); }, inc: function () { if (v < p.max) set(p.key, v + 1); } };
+      }) };
+    });
+    var diff = PARAMS.filter(function (p) { return s.vals[p.key] !== p.v; }).map(function (p) { return { key: p.key, from: p.v, to: s.vals[p.key] }; });
+    return {
+      groups: groups, diff: diff, noDiff: !diff.length, diffBorder: diff.length ? '#F7EBD0' : '#34374F',
+      running: s.running, done: s.done && !s.running,
+      runLabel: s.running ? 'Running…' : 'Run 10,000 × 2',
+      compare: [
+        { name: 'Top strategy win rate (4p)', base: '[x]%', variant: '[x]%', delta: '[±x]', color: '#57C785' },
+        { name: 'First-seat edge', base: '[x]', variant: '[x]', delta: '[±x]', color: '#ECE8DF' },
+        { name: 'Discs lost, non-first arrivals', base: '[x]', variant: '[x]', delta: '[±x]', color: '#57C785' },
+        { name: 'Discs lost, first arrival', base: '[x]', variant: '[x]', delta: '[±x]', color: '#57C785' },
+        { name: 'Turns per game', base: '[x]', variant: '[x]', delta: '[±x]', color: '#ECE8DF' },
+        { name: 'Rush share of moves', base: '[x]%', variant: '[x]%', delta: '[±x]', color: '#E7766E' }
+      ],
+      run: function () { self.setState({ running: true, done: false }); setTimeout(function () { self.setState({ running: false, done: true }); }, 1700); }
+    };
+  }
+}
+</script>
+</body>
+</html>

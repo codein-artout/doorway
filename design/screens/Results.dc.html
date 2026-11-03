@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>End of game — scores and feedback</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#12131F}
+a{color:#F7EBD0}a:hover{color:#FFFFFF}
+button,input,textarea{font:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid #F7EBD0;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; min-height: 1420px; background: #12131F; color: #ECE8DF; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 15px; line-height: 1.45; padding: 32px 28px">
+
+  <div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 28px">
+    <div style="flex: 1 1 560px">
+      <div style="font: 700 12px 'JetBrains Mono', monospace; letter-spacing: 0.06em; color: #A9A8B8; text-transform: uppercase">Game over · 58 minutes · 4 players · seed 7f3a-92</div>
+      <h1 style="margin: 6px 0 6px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.015em; line-height: 1.05">Kavi brought the most through.</h1>
+      <p style="margin: 0; color: #A9A8B8">Points come only from the stretch each of you kept. Faded discs stayed behind.</p>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px">
+      <a href="Lobby.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 20px; border-radius: 12px; background: #F7EBD0; color: #12131F; font-weight: 700; text-decoration: none">Play again</a>
+      <button type="button" style="min-height: 48px; padding: 0 18px; border-radius: 12px; border: 1px solid #34374F; background: #1B1D2E; color: #ECE8DF; cursor: pointer">Watch the replay</button>
+    </div>
+  </div>
+
+  <section aria-label="Final scores" style="margin-top: 26px; padding: 8px 0; border-radius: 18px; background: #1B1D2E; border: 1px solid #34374F; overflow-x: auto">
+    <div style="min-width: 1080px">
+      <div style="display: grid; grid-template-columns: 52px 200px 110px minmax(0, 1fr) 360px 80px; gap: 16px; padding: 10px 22px; font-size: 12px; color: #A9A8B8; border-bottom: 1px solid #2C2F45">
+        <span>Rank</span><span>Player</span><span>Arrived</span><span>Life lived → stretch kept</span><span>Where the points came from</span><span style="text-align: right">Total</span>
+      </div>
+      <sc-for list="{{players}}" as="p" hint-placeholder-count="4">
+        <div style="display: grid; grid-template-columns: 52px 200px 110px minmax(0, 1fr) 360px 80px; gap: 16px; align-items: center; padding: 16px 22px; border-bottom: 1px solid #23253A; background: {{p.bg}}">
+          <span style="font: 800 26px 'Bricolage Grotesque', sans-serif">{{p.rank}}</span>
+          <div>
+            <div style="font-weight: 700; font-size: 17px">{{p.name}}</div>
+            <div style="font-size: 12px; color: #A9A8B8">{{p.badge}}</div>
+          </div>
+          <div style="font-size: 13px"><b>{{p.arrived}}</b><br><span style="color: #A9A8B8">kept {{p.kept}} of {{p.lived}}</span></div>
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <div style="display: flex; gap: 3px; align-items: center" aria-label="{{p.aria}}">
+              <sc-for list="{{p.discs}}" as="d" hint-placeholder-count="10">
+                <span title="{{d.title}}" style="width: 22px; height: 22px; border-radius: 50%; background: {{d.color}}; opacity: {{d.opacity}}; display: grid; place-items: center; flex: none">
+                  <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #12131F; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round"><path d="{{d.icon}}"></path></svg>
+                </span>
+              </sc-for>
+            </div>
+            <div style="display: flex; gap: 3px">
+              <sc-for list="{{p.discs}}" as="d" hint-placeholder-count="10">
+                <span style="width: 22px; height: 3px; border-radius: 2px; background: {{d.under}}; flex: none"></span>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="display: flex; height: 18px; border-radius: 9px; overflow: hidden; background: #12131F" role="img" aria-label="{{p.barAria}}">
+              <span style="width: {{p.wCards}}; background: #ECE8DF"></span>
+              <span style="width: {{p.wSets}}; background: #6CB6D6"></span>
+              <span style="width: {{p.wPassion}}; background: #E7766E"></span>
+              <span style="width: {{p.wRefl}}; background: #8E8FA8"></span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 6px; font-size: 12px">
+              <span><b style="font-family: 'JetBrains Mono', monospace">{{p.cards}}</b> <span style="color: #A9A8B8">cards</span></span>
+              <span><b style="font-family: 'JetBrains Mono', monospace">{{p.sets}}</b> <span style="color: #A9A8B8">full life</span></span>
+              <span><b style="font-family: 'JetBrains Mono', monospace">{{p.passion}}</b> <span style="color: #A9A8B8">passion</span></span>
+              <span><b style="font-family: 'JetBrains Mono', monospace">{{p.refl}}</b> <span style="color: #A9A8B8">reflection</span></span>
+            </div>
+          </div>
+          <span style="font: 800 32px 'Bricolage Grotesque', sans-serif; text-align: right">{{p.total}}</span>
+        </div>
+      </sc-for>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 12px 22px; font-size: 12px; color: #A9A8B8">
+        <span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #ECE8DF"></span>Cards</span>
+        <span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #6CB6D6"></span>Full life (+6 per set of five)</span>
+        <span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #E7766E"></span>Passion (longest run)</span>
+        <span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #8E8FA8"></span>Reflection</span>
+        <span style="margin-left: auto">Tiebreak: most discs kept, then earlier arrival.</span>
+      </div>
+    </div>
+  </section>
+
+  <section aria-label="Your game in numbers" style="margin-top: 18px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+    <div style="padding: 16px; border-radius: 14px; background: #171928"><div style="font: 800 28px 'Bricolage Grotesque', sans-serif">17</div><div style="font-size: 13px; color: #A9A8B8">turns you took · 4 of them back-to-back</div></div>
+    <div style="padding: 16px; border-radius: 14px; background: #171928"><div style="font: 800 28px 'Bricolage Grotesque', sans-serif">2</div><div style="font-size: 13px; color: #A9A8B8">rushes</div></div>
+    <div style="padding: 16px; border-radius: 14px; background: #171928"><div style="font: 800 28px 'Bricolage Grotesque', sans-serif">4</div><div style="font-size: 13px; color: #A9A8B8">memories left behind at the Doorway</div></div>
+    <div style="padding: 16px; border-radius: 14px; background: #171928"><div style="font: 800 28px 'Bricolage Grotesque', sans-serif">+2</div><div style="font-size: 13px; color: #A9A8B8">points the best stretch would have added</div></div>
+  </section>
+
+  <section aria-label="Feedback" style="margin-top: 28px; padding: 24px; border-radius: 18px; background: #1B1D2E; border: 1px solid #F7EBD0">
+    <sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
+      <div role="status">
+        <h2 style="margin: 0 0 6px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px">Thank you. That helps a lot.</h2>
+        <p style="margin: 0; color: #A9A8B8">Your answers are saved with this game's replay. Up for another?</p>
+      </div>
+    </sc-if>
+    <sc-if value="{{notSent}}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+        <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px">Before you go — about a minute</h2>
+        <span style="font-size: 13px; color: #A9A8B8">We keep your nickname and your game moves. Nothing else.</span>
+      </div>
+      <form style="margin-top: 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 32px">
+        <sc-for list="{{scales}}" as="q" hint-placeholder-count="4">
+          <fieldset style="border: none; margin: 0; padding: 0">
+            <legend style="font-weight: 700; margin-bottom: 8px">{{q.label}}</legend>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px">
+              <sc-for list="{{q.options}}" as="o" hint-placeholder-count="5">
+                <button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" style="min-width: 48px; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 2px solid {{o.border}}; background: {{o.bg}}; color: {{o.fg}}; font-weight: 700; cursor: pointer">{{o.text}}</button>
+              </sc-for>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #A9A8B8; margin-top: 4px; max-width: 290px">{{q.ends}}</div>
+          </fieldset>
+        </sc-for>
+        <label style="display: flex; flex-direction: column; gap: 8px">
+          <span style="font-weight: 700">What was the most confusing moment?</span>
+          <textarea rows="3" placeholder="e.g. when Arun took two turns in a row" style="resize: vertical; padding: 12px; border-radius: 12px; border: 1px solid #34374F; background: #12131F; color: #ECE8DF"></textarea>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 8px">
+          <span style="font-weight: 700">Your most memorable moment — or anything else?</span>
+          <textarea rows="3" placeholder="Free text" style="resize: vertical; padding: 12px; border-radius: 12px; border: 1px solid #34374F; background: #12131F; color: #ECE8DF"></textarea>
+        </label>
+      </form>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; align-items: center">
+        <button type="button" onClick="{{send}}" style="min-height: 52px; padding: 0 26px; border-radius: 14px; border: none; background: #F7EBD0; color: #12131F; font-weight: 700; font-size: 16px; cursor: pointer">Send feedback</button>
+        <button type="button" onClick="{{send}}" style="min-height: 52px; padding: 0 18px; border-radius: 14px; border: none; background: transparent; color: #A9A8B8; text-decoration: underline; cursor: pointer">Skip</button>
+      </div>
+    </sc-if>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1420}}'>
+var ICONS = {
+  pink: 'M12 20.5s-7.5-4.6-7.5-10.4A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2.5c0 5.8-7.5 10.4-7.5 10.4z',
+  gold: 'M5 5h8.5L16 7.5 13.5 10H5zM9.5 10v10',
+  green: 'M12 2.5l6 7.5-6 8-6-8zM12 18c0 2-2.5 2-2.5 3.5',
+  orange: 'M3.5 11.5L12 4.5l8.5 7M6 10v10h12V10M10 20v-5h4v5',
+  purple: 'M12 3l2.5 5.4 5.9.6-4.4 4 1.3 5.8L12 15.9l-5.3 2.9L8 13l-4.4-4 5.9-.6z'
+};
+var COLORS = { pink: '#F07AA8', gold: '#E9B949', green: '#57C785', orange: '#F08A3C', purple: '#A48BFF' };
+var NAMES = { pink: 'Love', gold: 'Work', green: 'Play', orange: 'Family', purple: 'Wonder' };
+var DATA = [
+  { name: 'Kavi', badge: 'Bot · Specialist', arrived: '1st', keep: [1, 9], doms: ['gold','gold','gold','gold','gold','orange','pink','gold','green'], cards: 25, sets: 0, passion: 10, refl: 6 },
+  { name: 'Priya', badge: 'You', you: true, arrived: '2nd', keep: [3, 11], doms: ['purple','green','gold','gold','gold','pink','orange','purple','green','gold','orange','pink','purple'], cards: 26, sets: 6, passion: 3, refl: 4 },
+  { name: 'Meera', badge: 'Friend', arrived: '4th', keep: [5, 10], doms: ['purple','purple','gold','purple','pink','orange','green','purple','gold','purple'], cards: 17, sets: 6, passion: 3, refl: 0 },
+  { name: 'Arun', badge: 'Bot · Tempo', arrived: '3rd', keep: [8, 14], doms: ['green','green','orange','green','orange','pink','purple','gold','green','orange','pink','purple','gold','green'], cards: 18, sets: 6, passion: 0, refl: 0 }
+];
+var MAX = 45;
+function pct(v) { return (v / MAX * 100).toFixed(1) + '%'; }
+var SCALES = [
+  { key: 'fun', label: 'How much fun was it?', opts: ['1','2','3','4','5'], ends: 'not much · a lot' },
+  { key: 'clarity', label: 'How clear were the rules?', opts: ['1','2','3','4','5'], ends: 'lost · crystal clear' },
+  { key: 'again', label: 'Would you play again?', opts: ['Yes','Maybe','No'], ends: '' },
+  { key: 'length', label: 'The length felt…', opts: ['Too short','Right','Too long'], ends: '' },
+  { key: 'choices', label: 'Did you feel you had real choices?', opts: ['1','2','3','4','5'], ends: 'no · always' }
+];
+
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { answers: {}, sent: false }; }
+  renderVals() {
+    var self = this, s = this.state;
+    var players = DATA.map(function (p, i) {
+      var total = p.cards + p.sets + p.passion + p.refl;
+      return {
+        rank: i + 1, name: p.name, badge: p.badge, arrived: p.arrived, kept: p.keep[1] - p.keep[0] + 1, lived: p.doms.length,
+        bg: p.you ? '#212338' : 'transparent',
+        discs: p.doms.map(function (d, j) {
+          var kept = j + 1 >= p.keep[0] && j + 1 <= p.keep[1];
+          return { color: COLORS[d], icon: ICONS[d], opacity: kept ? 1 : 0.25, under: kept ? '#F7EBD0' : 'transparent', title: NAMES[d] + (kept ? ' — kept' : ' — left behind') };
+        }),
+        aria: p.name + ' lived ' + p.doms.length + ' memories and kept discs ' + p.keep[0] + ' to ' + p.keep[1],
+        cards: p.cards, sets: p.sets, passion: p.passion, refl: p.refl, total: total,
+        wCards: pct(p.cards), wSets: pct(p.sets), wPassion: pct(p.passion), wRefl: pct(p.refl),
+        barAria: 'Cards ' + p.cards + ', full life ' + p.sets + ', passion ' + p.passion + ', reflection ' + p.refl
+      };
+    });
+    var scales = SCALES.map(function (q) {
+      return { label: q.label, ends: q.ends, options: q.opts.map(function (o) {
+        var on = s.answers[q.key] === o;
+        return { text: o, on: on, bg: on ? '#F7EBD0' : '#12131F', fg: on ? '#12131F' : '#ECE8DF', border: on ? '#F7EBD0' : '#34374F',
+          pick: function () { var a = Object.assign({}, s.answers); a[q.key] = o; self.setState({ answers: a }); } };
+      }) };
+    });
+    return { players: players, scales: scales, sent: s.sent, notSent: !s.sent, send: function () { self.setState({ sent: true }); } };
+  }
+}
+</script>
+</body>
+</html>

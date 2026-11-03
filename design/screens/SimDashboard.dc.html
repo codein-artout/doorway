@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Simulation analysis</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#12131F}
+a{color:#F7EBD0}a:hover{color:#FFFFFF}
+button,select{font:inherit}
+button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #F7EBD0;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; min-height: 1700px; background: #12131F; color: #ECE8DF; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 15px; line-height: 1.45; padding: 0 0 32px">
+
+  <nav aria-label="Designer tools" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; padding: 14px 28px; border-bottom: 1px solid #2C2F45">
+    <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; margin-right: 10px">Doorway · Designer</span>
+    <a href="SimDashboard.dc.html" aria-current="page" style="min-height: 40px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 10px; background: #24273B; color: #ECE8DF; text-decoration: none; font-weight: 700">Analysis</a>
+    <a href="Sandbox.dc.html" style="min-height: 40px; display: inline-flex; align-items: center; padding: 0 12px; color: #A9A8B8; text-decoration: none">Sandbox</a>
+    <a href="Feedback.dc.html" style="min-height: 40px; display: inline-flex; align-items: center; padding: 0 12px; color: #A9A8B8; text-decoration: none">Playtest feedback</a>
+    <div style="flex: 1"></div>
+    <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #A9A8B8">Run
+      <select style="min-height: 40px; border-radius: 10px; background: #1B1D2E; color: #ECE8DF; border: 1px solid #34374F; padding: 0 8px"><option>2026-11-05 · v0.2-default · full study</option></select>
+    </label>
+    <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #A9A8B8">Players
+      <select style="min-height: 40px; border-radius: 10px; background: #1B1D2E; color: #ECE8DF; border: 1px solid #34374F; padding: 0 8px"><option>4</option><option>3</option><option>2</option><option>All</option></select>
+    </label>
+  </nav>
+
+  <div style="margin: 16px 28px 0; padding: 10px 14px; border-radius: 10px; border: 1px dashed #5FD3E6; font-size: 13px; color: #ECE8DF">Layout reference. Every number on this page is placeholder data — the real values come from the overnight study in <code style="font-family: 'JetBrains Mono', monospace">reports/data/</code>.</div>
+
+  <header style="padding: 22px 28px 6px">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 38px; letter-spacing: -0.015em">What the bots found</h1>
+    <p style="margin: 4px 0 0; color: #A9A8B8">[N] games · 11 strategies + noisy variants · 2, 3 and 4 players · every seat order · ruleset v0.2-default</p>
+  </header>
+
+  <section aria-label="Headline answers" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 14px 28px">
+    <sc-for list="{{headlines}}" as="h" hint-placeholder-count="4">
+      <div style="padding: 18px; border-radius: 16px; background: #1B1D2E; border: 1px solid {{h.border}}; display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 13px; color: #A9A8B8">{{h.q}}</span>
+        <span style="font: 800 24px 'Bricolage Grotesque', sans-serif; line-height: 1.15">{{h.a}}</span>
+        <span style="font-size: 13px">{{h.detail}}</span>
+        <span style="align-self: flex-start; font: 700 11px 'JetBrains Mono', monospace; padding: 4px 8px; border-radius: 999px; background: {{h.chipBg}}; color: #12131F">{{h.chip}}</span>
+      </div>
+    </sc-for>
+  </section>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 16px; padding: 4px 28px">
+    <section aria-label="Win rate by strategy" style="flex: 1 1 560px; min-width: 0; padding: 20px; border-radius: 16px; background: #1B1D2E; border: 1px solid #34374F">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 19px">Win rate by strategy · 4 players</h2>
+      <p style="margin: 2px 0 14px; font-size: 13px; color: #A9A8B8">Dot = win rate, line = 95% confidence interval. Dashed line = fair share (25%). Red line = the 35% "ready to print" ceiling.</p>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <sc-for list="{{strategies}}" as="s" hint-placeholder-count="11">
+          <div style="display: grid; grid-template-columns: 140px minmax(0, 1fr) 72px; gap: 12px; align-items: center">
+            <span style="font-size: 13px; text-align: right">{{s.name}}</span>
+            <div style="position: relative; height: 22px; border-radius: 4px; background: #12131F">
+              <span style="position: absolute; top: 0; bottom: 0; left: 62.5%; border-left: 1px dashed #6B6E8A"></span>
+              <span style="position: absolute; top: 0; bottom: 0; left: 87.5%; border-left: 2px solid #E7766E"></span>
+              <span style="position: absolute; top: 10px; height: 2px; left: {{s.lo}}; width: {{s.ci}}; background: #A9A8B8"></span>
+              <span style="position: absolute; top: 5px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; left: {{s.x}}; background: {{s.dot}}"></span>
+            </div>
+            <span style="font: 700 13px 'JetBrains Mono', monospace">{{s.wr}}</span>
+          </div>
+        </sc-for>
+        <div style="display: grid; grid-template-columns: 140px minmax(0, 1fr) 72px; gap: 12px; font: 500 11px 'JetBrains Mono', monospace; color: #A9A8B8">
+          <span></span><span style="display: flex; justify-content: space-between"><span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span></span><span></span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Head to head" style="flex: 1 1 560px; min-width: 0; padding: 20px; border-radius: 16px; background: #1B1D2E; border: 1px solid #34374F">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 19px">Head to head · 2 players</h2>
+      <p style="margin: 2px 0 14px; font-size: 13px; color: #A9A8B8">Row strategy's win rate against column strategy, both seat orders. Orange = row wins more, blue = row loses more.</p>
+      <div style="overflow-x: auto">
+        <div style="display: grid; grid-template-columns: 112px repeat(11, minmax(34px, 1fr)); gap: 2px; min-width: 560px; font: 500 11px 'JetBrains Mono', monospace">
+          <span></span>
+          <sc-for list="{{shortNames}}" as="n" hint-placeholder-count="11"><span style="text-align: center; color: #A9A8B8; padding-bottom: 4px">{{n.s}}</span></sc-for>
+          <sc-for list="{{matrix}}" as="r" hint-placeholder-count="11">
+            <span style="font-family: 'Atkinson Hyperlegible', sans-serif; font-size: 12px; text-align: right; padding-right: 6px; align-self: center">{{r.name}}</span>
+            <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="11">
+              <span style="height: 30px; display: grid; place-items: center; border-radius: 3px; background: {{c.bg}}; color: {{c.fg}}">{{c.v}}</span>
+            </sc-for>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 16px 28px 4px">
+    <section aria-label="The Doorway question" style="padding: 20px; border-radius: 16px; background: #1B1D2E; border: 1px solid #F7EBD0">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 19px">Does arriving first make the Doorway irrelevant?</h2>
+      <p style="margin: 2px 0 14px; font-size: 13px; color: #A9A8B8">Average tower at arrival vs. tile size, by arrival order (4p).</p>
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <sc-for list="{{doorway}}" as="d" hint-placeholder-count="4">
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 13px"><b>{{d.place}} · keeps {{d.keep}}</b><span>loses <b style="font-family: 'JetBrains Mono', monospace">{{d.lost}}</b> discs · {{d.share}} lose any</span></div>
+            <div style="position: relative; height: 16px; margin-top: 4px; border-radius: 4px; background: #12131F">
+              <span style="position: absolute; left: 0; top: 0; bottom: 0; width: {{d.towerW}}; background: #6B6E8A; border-radius: 4px"></span>
+              <span style="position: absolute; left: 0; top: 0; bottom: 0; width: {{d.keepW}}; background: #F7EBD0; border-radius: 4px"></span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <p style="margin: 12px 0 0; font-size: 12px; color: #A9A8B8">Light = discs that fit through. Grey beyond it = discs left behind.</p>
+    </section>
+
+    <section aria-label="Seat advantage" style="padding: 20px; border-radius: 16px; background: #1B1D2E; border: 1px solid #34374F">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 19px">Seat advantage</h2>
+      <p style="margin: 2px 0 14px; font-size: 13px; color: #A9A8B8">Win rate minus fair share, by starting stack position. Target: within ±5 points.</p>
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <sc-for list="{{seats}}" as="g" hint-placeholder-count="3">
+          <div>
+            <div style="font-size: 13px; font-weight: 700; margin-bottom: 4px">{{g.label}}</div>
+            <div style="display: flex; gap: 6px; align-items: center; height: 46px">
+              <sc-for list="{{g.bars}}" as="b" hint-placeholder-count="4">
+                <div style="flex: 1; height: 46px; position: relative">
+                  <span style="position: absolute; left: 0; right: 0; top: 23px; border-top: 1px solid #4A4D66"></span>
+                  <span style="position: absolute; left: 20%; right: 20%; top: {{b.top}}; height: {{b.h}}; background: {{b.c}}; border-radius: 2px"></span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display: flex; gap: 6px; font: 500 11px 'JetBrains Mono', monospace; color: #A9A8B8">
+              <sc-for list="{{g.bars}}" as="b" hint-placeholder-count="4"><span style="flex: 1; text-align: center">{{b.label}}</span></sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section aria-label="Where points come from" style="padding: 20px; border-radius: 16px; background: #1B1D2E; border: 1px solid #34374F">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 19px">Where winning points come from</h2>
+      <p style="margin: 2px 0 14px; font-size: 13px; color: #A9A8B8">Average score split for winners, plus how well each part predicts a win.</p>
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <sc-for list="{{components}}" as="c" hint-placeholder-count="4">
+          <div style="display: grid; grid-template-columns: 90px minmax(0, 1fr) 82px; gap: 10px; align-items: center; font-size: 13px">
+            <span>{{c.name}}</span>
+            <span style="height: 14px; border-radius: 4px; background: #12131F; overflow: hidden"><span style="display: block; height: 100%; width: {{c.w}}; background: {{c.color}}"></span></span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px">{{c.pts}} · r={{c.r}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #2C2F45; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; font-size: 13px">
+        <div><b style="font: 800 22px 'Bricolage Grotesque', sans-serif">[x]</b><br><span style="color: #A9A8B8">turns per game (4p)</span></div>
+        <div><b style="font: 800 22px 'Bricolage Grotesque', sans-serif">[x]</b><br><span style="color: #A9A8B8">extra back-to-back turns per player</span></div>
+        <div><b style="font: 800 22px 'Bricolage Grotesque', sans-serif">[x]%</b><br><span style="color: #A9A8B8">of moves are Rush</span></div>
+        <div><b style="font: 800 22px 'Bricolage Grotesque', sans-serif">[x]</b><br><span style="color: #A9A8B8">years saved by experience, per game</span></div>
+      </div>
+    </section>
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 16px; padding: 12px 28px 4px">
+    <section aria-label="Card balance" style="flex: 1 1 560px; min-width: 0; padding: 20px; border-radius: 16px; background: #1B1D2E; border: 1px solid #34374F">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 19px">Cards to look at</h2>
+        <a href="#" style="font-size: 13px">All 60 cards →</a>
+      </div>
+      <p style="margin: 2px 0 12px; font-size: 13px; color: #A9A8B8">Pick rate when visible, and win rate of players who took it (fair = 25%).</p>
+      <div style="overflow-x: auto">
+        <div style="min-width: 520px">
+          <div style="display: grid; grid-template-columns: 76px minmax(0, 1fr) 90px 110px 120px; gap: 10px; font-size: 12px; color: #A9A8B8; padding: 0 0 6px; border-bottom: 1px solid #2C2F45">
+            <span>ID</span><span>Card</span><span>Picked</span><span>Win when taken</span><span>Flag</span>
+          </div>
+          <sc-for list="{{cards}}" as="c" hint-placeholder-count="6">
+            <div style="display: grid; grid-template-columns: 76px minmax(0, 1fr) 90px 110px 120px; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid #23253A; font-size: 13px">
+              <span style="font-family: 'JetBrains Mono', monospace">{{c.id}}</span>
+              <span style="display: flex; align-items: center; gap: 8px"><span style="width: 14px; height: 14px; border-radius: 50%; background: {{c.color}}; flex: none"></span>{{c.name}}</span>
+              <span style="font-family: 'JetBrains Mono', monospace">{{c.pick}}</span>
+              <span style="font-family: 'JetBrains Mono', monospace">{{c.win}}</span>
+              <span style="font: 700 11px 'JetBrains Mono', monospace; padding: 3px 8px; border-radius: 999px; background: {{c.flagBg}}; color: #12131F; justify-self: start">{{c.flag}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Sensitivity sweeps" style="flex: 1 1 560px; min-width: 0; padding: 20px; border-radius: 16px; background: #1B1D2E; border: 1px solid #34374F">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 19px">If we turn one dial…</h2>
+      <p style="margin: 2px 0 12px; font-size: 13px; color: #A9A8B8">Top strategy's win rate (bar) and discs lost by non-first arrivals (number), per value. Baseline outlined.</p>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+        <sc-for list="{{sweeps}}" as="w" hint-placeholder-count="4">
+          <div style="padding: 12px; border-radius: 12px; background: #12131F">
+            <div style="font: 700 12px 'JetBrains Mono', monospace; margin-bottom: 8px">{{w.key}}</div>
+            <div style="display: flex; gap: 8px; align-items: flex-end; height: 92px">
+              <sc-for list="{{w.vals}}" as="v" hint-placeholder-count="4">
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; height: 92px; justify-content: flex-end">
+                  <span style="font: 500 10px 'JetBrains Mono', monospace; color: #A9A8B8">{{v.lost}}</span>
+                  <span style="width: 100%; height: {{v.h}}; background: {{v.c}}; border-radius: 3px; outline: {{v.outline}}; outline-offset: 2px"></span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 6px">
+              <sc-for list="{{w.vals}}" as="v" hint-placeholder-count="4"><span style="flex: 1; text-align: center; font: 500 10px 'JetBrains Mono', monospace; color: #ECE8DF">{{v.label}}</span></sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </div>
+
+  <section aria-label="Suggested rule tweaks" style="margin: 16px 28px 0; padding: 22px; border-radius: 16px; background: #171928; border: 1px solid #F7EBD0">
+    <h2 style="margin: 0 0 4px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px">Suggested rule tweaks</h2>
+    <p style="margin: 0 0 14px; font-size: 13px; color: #A9A8B8">Each one links to the sweep that backs it. Nothing changes in the rules until you accept it in the sandbox.</p>
+    <ol style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 10px">
+      <li><b>[Tweak — e.g. widen the 4p Doorway to 10 / 7 / 5 / 3]</b> <span style="color: #A9A8B8">— because [sweep result]. </span><a href="Sandbox.dc.html">Try it in the sandbox</a></li>
+      <li><b>[Tweak]</b> <span style="color: #A9A8B8">— because [sweep result]. </span><a href="Sandbox.dc.html">Try it in the sandbox</a></li>
+      <li><b>[Tweak]</b> <span style="color: #A9A8B8">— because [sweep result]. </span><a href="Sandbox.dc.html">Try it in the sandbox</a></li>
+    </ol>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1700}}'>
+var STRATS = [
+  ['Lookahead', 'LA', 34], ['Specialist', 'SP', 31], ['Tempo', 'TE', 29], ['Late bloomer', 'LB', 27], ['Passion spec.', 'PS', 27],
+  ['Greedy', 'GR', 25], ['Generalist', 'GE', 24], ['Set collector', 'SC', 23], ['Early leaver', 'EL', 20], ['Rusher', 'RU', 17], ['Random', 'RA', 6]
+];
+function mix(a, b, t) { return Math.round(a + (b - a) * t); }
+function cellColor(v) {
+  var t = Math.min(1, Math.abs(v - 50) / 35);
+  var base = [27, 29, 46];
+  var to = v >= 50 ? [240, 160, 75] : [91, 141, 239];
+  var c = [mix(base[0], to[0], t), mix(base[1], to[1], t), mix(base[2], to[2], t)];
+  return { bg: 'rgb(' + c.join(',') + ')', fg: t > 0.55 ? '#12131F' : '#ECE8DF' };
+}
+class Component extends DCLogic {
+  renderVals() {
+    var strategies = STRATS.map(function (s) {
+      var ci = s[2] > 10 ? 1.4 : 0.8;
+      return { name: s[0], wr: s[2] + '%', x: (s[2] / 40 * 100) + '%', lo: ((s[2] - ci) / 40 * 100) + '%', ci: (2 * ci / 40 * 100) + '%', dot: s[2] > 35 ? '#E7766E' : '#F7EBD0' };
+    });
+    var matrix = STRATS.map(function (r) {
+      return { name: r[0], cells: STRATS.map(function (c) {
+        if (r === c) return { v: '—', bg: '#12131F', fg: '#6B6E8A' };
+        var v = Math.max(5, Math.min(95, Math.round(50 + (r[2] - c[2]) * 1.6)));
+        var col = cellColor(v);
+        return { v: v, bg: col.bg, fg: col.fg };
+      }) };
+    });
+    return {
+      headlines: [
+        { q: 'Does any strategy dominate?', a: '[Answer]', detail: 'Top strategy wins [x]% of 4p games (ceiling 35%).', chip: 'BALANCE', chipBg: '#F7EBD0', border: '#34374F' },
+        { q: 'Does arriving 1st make the Doorway irrelevant?', a: '[Answer]', detail: '1st arrivals lose [x] discs on average; 4th lose [x].', chip: 'HEADLINE', chipBg: '#5FD3E6', border: '#5FD3E6' },
+        { q: 'Is there a seat advantage?', a: '[Answer]', detail: 'Top of the starting stack wins [x] pts above fair share.', chip: 'SEATS', chipBg: '#F7EBD0', border: '#34374F' },
+        { q: 'Is Rush worth it?', a: '[Answer]', detail: 'Players who rush 3+ times win [x]% vs [x]%.', chip: 'TEMPO', chipBg: '#F7EBD0', border: '#34374F' }
+      ],
+      strategies: strategies,
+      shortNames: STRATS.map(function (s) { return { s: s[1] }; }),
+      matrix: matrix,
+      doorway: [
+        { place: '1st', keep: 9, lost: '[x]', share: '[x]%', towerW: '58%', keepW: '56%' },
+        { place: '2nd', keep: 8, lost: '[x]', share: '[x]%', towerW: '64%', keepW: '50%' },
+        { place: '3rd', keep: 7, lost: '[x]', share: '[x]%', towerW: '68%', keepW: '44%' },
+        { place: '4th', keep: 6, lost: '[x]', share: '[x]%', towerW: '74%', keepW: '38%' }
+      ],
+      seats: [
+        { label: '2 players', bars: [{ label: 'top', top: '13px', h: '10px', c: '#F0A04B' }, { label: '2nd', top: '23px', h: '10px', c: '#5B8DEF' }] },
+        { label: '3 players', bars: [{ label: 'top', top: '15px', h: '8px', c: '#F0A04B' }, { label: '2nd', top: '21px', h: '2px', c: '#F0A04B' }, { label: '3rd', top: '23px', h: '10px', c: '#5B8DEF' }] },
+        { label: '4 players', bars: [{ label: 'top', top: '11px', h: '12px', c: '#F0A04B' }, { label: '2nd', top: '19px', h: '4px', c: '#F0A04B' }, { label: '3rd', top: '23px', h: '5px', c: '#5B8DEF' }, { label: '4th', top: '23px', h: '11px', c: '#5B8DEF' }] }
+      ],
+      components: [
+        { name: 'Cards', w: '62%', pts: '[x] pts', r: '[x]', color: '#ECE8DF' },
+        { name: 'Full life', w: '18%', pts: '[x] pts', r: '[x]', color: '#6CB6D6' },
+        { name: 'Passion', w: '12%', pts: '[x] pts', r: '[x]', color: '#E7766E' },
+        { name: 'Reflection', w: '8%', pts: '[x] pts', r: '[x]', color: '#8E8FA8' }
+      ],
+      cards: [
+        { id: 'GD-O3', name: 'Teach what you know', color: '#E9B949', pick: '[x]%', win: '[x]%', flag: 'STRONG', flagBg: '#E7766E' },
+        { id: 'OR-O2', name: 'Make peace with it', color: '#F08A3C', pick: '[x]%', win: '[x]%', flag: 'STRONG', flagBg: '#E7766E' },
+        { id: 'GD-M3', name: 'Quit the good job', color: '#E9B949', pick: '[x]%', win: '[x]%', flag: 'WATCH', flagBg: '#F7EBD0' },
+        { id: 'GR-M2', name: 'Learn to rest', color: '#57C785', pick: '[x]%', win: '[x]%', flag: 'WEAK', flagBg: '#6CB6D6' },
+        { id: 'OR-M2', name: 'Old friends', color: '#F08A3C', pick: '[x]%', win: '[x]%', flag: 'WEAK', flagBg: '#6CB6D6' },
+        { id: 'PU-Y2', name: 'Say yes more', color: '#A48BFF', pick: '[x]%', win: '[x]%', flag: 'UNUSED', flagBg: '#8E8FA8' }
+      ],
+      sweeps: [
+        { key: 'doorway.4p', vals: [{ label: '9/8/7/6', h: '62px', c: '#F7EBD0', outline: '2px solid #F7EBD0', lost: '[x]' }, { label: '10/7/5/3', h: '50px', c: '#6B6E8A', outline: 'none', lost: '[x]' }, { label: '8/7/6/5', h: '68px', c: '#6B6E8A', outline: 'none', lost: '[x]' }] },
+        { key: 'experienceCap', vals: [{ label: '2', h: '44px', c: '#6B6E8A', outline: 'none', lost: '[x]' }, { label: '3', h: '52px', c: '#6B6E8A', outline: 'none', lost: '[x]' }, { label: '4', h: '62px', c: '#F7EBD0', outline: '2px solid #F7EBD0', lost: '[x]' }, { label: 'none', h: '70px', c: '#6B6E8A', outline: 'none', lost: '[x]' }] },
+        { key: 'fullLifeBonus', vals: [{ label: '4', h: '66px', c: '#6B6E8A', outline: 'none', lost: '[x]' }, { label: '6', h: '62px', c: '#F7EBD0', outline: '2px solid #F7EBD0', lost: '[x]' }, { label: '8', h: '56px', c: '#6B6E8A', outline: 'none', lost: '[x]' }, { label: '10', h: '60px', c: '#6B6E8A', outline: 'none', lost: '[x]' }] },
+        { key: 'passion', vals: [{ label: '2/4/7', h: '54px', c: '#6B6E8A', outline: 'none', lost: '[x]' }, { label: '3/6/10', h: '62px', c: '#F7EBD0', outline: '2px solid #F7EBD0', lost: '[x]' }, { label: '4/8/14', h: '72px', c: '#6B6E8A', outline: 'none', lost: '[x]' }] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

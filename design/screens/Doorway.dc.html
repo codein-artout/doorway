@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Doorway — choose your stretch</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#12131F}
+a{color:#F7EBD0}a:hover{color:#FFFFFF}
+@keyframes eyb-fall{0%{opacity:1;transform:none}100%{opacity:.18;transform:translateX(-18px)}}
+@keyframes eyb-glow{0%,100%{box-shadow:0 0 50px rgba(247,235,208,.30)}50%{box-shadow:0 0 80px rgba(247,235,208,.50)}}
+.eyb-fall{animation:eyb-fall .5s ease-out forwards}
+.eyb-glow{animation:eyb-glow 3.2s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.eyb-fall,.eyb-glow{animation:none}}
+button{font:inherit}
+button:focus-visible{outline:2px solid #F7EBD0;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; min-height: 940px; background: #12131F; color: #ECE8DF; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 15px; line-height: 1.45; padding: 28px">
+  <div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 24px; margin-bottom: 20px">
+    <div style="flex: 1 1 520px">
+      <div style="font: 700 12px 'JetBrains Mono', monospace; letter-spacing: 0.06em; color: #A9A8B8; text-transform: uppercase">You arrived · 2nd of 4</div>
+      <h1 style="margin: 4px 0 6px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -0.015em; line-height: 1.05">The Doorway is small.</h1>
+      <p style="margin: 0; max-width: 620px">You lived 13 memories. You can carry <b>one unbroken stretch of 9</b> through. Everything outside it stays behind.</p>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap">
+      <span style="padding: 8px 12px; border-radius: 10px; background: #F7EBD0; color: #12131F; font-size: 14px"><b>2nd tile · 8</b></span>
+      <span style="padding: 8px 12px; border-radius: 10px; background: #24273B; font-size: 14px">+1 from <b>Make peace with it</b></span>
+      <span style="padding: 8px 12px; border-radius: 10px; border: 1px solid #F7EBD0; font-size: 14px">= keep <b>9</b></span>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+    <section aria-label="Your tower" style="flex: 1 1 460px; min-width: 0; padding: 20px; border-radius: 18px; background: #1B1D2E; border: 1px solid #34374F">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px">
+        <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px">Your tower</h2>
+        <span style="font-size: 13px; color: #A9A8B8">top = most recent</span>
+      </div>
+      <div role="listbox" aria-label="Choose the stretch you keep" style="display: flex; flex-direction: column; gap: 3px">
+        <sc-for list="{{discs}}" as="d" hint-placeholder-count="13">
+          <div class="{{d.cls}}" style="display: grid; grid-template-columns: 14px 26px 220px minmax(0, 1fr) 54px; align-items: center; gap: 10px; opacity: {{d.opacity}}">
+            <span style="align-self: stretch; border-left: {{d.bracket}}; border-top: {{d.capTop}}; border-bottom: {{d.capBottom}}; margin: -2px 0"></span>
+            <span style="font: 500 11px 'JetBrains Mono', monospace; color: #A9A8B8; text-align: right">{{d.n}}</span>
+            <button type="button" onClick="{{d.jump}}" aria-label="{{d.aria}}" style="height: 34px; border-radius: 17px; border: none; background: {{d.color}}; color: #12131F; display: flex; align-items: center; gap: 8px; padding: 0 14px; cursor: pointer; box-shadow: inset 0 -4px 0 rgba(0,0,0,.18)">
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #12131F; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round"><path d="{{d.icon}}"></path></svg>
+              <span style="font: 700 12px 'JetBrains Mono', monospace">{{d.code}}</span>
+              <span style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{d.name}}</span>
+            </button>
+            <span style="font-size: 12px; color: {{d.noteColor}}">{{d.note}}</span>
+            <span style="font: 700 13px 'JetBrains Mono', monospace; text-align: right">{{d.pts}}</span>
+          </div>
+        </sc-for>
+        <div style="margin: 6px 0 0 50px; width: 236px; height: 10px; border-radius: 3px; background: #4A4D66"></div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px">
+        <button type="button" onClick="{{up}}" disabled="{{atTop}}" style="min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #34374F; background: #24273B; color: #ECE8DF; cursor: pointer">Slide up ↑</button>
+        <button type="button" onClick="{{down}}" disabled="{{atBottom}}" style="min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #34374F; background: #24273B; color: #ECE8DF; cursor: pointer">Slide down ↓</button>
+        <button type="button" onClick="{{hint}}" aria-pressed="{{showHint}}" style="min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px dashed #A9A8B8; background: transparent; color: #ECE8DF; cursor: pointer">{{hintLabel}}</button>
+      </div>
+      <p style="margin: 10px 0 0; font-size: 13px; color: #A9A8B8">Tap any disc to start the stretch there. The stretch must be unbroken.</p>
+    </section>
+
+    <section aria-label="Score preview" style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+      <div style="display: flex; gap: 20px; align-items: center; padding: 22px; border-radius: 18px; background: #1B1D2E; border: 1px solid #F7EBD0">
+        <div class="eyb-glow" style="width: 120px; height: 150px; flex: none; border-radius: 60px 60px 8px 8px; background: #F7EBD0; color: #12131F; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 16px; box-sizing: border-box">
+          <span style="font: 800 44px 'Bricolage Grotesque', sans-serif; line-height: 1">{{total}}</span>
+          <span style="font-size: 12px">points</span>
+        </div>
+        <div style="flex: 1; min-width: 0">
+          <div style="font-size: 13px; color: #A9A8B8">Keeping discs {{from}}–{{to}}</div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 10px">
+            <sc-for list="{{parts}}" as="p" hint-placeholder-count="4">
+              <div style="padding: 10px 12px; border-radius: 12px; background: #12131F">
+                <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 13px; color: #A9A8B8">{{p.label}}</span><b style="font: 700 20px 'JetBrains Mono', monospace">{{p.value}}</b></div>
+                <div style="font-size: 12px; color: #ECE8DF; margin-top: 2px">{{p.why}}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding: 18px 20px; border-radius: 18px; background: #1B1D2E; border: 1px solid #34374F">
+        <h2 style="margin: 0 0 4px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 17px">Every stretch you could keep</h2>
+        <p style="margin: 0 0 12px; font-size: 13px; color: #A9A8B8">{{compareNote}}</p>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <sc-for list="{{windows}}" as="w" hint-placeholder-count="5">
+            <button type="button" onClick="{{w.pick}}" aria-pressed="{{w.on}}" style="display: grid; grid-template-columns: 76px minmax(0, 1fr) 40px; gap: 10px; align-items: center; min-height: 36px; padding: 0 8px; border-radius: 10px; border: 1px solid {{w.border}}; background: {{w.bg}}; color: #ECE8DF; cursor: pointer; text-align: left">
+              <span style="font: 500 12px 'JetBrains Mono', monospace">{{w.label}}</span>
+              <span style="height: 12px; border-radius: 6px; background: #12131F; overflow: hidden"><span style="display: block; height: 100%; width: {{w.pct}}; background: {{w.bar}}; border-radius: 6px"></span></span>
+              <b style="font: 700 14px 'JetBrains Mono', monospace; text-align: right">{{w.total}}</b>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+        <sc-if value="{{notLocked}}" hint-placeholder-val="{{ true }}">
+          <button type="button" onClick="{{lock}}" style="min-height: 52px; padding: 0 26px; border-radius: 14px; border: none; background: #F7EBD0; color: #12131F; font-weight: 700; font-size: 17px; cursor: pointer">Walk through with discs {{from}}–{{to}}</button>
+          <span style="font-size: 13px; color: #A9A8B8">You can also wait — nobody else is affected by your choice.</span>
+        </sc-if>
+        <sc-if value="{{locked}}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="padding: 14px 18px; border-radius: 14px; background: #24273B; border: 1px solid #F7EBD0">Through the Doorway with {{total}} points. {{dropped}} memories stayed behind. <button type="button" onClick="{{unlock}}" style="margin-left: 8px; background: none; border: none; color: #F7EBD0; text-decoration: underline; cursor: pointer; min-height: 32px">Change (demo)</button></div>
+        </sc-if>
+      </div>
+
+      <div style="padding: 14px 18px; border-radius: 14px; background: #171928; font-size: 13px; color: #A9A8B8">
+        Already through: <b style="color: #ECE8DF">Kavi</b> (1st, kept 9 of 9). Still on the path: <b style="color: #ECE8DF">Arun</b> at 37, <b style="color: #ECE8DF">Meera</b> at 34.
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"bestHintAvailable":{"editor":"boolean","default":true},"$preview":{"width":1440,"height":940}}'>
+var ICONS = {
+  pink: 'M12 20.5s-7.5-4.6-7.5-10.4A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2.5c0 5.8-7.5 10.4-7.5 10.4z',
+  gold: 'M5 5h8.5L16 7.5 13.5 10H5zM9.5 10v10',
+  green: 'M12 2.5l6 7.5-6 8-6-8zM12 18c0 2-2.5 2-2.5 3.5',
+  orange: 'M3.5 11.5L12 4.5l8.5 7M6 10v10h12V10M10 20v-5h4v5',
+  purple: 'M12 3l2.5 5.4 5.9.6-4.4 4 1.3 5.8L12 15.9l-5.3 2.9L8 13l-4.4-4 5.9-.6z'
+};
+var COLORS = { pink: '#F07AA8', gold: '#E9B949', green: '#57C785', orange: '#F08A3C', purple: '#A48BFF' };
+var DOMS = { pink: ['Love', 'Lv'], gold: ['Work', 'Wk'], green: ['Play', 'Pl'], orange: ['Family', 'Fm'], purple: ['Wonder', 'Wd'] };
+var ORDER = ['pink', 'gold', 'green', 'orange', 'purple'];
+var TOWER = [
+  { id: 'PU-Y1', name: 'See the sea', dom: 'purple', pts: 1 },
+  { id: 'GR-Y2', name: 'Keep a diary', dom: 'green', pts: 1 },
+  { id: 'GD-Y1', name: 'First job', dom: 'gold', pts: 1 },
+  { id: 'GD-Y3', name: 'Learn a trade', dom: 'gold', pts: 2 },
+  { id: 'GD-M2', name: 'Get very good at something', dom: 'gold', pts: 3 },
+  { id: 'PK-Y5', name: 'Fall in love', dom: 'pink', pts: 3 },
+  { id: 'OR-M3', name: 'Raise someone', dom: 'orange', pts: 4 },
+  { id: 'PU-M2', name: 'Live somewhere new', dom: 'purple', pts: 3 },
+  { id: 'GR-M3', name: 'Get good at something useless', dom: 'green', pts: 3 },
+  { id: 'GD-O3', name: 'Teach what you know', dom: 'gold', pts: 4, refl: 'gold', note: 'Reflection: +1 per kept Work' },
+  { id: 'OR-O2', name: 'Make peace with it', dom: 'orange', pts: 3, note: 'Power: keep 1 extra (active anyway)' },
+  { id: 'PK-O1', name: 'Still holding hands', dom: 'pink', pts: 3 },
+  { id: 'PU-O1', name: 'Stand somewhere very old', dom: 'purple', pts: 3 }
+];
+var KEEP = 9;
+function passion(r) { return r >= 5 ? 10 : r === 4 ? 6 : r === 3 ? 3 : 0; }
+function scoreWindow(start) {
+  var kept = TOWER.slice(start, start + KEEP), cards = 0, counts = {}, run = 0, best = 0, bestDom = null, prev = null;
+  kept.forEach(function (d) {
+    cards += d.pts; counts[d.dom] = (counts[d.dom] || 0) + 1;
+    run = d.dom === prev ? run + 1 : 1; prev = d.dom;
+    if (run > best) { best = run; bestDom = d.dom; }
+  });
+  var sets = Math.min.apply(null, ORDER.map(function (k) { return counts[k] || 0; }));
+  var refl = 0, reflWhy = 'No Reflection card kept';
+  kept.forEach(function (d) { if (d.refl) { refl += counts[d.refl]; reflWhy = 'Teach what you know × ' + counts[d.refl] + ' Work'; } });
+  var missing = ORDER.filter(function (k) { return !counts[k]; }).map(function (k) { return DOMS[k][0]; });
+  return {
+    cards: cards, sets: sets * 6, passion: passion(best), refl: refl, total: cards + sets * 6 + passion(best) + refl,
+    setsWhy: sets ? sets + ' complete set of all five' : 'Missing ' + missing.join(', '),
+    passionWhy: best >= 3 ? best + ' ' + DOMS[bestDom][0] + ' in a row' : 'Longest run is ' + best,
+    reflWhy: reflWhy, cardsWhy: kept.length + ' cards kept'
+  };
+}
+var MAXSTART = TOWER.length - KEEP;
+var BEST = 0;
+(function () { var b = -1; for (var i = 0; i <= MAXSTART; i++) { var t = scoreWindow(i).total; if (t > b) { b = t; BEST = i; } } })();
+
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { start: 0, showHint: false, locked: false }; }
+  renderVals() {
+    var self = this, s = this.state;
+    var start = s.start, end = start + KEEP - 1;
+    var sc = scoreWindow(start);
+    var hintOk = this.props.bestHintAvailable !== false;
+    var discs = TOWER.map(function (d, i) {
+      var kept = i >= start && i <= end;
+      var isBest = s.showHint && i >= BEST && i < BEST + KEEP;
+      return { i: i, n: i + 1, kept: kept, d: d,
+        color: COLORS[d.dom], icon: ICONS[d.dom], code: DOMS[d.dom][1], name: d.name, pts: d.pts + ' pt',
+        opacity: kept ? 1 : 0.32, cls: s.locked && !kept ? 'eyb-fall' : '',
+        bracket: kept ? '3px solid #F7EBD0' : isBest ? '3px dashed #A9A8B8' : '3px solid transparent',
+        capTop: kept && i === end ? '3px solid #F7EBD0' : '0', capBottom: kept && i === start ? '3px solid #F7EBD0' : '0',
+        note: kept ? (d.note || '') : 'stays behind', noteColor: kept ? '#ECE8DF' : '#A9A8B8',
+        aria: 'Disc ' + (i + 1) + ', ' + DOMS[d.dom][0] + ', ' + d.name + (kept ? ', kept' : ', stays behind'),
+        jump: function () { if (s.locked) return; var st = Math.max(0, Math.min(MAXSTART, i)); if (i > end) st = Math.max(0, Math.min(MAXSTART, i - KEEP + 1)); self.setState({ start: st }); }
+      };
+    }).reverse();
+    var maxTotal = 0, windows = [];
+    for (var w = 0; w <= MAXSTART; w++) { var t = scoreWindow(w).total; if (t > maxTotal) maxTotal = t; }
+    for (var w2 = MAXSTART; w2 >= 0; w2--) {
+      (function (ws) {
+        var t = scoreWindow(ws).total, on = ws === start, best = s.showHint && ws === BEST;
+        windows.push({ label: 'discs ' + (ws + 1) + '–' + (ws + KEEP), total: t, pct: Math.round(t / maxTotal * 100) + '%', on: on,
+          bg: on ? '#24273B' : 'transparent', border: on ? '#F7EBD0' : best ? '#A9A8B8' : '#2C2F45', bar: on ? '#F7EBD0' : '#6B6E8A',
+          pick: function () { if (!s.locked) self.setState({ start: ws }); } });
+      })(w2);
+    }
+    return {
+      discs: discs, windows: windows, total: sc.total, from: start + 1, to: end + 1,
+      parts: [
+        { label: 'Cards', value: sc.cards, why: sc.cardsWhy },
+        { label: 'Full life', value: sc.sets, why: sc.setsWhy },
+        { label: 'Passion', value: sc.passion, why: sc.passionWhy },
+        { label: 'Reflection', value: sc.refl, why: sc.reflWhy }
+      ],
+      compareNote: s.showHint ? 'Best stretch is outlined. Hint is off in blind playtests.' : 'Bars update as you slide. Taller is better.',
+      atTop: start >= MAXSTART || s.locked, atBottom: start <= 0 || s.locked,
+      showHint: s.showHint, hintLabel: hintOk ? (s.showHint ? 'Hide best stretch' : 'Show best stretch') : 'Hint off (blind test)',
+      locked: s.locked, notLocked: !s.locked, dropped: TOWER.length - KEEP,
+      up: function () { self.setState({ start: Math.min(MAXSTART, s.start + 1) }); },
+      down: function () { self.setState({ start: Math.max(0, s.start - 1) }); },
+      hint: function () { if (hintOk) self.setState({ showHint: !s.showHint }); },
+      lock: function () { self.setState({ locked: true }); },
+      unlock: function () { self.setState({ locked: false }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Join a table — phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#12131F}
+a{color:#F7EBD0}a:hover{color:#FFFFFF}
+button,input{font:inherit}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid #F7EBD0;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 1180px; box-sizing: border-box; background: #12131F; color: #ECE8DF; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 15px; line-height: 1.45; padding: 20px 16px 28px">
+  <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 17px">Doorway</div>
+
+  <section style="margin-top: 18px; padding: 22px 18px; border-radius: 20px; background: #1B1D2E; border: 1px solid #F7EBD0; position: relative; overflow: hidden">
+    <span aria-hidden="true" style="position: absolute; right: -10px; top: -6px; width: 88px; height: 110px; border-radius: 44px 44px 6px 6px; background: #F7EBD0; opacity: 0.12"></span>
+    <div style="font: 700 11px 'JetBrains Mono', monospace; letter-spacing: 0.06em; color: #A9A8B8; text-transform: uppercase">Room K7QX2P</div>
+    <h1 style="margin: 6px 0 8px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; line-height: 1.05; letter-spacing: -0.015em">Priya saved you a seat.</h1>
+    <p style="margin: 0 0 18px; color: #A9A8B8; font-size: 14px">One life, one hour, and the stretch of it you get to keep. No account needed.</p>
+    <label style="display: flex; flex-direction: column; gap: 6px">
+      <span style="font-weight: 700">Your nickname</span>
+      <input type="text" value="Meera" maxlength="20" autocomplete="nickname" style="min-height: 52px; padding: 0 16px; border-radius: 14px; border: 1px solid #34374F; background: #12131F; color: #ECE8DF; font-size: 18px">
+    </label>
+    <button type="button" style="width: 100%; margin-top: 12px; min-height: 54px; border-radius: 14px; border: none; background: #F7EBD0; color: #12131F; font-weight: 700; font-size: 17px">Take a seat</button>
+    <p style="margin: 12px 0 0; font-size: 12px; color: #A9A8B8">We keep your nickname and your game moves. Nothing else.</p>
+  </section>
+
+  <section aria-label="Who's here" style="margin-top: 16px; padding: 16px; border-radius: 16px; background: #1B1D2E; border: 1px solid #34374F">
+    <h2 style="margin: 0 0 10px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 17px">At the table</h2>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; align-items: center; gap: 10px"><span style="width: 30px; height: 30px; border-radius: 50%; background: #ECE8DF; color: #12131F; display: grid; place-items: center; font: 700 12px 'JetBrains Mono', monospace">P</span><span><b>Priya</b> <span style="font-size: 12px; color: #A9A8B8">host</span></span></div>
+      <div style="display: flex; align-items: center; gap: 10px"><span style="width: 30px; height: 30px; border-radius: 50%; background: #ECE8DF; color: #12131F; display: grid; place-items: center; font: 700 12px 'JetBrains Mono', monospace; outline: 2px dashed #A9A8B8; outline-offset: 2px">B</span><span><b>Bot · Tempo</b> <span style="font-size: 12px; color: #A9A8B8">normal</span></span></div>
+      <div style="display: flex; align-items: center; gap: 10px"><span style="width: 30px; height: 30px; border-radius: 50%; border: 2px dashed #F7EBD0; box-sizing: border-box; color: #F7EBD0; display: grid; place-items: center; font: 700 12px 'JetBrains Mono', monospace">M</span><span><b>You</b> <span style="font-size: 12px; color: #F7EBD0">seat 3 — joining</span></span></div>
+      <div style="display: flex; align-items: center; gap: 10px"><span style="width: 30px; height: 30px; border-radius: 50%; background: #34374F"></span><span style="color: #A9A8B8">Open seat</span></div>
+    </div>
+  </section>
+
+  <section aria-label="How to play" style="margin-top: 16px; padding: 16px; border-radius: 16px; background: #171928">
+    <h2 style="margin: 0 0 10px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 17px">How to play, in five breaths</h2>
+    <ol style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px">
+      <li><b>One life, 40 years.</b> At the end is the Doorway.</li>
+      <li><b>Quest:</b> spend years, stack a memory disc on your tower.</li>
+      <li><b>Furthest back goes next.</b> Cheap quests buy extra turns.</li>
+      <li><b>Or rush</b> just past the nearest pawn ahead.</li>
+      <li><b>Keep one unbroken stretch.</b> Arrive early to keep more.</li>
+    </ol>
+    <button type="button" style="width: 100%; margin-top: 14px; min-height: 48px; border-radius: 12px; border: 1px solid #F7EBD0; background: transparent; color: #F7EBD0; font-weight: 700">Play the 2-minute tutorial</button>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
