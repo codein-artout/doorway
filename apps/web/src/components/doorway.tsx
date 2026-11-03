@@ -77,9 +77,8 @@ function Rows({
         return (
           <div
             key={i}
-            className={`grid items-center gap-2.5 dw-tween ${locked && !kept ? 'dw-left-behind' : ''}`}
+            className={`grid grid-cols-[14px_26px_minmax(0,1fr)_44px] md:grid-cols-[14px_26px_minmax(0,220px)_minmax(0,1fr)_54px] items-center gap-2.5 dw-tween ${locked && !kept ? 'dw-left-behind' : ''}`}
             style={{
-              gridTemplateColumns: '14px 26px minmax(0,220px) minmax(0,1fr) 54px',
               opacity: 1,
               transform: locked && !kept ? 'translateX(-18px)' : locked && kept ? 'translateY(-4px)' : 'none',
               transitionDelay:
@@ -129,7 +128,7 @@ function Rows({
               <span className="truncate text-[13px] font-bold">{c.name}</span>
               <span className="sr-only">{`, disc ${i + 1}, ${DOMAIN[c.color].name}${kept ? ', kept' : ', stays behind'}. Start the stretch here.`}</span>
             </button>
-            <span className="text-xs" style={{ color: kept ? 'var(--text)' : 'var(--muted)' }}>
+            <span className="hidden text-xs md:block" style={{ color: kept ? 'var(--text)' : 'var(--muted)' }}>
               {note}
             </span>
             <span className="text-right font-mono text-[13px] font-bold">{c.points} pt</span>
@@ -324,7 +323,7 @@ export function DoorwaySelect({
                     aria-pressed={on}
                     className="grid min-h-9 cursor-pointer items-center gap-2.5 rounded-[10px] px-2 text-left text-text"
                     style={{
-                      gridTemplateColumns: '76px minmax(0,1fr) 40px',
+                      gridTemplateColumns: '96px minmax(0,1fr) 40px',
                       border: `1px solid ${on ? 'var(--door)' : best ? 'var(--muted)' : 'var(--line-soft)'}`,
                       background: on ? 'var(--surface-2)' : 'transparent',
                     }}
@@ -374,6 +373,17 @@ export function DoorwaySelect({
           )}
         </section>
       </div>
+      {!locked && (
+        <div className="sticky bottom-0 z-20 flex items-center gap-3 rounded-t-2xl border border-door bg-surface px-4 py-3 md:hidden">
+          <span className="font-display text-[28px] font-extrabold">{sc.total}</span>
+          <span className="flex-1 text-xs text-muted">
+            points with discs {start + 1}–{end + 1}
+          </span>
+          <button type="button" onClick={lock} className="min-h-[48px] cursor-pointer rounded-xl border-none bg-door px-4 font-bold text-ink">
+            Walk through
+          </button>
+        </div>
+      )}
     </div>
   );
 }

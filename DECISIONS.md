@@ -60,3 +60,57 @@ Every judgement call made while building, with date, decision, why and alternati
 ### D-TEST-1 — Property-test budget (2026-11-03)
 - **Decision:** 10,000 random 1–4p default games (fast-check, fixed seed 20261103) plus 1,000 minCost = 0, 1,000 alternative-Doorway and 1,000 solo games. On every step: invariants, and `legalMoves ⟺ apply` on three candidates (two from a "move universe" of in- and out-of-market quests with every power-flag combination, rushes with every discard, out-of-range swaps and windows; one legal move). Every 200th game (40th for variants) checks the whole universe exhaustively. Replays compare players + scores for every game and the full `stateHash` for 10%.
 - **Why:** exhaustive checks on every state take ~5 minutes; this keeps `pnpm test` around 30–40 s while still covering every move shape.
+
+## Bots and simulation
+
+### D-BOT-1 — Bot interface and features (2026-11-03)
+- **Decision:** every bot implements `BotPolicy { id, label, params, choose(view, rng) }`. `BotView.state` is the public state with decks *sorted by id* (the set of unseen cards is public, the order is not — R15) and the RNG state blanked. Weighted strategies score each legal move as Σ weight × feature (features in `packages/bots/src/features.ts`); weights/params live in `packages/bots/strategies.json`.
+- The "projected window" used by features is the top `allowance − expectedFutureDiscs` discs of the tower, where the allowance is projected from the current race position and future discs = years left ÷ `avgYears`.
+- Pending swaps use one shared chooser (best projected-window value); windows are always the engine's `bestWindow` (spec §6).
+
+### D-BOT-2 — Lookahead budget (2026-11-03)
+- **Decision:** flat determinized Monte Carlo with common random numbers: 16 determinizations × up to 6 candidate moves (top quests by points/year, plain rush, best denying discard), greedy rollouts. Budget is counted in rollouts, not milliseconds, so it is deterministic. Measured: ~7 ms/move in 2p, ~250 ms per 4p game with one lookahead seat (target ≤ 3 s), beats greedy ~80% in 2p (test requires > 60%).
+- **Alternatives:** ms-based budgets (non-deterministic across machines), MCTS (more code, little gain at this budget).
+
+### D-BOT-3 — Bot RNG in the browser (2026-11-03)
+- **Decision:** in the web client each bot decision seeds its stream from `botSeed(seed, seat, policy) + '|m' + moveIndex`, so undo/redo and reloads reproduce the same bot choices. The simulator keeps one continuous stream per seat. Both satisfy R30 (own stream, deal unaffected).
+
+### D-SIM-1 — Seat mode `field` and explicit seat lists (2026-11-03)
+- **Decision:** besides `rotate | fixed | all-permutations`, the CLI accepts `--seats field` (each seat drawn uniformly from `--bots`, seeded per game); the study can pass explicit seat lists (S2 uses all 990 / 7,920 ordered seatings of distinct strategies).
+
+### D-SIM-2 — Paired seeds across sweep values (2026-11-03)
+- **Decision:** game *g* uses seed `<seed>|g<g>` for every sweep value, so variants are compared on identical deals (common random numbers). Value labels write lists with `/` (`doorway.4=10/7/5/3`) so they never break CSV cells.
+
+### D-SIM-3 — S4 lookahead budget (2026-11-03)
+- **Decision:** in the S4 sweep fields the lookahead seat runs at 4 determinizations × 5 candidates (about 4× cheaper). S4C re-runs `doorway.4` and `experienceCap` with 2,000 games per value where every game has one full-budget lookahead seat (the prompt's "confirm the top findings with 2k games that include lookahead").
+
+### D-SIM-4 — Chunked, resumable study (2026-11-03)
+- **Decision:** runs are split into chunks (125–500 games) written atomically to `reports/runs/<run>/chunks/`. `--resume` skips existing chunks; `study.ts --budget-min 22` processes runs until the time budget is spent, so each background job stays under 25 minutes and is restarted until the plan is complete.
+
+### D-SIM-5 — Statistics (2026-11-03)
+- Win rates count a k-way shared win as 1/k (R28) with Wilson 95% intervals over player-games. Card "win when picked" is the picker's mean win share relative to fair share (1/n), 95% CI by normal approximation; flagged when the CI clears fair by more than ±10%. Predictors of winning: logistic regression (IRLS) on standardized components plus point-biserial correlations, on up to 60,000 4p player-games.
+- Seat advantage pass/fail uses percentage points (±5 pts) per R45; the relative reading is reported alongside.
+
+## Web app
+
+### D-WEB-1 — GameClient boundary (2026-11-03)
+- **Decision:** the table talks only to `GameClient` (`getSnapshot / subscribe / submit / undo / setBotSpeed / toReplay`). `LocalGameClient` runs the engine in the page and bots in a Web Worker (`workers/bot.worker.ts`). A networked client (server-authoritative engine, rooms, R32 online undo with `revealAt`) can implement the same interface later. Moves are plain serializable actions; a replay is `{ ruleset, seed, seats, moves }` (format `doorway-replay@1`, ruleset embedded so custom rulesets travel).
+- Persistence is localStorage only (current game, finished games, custom rulesets, settings, tips seen), every access wrapped in try/catch.
+
+### D-WEB-2 — Local undo semantics (2026-11-03)
+- **Decision (R32, local):** Undo reverts the most recent *human* move and every bot move after it; unlimited. In all-bot games it steps back one move.
+
+### D-WEB-3 — Once-per-game power toggles (2026-11-03)
+- **Decision:** *Old friends* / *Say yes more* appear as checkboxes in the action bar only when the player holds the unused power **and** some face-up card would need it (R17/R18). Cards that need a power are clickable only while it is ticked; the move sent to the engine sets the flag exactly when needed.
+
+### D-WEB-4 — Best-window hint (2026-11-03)
+- **Decision:** following `Doorway.dc.html`, the hint is a toggle ("Show best stretch") that is available by default and disabled in Blind test ("Hint off (blind test)"). The live score preview always updates (R35).
+
+### D-WEB-5 — Deferred UI from the mockups (2026-11-03)
+- The "Something feels off" flag (R37), the privacy footer (R40), the survey (R36), room codes and invite/join are later features (BUILD_PROMPT §7) and are not shown in the local build. The header shows `LOCAL · n players · ruleset · seed` where the mockup shows the room code.
+
+### D-WEB-6 — Faded discs without opacity (2026-11-03)
+- **Decision:** "left behind" discs are drawn with a 30% colour-mix of the domain colour over the surface (≈ the 25–32% opacity of DESIGN.md) instead of CSS opacity, so text on them keeps WCAG contrast and axe passes. Heatmap cells pick whichever text colour reaches 4.5:1 and deepen the fill until one does.
+
+### D-WEB-7 — Tailwind token names (2026-11-03)
+- `--base` (tower base plate) is exposed to Tailwind as `plate`, because a `base` colour collides with Tailwind's `text-base` font-size utility.
