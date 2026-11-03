@@ -27,7 +27,7 @@
 ## Verification (fresh clone of the pushed branch, 2026-11-04 ~00:00 UTC)
 - `pnpm install`, `pnpm lint`, `pnpm typecheck`: pass.
 - `pnpm test`: 201 tests in 16 files pass; rule coverage: all 201 IDs have tests (6 deferred); property tests at 10,000 games (+3,000 variant games); §16 worked example passes.
-- Perf: 1,000 greedy 4p games ≈ 3–4 s (target < 10 s). Sweep speed: 3 values × 10,000 4p heuristic games in 42 s (target < 2 min). Lookahead: ~250 ms per 4p game with one lookahead seat (target ≤ 3 s).
+- Perf: 1,000 greedy 4p games in 1.2 s (target < 10 s). Sweep speed: 3 values × 10,000 4p heuristic games in 42 s (target < 2 min). Lookahead: ~250 ms per 4p game with one lookahead seat (target ≤ 3 s).
 - `pnpm sim --players 4 --games 1000 --bots greedy,tempo,specialist,generalist`: 2.5 s. `pnpm sim:report`: reproduces the committed ANALYSIS.md byte for byte.
 - `pnpm build`: pass. `pnpm e2e`: 12 Playwright tests pass (full 2p game vs bot at Instant, keyboard, 360 px, axe on every page, sandbox save).
 
