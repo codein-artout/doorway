@@ -87,6 +87,8 @@
   }
   a {
     color: var(--door);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
   a:hover {
     color: #ffffff;

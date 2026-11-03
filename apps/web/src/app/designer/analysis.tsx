@@ -345,7 +345,10 @@ export function Analysis({ summary }: { summary: Summary | null }) {
           {m.tweaks.map((t) => (
             <li key={t.title}>
               <b>{t.title}</b> <span className="text-muted">— {t.why} </span>
-              <a href={`/designer/sandbox?set=${encodeURIComponent(`${t.sweep}=${t.value}`)}`}>
+              <a
+                className="underline"
+                href={`/designer/sandbox?set=${encodeURIComponent(`${t.sweep}=${t.value}`)}`}
+              >
                 Try it in the sandbox
               </a>
               <div className="text-xs text-muted">{t.evidence}</div>
