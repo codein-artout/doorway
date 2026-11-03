@@ -138,6 +138,7 @@ export type MarketProps = {
   registerCard?: (id: string, el: HTMLButtonElement | null) => void;
   focusId?: string | null;
   onCardKey?: (e: React.KeyboardEvent, id: string) => void;
+  armed?: { ageReach: boolean; ignoreReq: boolean };
 };
 
 /** Market rows: label tile + up to 3 cards; empty slots show the deck count (R13, R15: counts only). */
@@ -153,6 +154,7 @@ export function Market({
   registerCard,
   focusId,
   onCardKey,
+  armed,
 }: MarketProps) {
   const vp = viewer ? state.players.find((p) => p.id === viewer)!.position : null;
   const maxSlots = Math.max(...ages.map((a) => state.ruleset.market[a]), 1);
@@ -171,7 +173,11 @@ export function Market({
             <AgeLabel age={age} state={state} viewerPos={vp} />
             {cards.map((id) => {
               const v = cardView(state, viewer, id, { myTurn, rushMode, discarding: discard === id });
-              const clickable = myTurn && (rushMode ? state.ruleset.rushDiscard : v.takeable);
+              const powerOk =
+                (!v.needsAgeReach || !!armed?.ageReach) && (!v.needsIgnoreReq || !!armed?.ignoreReq);
+              if (myTurn && !rushMode && v.takeable && !powerOk)
+                v.status = `Needs ${v.needsAgeReach ? 'Old friends' : 'Say yes more'} — tick it below`;
+              const clickable = myTurn && (rushMode ? state.ruleset.rushDiscard : v.takeable && powerOk);
               return (
                 <QuestCard
                   key={id}

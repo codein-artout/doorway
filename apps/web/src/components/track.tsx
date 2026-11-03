@@ -21,6 +21,7 @@ export function TrackCell({
   ghost,
   ghostInitial,
   height = 116,
+  flash = false,
 }: {
   n: number;
   age: Age;
@@ -30,6 +31,7 @@ export function TrackCell({
   ghost?: boolean;
   ghostInitial?: string;
   height?: number;
+  flash?: boolean;
 }) {
   // pawns: bottom → top; draw the top pawn first (highest on screen)
   const shown = pawns.slice().reverse();
@@ -54,7 +56,7 @@ export function TrackCell({
       {milestone ? (
         <span
           title="Milestone: swap two adjacent discs"
-          className="grid h-[22px] w-[22px] place-items-center rounded-full border-2 border-door font-mono text-[10px] font-bold text-door"
+          className={`${flash ? 'dw-flash' : ''} grid h-[22px] w-[22px] place-items-center rounded-full border-2 border-door font-mono text-[10px] font-bold text-door`}
         >
           {n}
         </span>
@@ -143,7 +145,9 @@ export function Track({
   current,
   ghost,
   compactHeight,
+  flash = [],
 }: {
+  flash?: number[];
   state: GameState;
   current: PlayerId | null;
   ghost?: { space: number; initial: string } | null;
@@ -194,6 +198,7 @@ export function Track({
                   ghost={ghost?.space === i}
                   ghostInitial={ghost?.initial}
                   height={compactHeight}
+                  flash={flash.includes(i)}
                 />
               ))}
             </div>

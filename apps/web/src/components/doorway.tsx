@@ -132,7 +132,7 @@ function Rows({
           </div>
         );
       })}
-      <div className="mt-1.5 ml-[50px] h-2.5 w-[236px] max-w-[60%] rounded-[3px] bg-base" aria-hidden />
+      <div className="mt-1.5 ml-[50px] h-2.5 w-[236px] max-w-[60%] rounded-[3px] bg-plate" aria-hidden />
     </div>
   );
 }

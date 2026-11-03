@@ -182,6 +182,7 @@ describe('Rule coverage checker', () => {
     const r = spawnSync(process.execPath, [path.join(root, 'scripts/check-rule-coverage.mjs')], {
       encoding: 'utf8',
     });
-    expect(r.stderr + r.stdout).toMatch(/rule coverage/);
+    expect(r.stderr + r.stdout).toMatch(/rule coverage: all \d+ IDs have tests/);
+    expect(r.status).toBe(0);
   });
 });

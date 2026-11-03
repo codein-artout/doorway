@@ -100,7 +100,7 @@ export function TowerList({
           </div>
         );
       })}
-      <div className="mt-1 ml-[26px] h-2 w-[76px] rounded-[3px] bg-base" aria-hidden />
+      <div className="mt-1 ml-[26px] h-2 w-[76px] rounded-[3px] bg-plate" aria-hidden />
       {p.tower.length === 0 && <p className="m-0 text-[13px] text-muted">No memories yet.</p>}
       <span className="sr-only">{`Tower base to top: ${p.tower.map((id) => DOMAIN[state.cards[id].color].name).join(', ')}`}</span>
     </div>
