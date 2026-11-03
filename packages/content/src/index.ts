@@ -30,3 +30,15 @@ export const DOMAIN_INFO = {
   orange: { name: 'Family', code: 'Fm', icon: 'house' },
   purple: { name: 'Wonder', code: 'Wd', icon: 'star' },
 } as const;
+
+/** Rulebook §11 solo rating bands (verbatim). `min` is inclusive. */
+export const SOLO_RATINGS = [
+  { min: 45, label: 'Everything you could bring' },
+  { min: 35, label: 'A full life' },
+  { min: 25, label: 'A good life' },
+  { min: -Infinity, label: 'A quiet life' },
+] as const;
+
+export function soloRating(total: number): string {
+  return SOLO_RATINGS.find((r) => total >= r.min)!.label;
+}

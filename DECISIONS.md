@@ -47,3 +47,16 @@ Every judgement call made while building, with date, decision, why and alternati
 
 ### D-ENG-7 — Override syntax (2026-11-03)
 - **Decision:** dotted paths (`doorway.4`, `doorway.4.0`, `passion.5`). Values: `10,7,5,3` or `10/7/5/3` → array; `3:2,4:4,5:7` → object; a plain list on an object key (e.g. `passion=2,4,7`) maps onto the existing thresholds in ascending key order, so the S4 sweep `passion: 2/4/7` means `{3:2, 4:4, 5:7}`.
+
+### D-ENG-8 — Hash memoization (2026-11-03)
+- **Decision:** `rulesetHash`/`cardsHash` are memoized per object (WeakMap). Content objects must be treated as immutable once loaded; overrides always deep-clone (`setByPath`), so a changed ruleset is a new object with a new hash.
+- **Why:** hashing 60 cards in pure JS on every `init` cost ~0.3 ms/game, which dominated simulations and replays.
+
+### D-ENG-9 — Arrival during a pending swap (2026-11-03)
+- **Decision:** a pawn that reached the track end during a quest/rush that also queued swaps stands on space 40 with `arrivalOrder = null` until the swaps resolve (R8: swaps before arrival). The invariant checker allows exactly this state.
+
+## Tests
+
+### D-TEST-1 — Property-test budget (2026-11-03)
+- **Decision:** 10,000 random 1–4p default games (fast-check, fixed seed 20261103) plus 1,000 minCost = 0, 1,000 alternative-Doorway and 1,000 solo games. On every step: invariants, and `legalMoves ⟺ apply` on three candidates (two from a "move universe" of in- and out-of-market quests with every power-flag combination, rushes with every discard, out-of-range swaps and windows; one legal move). Every 200th game (40th for variants) checks the whole universe exhaustively. Replays compare players + scores for every game and the full `stateHash` for 10%.
+- **Why:** exhaustive checks on every state take ~5 minutes; this keeps `pnpm test` around 30–40 s while still covering every move shape.

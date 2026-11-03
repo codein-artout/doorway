@@ -24,12 +24,26 @@ import { AGES, DOMAINS, IllegalMoveError } from './types';
 
 // ---------------------------------------------------------------- hashing
 
+// Memoized by object identity: content objects are treated as immutable once loaded.
+const rulesetHashes = new WeakMap<object, string>();
+const cardsHashes = new WeakMap<object, string>();
+
 export function rulesetHash(ruleset: Ruleset): string {
-  return sha256(canonicalJson(ruleset));
+  let h = rulesetHashes.get(ruleset);
+  if (h === undefined) {
+    h = sha256(canonicalJson(ruleset));
+    rulesetHashes.set(ruleset, h);
+  }
+  return h;
 }
 
 export function cardsHash(cards: Card[]): string {
-  return sha256(canonicalJson(cards));
+  let h = cardsHashes.get(cards);
+  if (h === undefined) {
+    h = sha256(canonicalJson(cards));
+    cardsHashes.set(cards, h);
+  }
+  return h;
 }
 
 // ---------------------------------------------------------------- setup

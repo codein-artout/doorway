@@ -121,3 +121,26 @@ describe('content: §15 card count claims', () => {
     expect(range('old', 'points')).toEqual([3, 4]);
   });
 });
+
+import { soloRating, DOMAIN_INFO } from '../src/index';
+describe('content: solo ratings (rulebook §11) and domain codes', () => {
+  it('RB-11.T1: under 25 — A quiet life', () =>
+    expect([0, 24].map(soloRating)).toEqual(['A quiet life', 'A quiet life']));
+  it('RB-11.T2: 25–34 — A good life', () =>
+    expect([25, 34].map(soloRating)).toEqual(['A good life', 'A good life']));
+  it('RB-11.T3: 35–44 — A full life', () =>
+    expect([35, 44].map(soloRating)).toEqual(['A full life', 'A full life']));
+  it('RB-11.T4: 45+ — Everything you could bring', () =>
+    expect([45, 80].map(soloRating)).toEqual(['Everything you could bring', 'Everything you could bring']));
+  it('R33: two-letter domain codes Lv Wk Pl Fm Wd, all distinct, with icons', () => {
+    expect(Object.values(DOMAIN_INFO).map((d) => d.code)).toEqual(['Lv', 'Wk', 'Pl', 'Fm', 'Wd']);
+    expect(Object.values(DOMAIN_INFO).map((d) => d.icon)).toEqual([
+      'heart',
+      'hammer',
+      'kite',
+      'house',
+      'star',
+    ]);
+    expect(new Set(Object.values(DOMAIN_INFO).map((d) => d.code[0])).size).toBeLessThan(5); // single letters would collide
+  });
+});

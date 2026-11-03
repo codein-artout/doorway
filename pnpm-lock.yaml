@@ -45,7 +45,11 @@ importers:
         specifier: ^4.3.6
         version: 4.6.7
 
-  packages/engine: {}
+  packages/engine:
+    devDependencies:
+      '@doorway/content':
+        specifier: workspace:*
+        version: link:../content
 
 packages:
 

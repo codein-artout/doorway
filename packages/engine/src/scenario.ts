@@ -11,15 +11,7 @@ export type ScenarioSpec = {
   /** top-of-deck order; cards not named anywhere follow in cards.json order */
   decks?: Partial<Record<Age, string[]>>;
   /** per-player overrides (towers' cards are removed from decks/market automatically) */
-  players?: Record<
-    PlayerId,
-    Partial<
-      Pick<
-        PlayerState,
-        'position' | 'tower' | 'milestonesUsed' | 'oncePowersUsed' | 'pendingNextQuestDiscount'
-      >
-    >
-  >;
+  players?: Record<PlayerId, Partial<Omit<PlayerState, 'id' | 'seat'>>>;
   /** explicit stacks (space → bottom..top). Required if you move pawns off space 0. */
   stacks?: Record<number, PlayerId[]>;
   discard?: string[];
