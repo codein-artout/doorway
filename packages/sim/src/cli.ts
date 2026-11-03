@@ -33,6 +33,8 @@ const HELP = `pnpm sim [options]
   --name NAME            run name (default from the arguments)
   --quiet                no progress output`;
 
+class HelpRequested extends Error {}
+
 export function parseArgs(argv: string[]) {
   const a: Record<string, string[]> = {};
   for (let i = 0; i < argv.length; i++) {
@@ -58,10 +60,7 @@ function loadRuleset(spec: string): Ruleset {
 
 export function configFromArgs(argv: string[]): SimConfig & { workers: number } {
   const a = parseArgs(argv);
-  if (a.help) {
-    console.log(HELP);
-    process.exit(0);
-  }
+  if (a.help) throw new HelpRequested();
   const one = (k: string, d?: string) => a[k]?.[a[k].length - 1] ?? d;
   const players = Number(one('players', '4'));
   const bots = (one('bots', 'greedy,tempo,specialist,generalist') as string)
@@ -133,7 +132,16 @@ export function configFromArgs(argv: string[]): SimConfig & { workers: number } 
 }
 
 export async function main(argv: string[]): Promise<RunSummary | null> {
-  const cfg = configFromArgs(argv);
+  let cfg: ReturnType<typeof configFromArgs>;
+  try {
+    cfg = configFromArgs(argv);
+  } catch (e) {
+    if (e instanceof HelpRequested) {
+      console.log(HELP);
+      return null;
+    }
+    throw e;
+  }
   for (const b of cfg.bots)
     if (!STRATEGY_IDS.includes(b.split('@')[0]))
       throw new Error(`Unknown bot "${b}". Known: ${STRATEGY_IDS.join(', ')}`);
