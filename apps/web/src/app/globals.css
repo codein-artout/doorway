@@ -73,42 +73,44 @@
   --font-mono: var(--font-jetbrains), 'JetBrains Mono', ui-monospace, monospace;
 }
 
-html,
-body {
-  background: var(--ink);
-  color: var(--text);
-}
-body {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.45;
-}
-a {
-  color: var(--door);
-}
-a:hover {
-  color: #ffffff;
-}
-button,
-select,
-input,
-textarea {
-  font: inherit;
-}
-button:focus-visible,
-select:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-a:focus-visible,
-[tabindex]:focus-visible {
-  outline: 2px solid var(--door);
-  outline-offset: 2px;
-}
-h1,
-h2,
-h3 {
-  letter-spacing: -0.015em;
+@layer base {
+  html,
+  body {
+    background: var(--ink);
+    color: var(--text);
+  }
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  a {
+    color: var(--door);
+  }
+  a:hover {
+    color: #ffffff;
+  }
+  button,
+  select,
+  input,
+  textarea {
+    font: inherit;
+  }
+  button:focus-visible,
+  select:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  a:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--door);
+    outline-offset: 2px;
+  }
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.015em;
+  }
 }
 
 /* DESIGN.md §4 motion */
