@@ -31,8 +31,10 @@ function kPerms(ids: string[], k: number): string[][] {
   return out;
 }
 
-export function studyRuns(): StudyRun[] {
-  const all = STRATEGY_IDS; // 11
+/** The study plan. `scale` shrinks game counts and `strategies` restricts the roster (tests, smoke runs). */
+export function studyRuns(opts: { scale?: number; strategies?: string[] } = {}): StudyRun[] {
+  const scale = opts.scale ?? 1;
+  const all = opts.strategies ?? STRATEGY_IDS; // 11
   const field = all.filter((x) => x !== 'random'); // 10
   const runs: StudyRun[] = [];
   // S1 — 2p round robin: 121 ordered pairs × 1,000
@@ -147,10 +149,15 @@ export function studyRuns(): StudyRun[] {
       chunkSize: 500,
       logsBelow: 4,
     });
+  if (scale !== 1)
+    for (const r of runs) {
+      r.games = Math.max(r.seatList ? Math.min(r.seatList.length, 20) : 4, Math.round(r.games * scale));
+      r.chunkSize = Math.max(10, Math.round((r.chunkSize ?? 250) * scale * 4));
+    }
   return runs;
 }
 
-export const isComplete = (name: string) => existsSync(path.join(RUNS_DIR, name, 'COMPLETE'));
+export const isComplete = (name: string, dir = RUNS_DIR) => existsSync(path.join(dir, name, 'COMPLETE'));
 
 async function main(argv: string[]) {
   const arg = (k: string) => {

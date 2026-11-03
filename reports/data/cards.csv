@@ -1,0 +1,61 @@
+scope,card,name,age,domain,takeable,picked,pick_rate,picked_games,win_when_picked,fair,rel_win,rel_lo,rel_hi
+S1/base,PK-Y1,"First crush",young,pink,109967,9642,0.0877,9642,0.4869,0.5,0.9739,0.9539,0.9938
+S1/base,PK-Y2,"Write a terrible love letter",young,pink,108600,9130,0.0841,9130,0.4866,0.5,0.9733,0.9528,0.9938
+S1/base,PK-Y3,"Dance badly at a wedding",young,pink,56223,12086,0.215,12086,0.5938,0.5,1.1877,1.1701,1.2052
+S1/base,PK-Y4,"Have your heart broken",young,pink,55479,11900,0.2145,11900,0.5974,0.5,1.1948,1.1772,1.2124
+S1/base,PK-Y5,"Fall in love",young,pink,38511,13098,0.3401,13098,0.6492,0.5,1.2984,1.282,1.3147
+S1/base,PK-M1,"Someone who stays",middle,pink,31466,5878,0.1868,5878,0.5791,0.5,1.1582,1.133,1.1835
+S1/base,PK-M2,"Move in together",middle,pink,25869,7226,0.2793,7226,0.6423,0.5,1.2845,1.2624,1.3066
+S1/base,PK-M3,"Learn how to apologise",middle,pink,31876,5248,0.1646,5248,0.6254,0.5,1.2508,1.2246,1.277
+S1/base,PK-M4,"Start over with someone new",middle,pink,13345,5832,0.437,5832,0.6571,0.5,1.3141,1.2898,1.3385
+S1/base,PK-O1,"Still holding hands",old,pink,17677,4347,0.2459,4347,0.5843,0.5,1.1686,1.1393,1.1979
+S1/base,PK-O2,"Grow old with someone",old,pink,10873,4507,0.4145,4507,0.621,0.5,1.2421,1.2137,1.2704
+S1/base,PK-O3,"Write it all down for them",old,pink,17284,5073,0.2935,5073,0.7266,0.5,1.4532,1.4287,1.4777
+S1/base,GD-Y1,"First job",young,gold,111290,9198,0.0826,9198,0.4859,0.5,0.9717,0.9513,0.9922
+S1/base,GD-Y2,"Get fired from a cafe",young,gold,107212,9166,0.0855,9166,0.4878,0.5,0.9756,0.9551,0.996
+S1/base,GD-Y3,"Learn a trade",young,gold,54223,11386,0.21,11386,0.6028,0.5,1.2055,1.1875,1.2235
+S1/base,GD-Y4,"Pull an all-nighter that mattered",young,gold,53759,11923,0.2218,11923,0.5908,0.5,1.1816,1.1639,1.1992
+S1/base,GD-Y5,"Make your first real money",young,gold,38987,13141,0.3371,13141,0.6569,0.5,1.3138,1.2975,1.33
+S1/base,GD-M1,"Make enough to slow down",middle,gold,33849,6171,0.1823,6171,0.5795,0.5,1.159,1.1343,1.1836
+S1/base,GD-M2,"Get very good at something",middle,gold,31285,5060,0.1617,5060,0.6257,0.5,1.2514,1.2247,1.2781
+S1/base,GD-M3,"Quit the good job",middle,gold,22529,6905,0.3065,6905,0.6527,0.5,1.3054,1.283,1.3279
+S1/base,GD-M4,"Build something with your name on it",middle,gold,13799,6075,0.4402,6075,0.6502,0.5,1.3004,1.2764,1.3244
+S1/base,GD-O1,"Become someone's mentor",old,gold,18171,4359,0.2399,4359,0.593,0.5,1.1861,1.1569,1.2152
+S1/base,GD-O2,"Retire on your own terms",old,gold,10699,4186,0.3913,4186,0.623,0.5,1.2461,1.2167,1.2754
+S1/base,GD-O3,"Teach what you know",old,gold,16856,5272,0.3128,5272,0.7183,0.5,1.4366,1.4124,1.4609
+S1/base,GR-Y1,"Build a fort",young,green,104685,9328,0.0891,9328,0.487,0.5,0.9741,0.9538,0.9943
+S1/base,GR-Y2,"Keep a diary",young,green,86862,10493,0.1208,10493,0.5508,0.5,1.1017,1.0827,1.1207
+S1/base,GR-Y3,"Learn an instrument",young,green,54971,12200,0.2219,12200,0.5985,0.5,1.197,1.1797,1.2144
+S1/base,GR-Y4,"Join a team you're bad on",young,green,53066,11830,0.2229,11830,0.5959,0.5,1.1917,1.174,1.2094
+S1/base,GR-Y5,"Win something that doesn't matter",young,green,38435,13092,0.3406,13092,0.6452,0.5,1.2904,1.274,1.3068
+S1/base,GR-M1,"A hobby that takes you places",middle,green,32875,6038,0.1837,6038,0.5808,0.5,1.1616,1.1368,1.1865
+S1/base,GR-M2,"Learn to rest",middle,green,72400,3286,0.0454,3286,0.4157,0.5,0.8314,0.7977,0.8651
+S1/base,GR-M3,"Get good at something useless",middle,green,26380,7136,0.2705,7136,0.6258,0.5,1.2517,1.2292,1.2741
+S1/base,GR-M4,"Finish the long project",middle,green,13309,5706,0.4287,5706,0.6363,0.5,1.2727,1.2477,1.2977
+S1/base,GR-O1,"Take up something new at sixty",old,green,27201,3374,0.124,3374,0.5468,0.5,1.0937,1.0601,1.1273
+S1/base,GR-O2,"Play with the grandkids",old,green,16265,5289,0.3252,5289,0.6476,0.5,1.2951,1.2694,1.3209
+S1/base,GR-O3,"Master the thing you love",old,green,12208,4409,0.3612,4409,0.697,0.5,1.394,1.3668,1.4211
+S1/base,OR-Y1,"Call your mother",young,orange,105290,9488,0.0901,9488,0.4751,0.5,0.9503,0.9302,0.9703
+S1/base,OR-Y2,"Fight with your sibling",young,orange,109343,9200,0.0841,9200,0.4817,0.5,0.9635,0.9431,0.9839
+S1/base,OR-Y3,"Make a best friend",young,orange,54808,12105,0.2209,12105,0.5944,0.5,1.1888,1.1713,1.2063
+S1/base,OR-Y4,"Leave home",young,orange,55945,12093,0.2162,12093,0.6104,0.5,1.2209,1.2035,1.2383
+S1/base,OR-Y5,"Be there when it mattered",young,orange,39011,13279,0.3404,13279,0.6586,0.5,1.3173,1.3011,1.3334
+S1/base,OR-M1,"Kids who drag you outside",middle,orange,31643,5747,0.1816,5747,0.5845,0.5,1.169,1.1435,1.1944
+S1/base,OR-M2,"Old friends",middle,orange,55657,4967,0.0892,4967,0.5154,0.5,1.0308,1.003,1.0586
+S1/base,OR-M3,"Raise someone",middle,orange,18707,7103,0.3797,7103,0.6941,0.5,1.3881,1.3667,1.4096
+S1/base,OR-M4,"Look after your parents",middle,orange,34365,5527,0.1608,5527,0.6159,0.5,1.2318,1.2061,1.2574
+S1/base,OR-O1,"Host every holiday",old,orange,17012,4122,0.2423,4122,0.5835,0.5,1.1669,1.1368,1.197
+S1/base,OR-O2,"Make peace with it",old,orange,23437,3278,0.1399,3278,0.6464,0.5,1.2929,1.2601,1.3256
+S1/base,OR-O3,"Leave something behind",old,orange,11455,4095,0.3575,4095,0.7131,0.5,1.4261,1.3984,1.4538
+S1/base,PU-Y1,"See the sea",young,purple,110465,9254,0.0838,9254,0.4975,0.5,0.995,0.9747,1.0154
+S1/base,PU-Y2,"Say yes more",young,purple,92617,9937,0.1073,9937,0.5425,0.5,1.085,1.0654,1.1046
+S1/base,PU-Y3,"Stay up for a meteor shower",young,purple,54008,11874,0.2199,11874,0.5973,0.5,1.1945,1.1769,1.2122
+S1/base,PU-Y4,"Get lost in a city",young,purple,56868,12319,0.2166,12319,0.594,0.5,1.1881,1.1707,1.2054
+S1/base,PU-Y5,"Travel alone",young,purple,38850,13484,0.3471,13484,0.6683,0.5,1.3365,1.3207,1.3524
+S1/base,PU-M1,"Come back with ideas",middle,purple,32479,6114,0.1882,6114,0.6026,0.5,1.2051,1.1806,1.2296
+S1/base,PU-M2,"Live somewhere new",middle,purple,38585,6195,0.1606,6195,0.6186,0.5,1.2371,1.2129,1.2613
+S1/base,PU-M3,"Change your mind about something big",middle,purple,23244,6474,0.2785,6474,0.6449,0.5,1.2898,1.2665,1.3131
+S1/base,PU-M4,"See something you can't explain",middle,purple,12722,6057,0.4761,6057,0.6612,0.5,1.3224,1.2986,1.3463
+S1/base,PU-O1,"Stand somewhere very old",old,purple,16568,4233,0.2555,4233,0.5835,0.5,1.167,1.1373,1.1967
+S1/base,PU-O2,"Go back to the first place",old,purple,16089,5707,0.3547,5707,0.6646,0.5,1.3292,1.3047,1.3537
+S1/base,PU-O3,"Wonder at the ordinary",old,purple,16131,5413,0.3356,5413,0.7194,0.5,1.4388,1.4148,1.4627

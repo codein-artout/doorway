@@ -14,6 +14,7 @@
   "dependencies": {
     "@doorway/bots": "workspace:*",
     "@doorway/content": "workspace:*",
-    "@doorway/engine": "workspace:*"
+    "@doorway/engine": "workspace:*",
+    "hyparquet-writer": "0.18.0"
   }
 }
