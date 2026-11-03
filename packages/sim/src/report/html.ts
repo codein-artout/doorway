@@ -16,7 +16,7 @@ export function diverging(v: number, mid: number, span: number) {
   return { bg, fg: t > 0.55 ? C.ink : C.text };
 }
 
-function winChart(
+export function winChart(
   rows: { label: string; win: number; lo: number; hi: number }[],
   fair: number,
   ceiling: number | null,
@@ -58,7 +58,7 @@ function doorwayBars(d: { players: number; rows: any[] }) {
     .join('');
 }
 
-function seatBars(x: { players: number; rows: any[] }) {
+export function seatBars(x: { players: number; rows: any[] }) {
   const W = 300,
     H = 90,
     mid = 45,
@@ -78,7 +78,7 @@ function seatBars(x: { players: number; rows: any[] }) {
 </svg>`;
 }
 
-function histogram(h: { lo: number; width: number; counts: number[] } | null, color: string) {
+export function histogram(h: { lo: number; width: number; counts: number[] } | null, color: string) {
   if (!h) return '';
   const W = 640,
     H = 140;

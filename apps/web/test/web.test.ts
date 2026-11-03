@@ -30,7 +30,7 @@ const setup = (o: Partial<GameSetup> = {}): GameSetup => ({
   ...o,
 });
 const inline = () => ({
-  compute: async (s: never, p: never) => (await import('../src/lib/bot-move')).chooseBotMove(s, p),
+  compute: async (s: GameState, p: string) => (await import('../src/lib/bot-move')).chooseBotMove(s, p),
   dispose: () => {},
 });
 

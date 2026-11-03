@@ -154,7 +154,7 @@ export function buildModel(s: Summary) {
   // ---- cards to look at
   const cards = (s.cards?.table ?? []) as any[];
   const flagged = cards.filter((c) => c.flag);
-  const unused = cards.filter((c) => c.pickRate < 0.02);
+  const unused = cards.filter((c) => Number.isFinite(c.pickRate) && c.takeable > 0 && c.pickRate < 0.02);
   const lookAt = [
     ...flagged.sort((a, b) => Math.abs(b.relWin - 1) - Math.abs(a.relWin - 1)),
     ...cards

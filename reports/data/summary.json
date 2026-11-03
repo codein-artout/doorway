@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-03T22:08:28.259Z",
+ "generatedAt": "2026-11-03T22:35:23.815Z",
  "ruleset": {
   "id": "v0.2-default",
   "hash": "aff43758f928de6e59da01360931644e608aadd2a59bb5b20df7c553a183f9be"
@@ -91,6 +91,160 @@
  },
  "runs": [
   {
+   "name": "S1-early_leaver-vs-early_leaver",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-early_leaver-vs-generalist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-early_leaver-vs-greedy",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-early_leaver-vs-late_bloomer",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-early_leaver-vs-lookahead",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-early_leaver-vs-passion_specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-early_leaver-vs-random",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-early_leaver-vs-rusher",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-early_leaver-vs-set_collector",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-early_leaver-vs-specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-early_leaver-vs-tempo",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-generalist-vs-early_leaver",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-generalist-vs-generalist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-generalist-vs-greedy",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-generalist-vs-late_bloomer",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-generalist-vs-lookahead",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-generalist-vs-passion_specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-generalist-vs-random",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-generalist-vs-rusher",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-generalist-vs-set_collector",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-generalist-vs-specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-generalist-vs-tempo",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
    "name": "S1-greedy-vs-early_leaver",
    "study": "S1",
    "players": 2,
@@ -113,6 +267,13 @@
   },
   {
    "name": "S1-greedy-vs-late_bloomer",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-greedy-vs-lookahead",
    "study": "S1",
    "players": 2,
    "games": 1000,
@@ -155,6 +316,230 @@
   },
   {
    "name": "S1-greedy-vs-tempo",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-late_bloomer-vs-early_leaver",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-late_bloomer-vs-generalist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-late_bloomer-vs-greedy",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-late_bloomer-vs-late_bloomer",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-late_bloomer-vs-lookahead",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-late_bloomer-vs-passion_specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-late_bloomer-vs-random",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-late_bloomer-vs-rusher",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-late_bloomer-vs-set_collector",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-late_bloomer-vs-specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-late_bloomer-vs-tempo",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-lookahead-vs-early_leaver",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-lookahead-vs-generalist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-lookahead-vs-greedy",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-lookahead-vs-late_bloomer",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-lookahead-vs-passion_specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-lookahead-vs-random",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-lookahead-vs-rusher",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-lookahead-vs-set_collector",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-lookahead-vs-specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-lookahead-vs-tempo",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-passion_specialist-vs-early_leaver",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-passion_specialist-vs-generalist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-passion_specialist-vs-greedy",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-passion_specialist-vs-late_bloomer",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-passion_specialist-vs-lookahead",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-passion_specialist-vs-passion_specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-passion_specialist-vs-random",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-passion_specialist-vs-rusher",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-passion_specialist-vs-set_collector",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-passion_specialist-vs-specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-passion_specialist-vs-tempo",
    "study": "S1",
    "players": 2,
    "games": 1000,
@@ -236,472 +621,780 @@
    "players": 2,
    "games": 1000,
    "values": 1
+  },
+  {
+   "name": "S1-rusher-vs-early_leaver",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-rusher-vs-generalist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-rusher-vs-greedy",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-rusher-vs-late_bloomer",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-rusher-vs-lookahead",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-rusher-vs-passion_specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-rusher-vs-random",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-rusher-vs-rusher",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-rusher-vs-set_collector",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-rusher-vs-specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-rusher-vs-tempo",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-set_collector-vs-early_leaver",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-set_collector-vs-generalist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-set_collector-vs-greedy",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-set_collector-vs-late_bloomer",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-set_collector-vs-lookahead",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-set_collector-vs-passion_specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-set_collector-vs-random",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-set_collector-vs-rusher",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-set_collector-vs-set_collector",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-set_collector-vs-specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-set_collector-vs-tempo",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-specialist-vs-early_leaver",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-specialist-vs-generalist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-specialist-vs-greedy",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-specialist-vs-late_bloomer",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-specialist-vs-lookahead",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-specialist-vs-passion_specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-specialist-vs-random",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-specialist-vs-rusher",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-specialist-vs-set_collector",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-specialist-vs-specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-specialist-vs-tempo",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-tempo-vs-early_leaver",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-tempo-vs-generalist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-tempo-vs-greedy",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-tempo-vs-late_bloomer",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-tempo-vs-lookahead",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-tempo-vs-passion_specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-tempo-vs-random",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-tempo-vs-rusher",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-tempo-vs-set_collector",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-tempo-vs-specialist",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
+  },
+  {
+   "name": "S1-tempo-vs-tempo",
+   "study": "S1",
+   "players": 2,
+   "games": 1000,
+   "values": 1
   }
  ],
  "totals": {
-  "games": 21000,
+  "games": 120000,
   "byStudy": {
-   "S1": 21000
+   "S1": 120000
   }
  },
  "groups": {
   "main-2p": {
-   "games": 21000,
-   "players": 42000,
+   "games": 120000,
+   "players": 240000,
    "turnsPerGame": {
-    "n": 21000,
-    "mean": 28.5426,
-    "sd": 3.4419
+    "n": 120000,
+    "mean": 28.0932,
+    "sd": 3.6803
    },
    "byPolicy": {
-    "lookahead": {
-     "n": 1000,
-     "win": 0.997,
-     "lo": 0.9912,
-     "hi": 0.999,
+    "late_bloomer": {
+     "n": 22000,
+     "win": 0.6239,
+     "lo": 0.6175,
+     "hi": 0.6303,
      "score": {
-      "n": 1000,
-      "mean": 30.117,
-      "sd": 5.2516
+      "n": 22000,
+      "mean": 32.0358,
+      "sd": 4.8514
      },
-     "rushes": 4.873,
-     "lost": 1.248,
-     "extraTurns": 1.816,
-     "turns": 14.536,
+     "rushes": 0,
+     "lost": 6.291,
+     "extraTurns": 5.377,
+     "turns": 14.414,
      "components": {
-      "cards": 20.85,
-      "full_life": 3.186,
-      "passion": 3.841,
-      "reflection": 2.24
+      "cards": 23.688,
+      "full_life": 2.382,
+      "passion": 3.211,
+      "reflection": 2.755
      }
     },
     "set_collector": {
-     "n": 2000,
-     "win": 0.825,
-     "lo": 0.8077,
-     "hi": 0.841,
+     "n": 22000,
+     "win": 0.6225,
+     "lo": 0.6161,
+     "hi": 0.6289,
      "score": {
-      "n": 2000,
-      "mean": 31.9755,
-      "sd": 4.2996
+      "n": 22000,
+      "mean": 31.413,
+      "sd": 4.3735
      },
-     "rushes": 0.016,
-     "lost": 4.32,
-     "extraTurns": 2.731,
-     "turns": 12.562,
+     "rushes": 0.017,
+     "lost": 4.449,
+     "extraTurns": 3.144,
+     "turns": 12.578,
      "components": {
-      "cards": 23.988,
-      "full_life": 4.05,
-      "passion": 1.42,
-      "reflection": 2.518
+      "cards": 23.562,
+      "full_life": 4.11,
+      "passion": 1.394,
+      "reflection": 2.347
      }
     },
     "generalist": {
-     "n": 2000,
-     "win": 0.8105,
-     "lo": 0.7927,
-     "hi": 0.8271,
+     "n": 22000,
+     "win": 0.6022,
+     "lo": 0.5957,
+     "hi": 0.6087,
      "score": {
-      "n": 2000,
-      "mean": 31.7975,
-      "sd": 4.53
+      "n": 22000,
+      "mean": 31.2088,
+      "sd": 4.4783
      },
-     "rushes": 0,
-     "lost": 4.835,
-     "extraTurns": 3.13,
-     "turns": 13.039,
+     "rushes": 0.001,
+     "lost": 4.922,
+     "extraTurns": 3.546,
+     "turns": 13.022,
      "components": {
-      "cards": 23.8,
-      "full_life": 4.11,
-      "passion": 1.502,
-      "reflection": 2.386
+      "cards": 23.458,
+      "full_life": 4.105,
+      "passion": 1.456,
+      "reflection": 2.191
+     }
+    },
+    "lookahead": {
+     "n": 20000,
+     "win": 0.5924,
+     "lo": 0.5855,
+     "hi": 0.5991,
+     "score": {
+      "n": 20000,
+      "mean": 28.7179,
+      "sd": 5.4105
+     },
+     "rushes": 4.421,
+     "lost": 1.566,
+     "extraTurns": 3.629,
+     "turns": 14.259,
+     "components": {
+      "cards": 19.647,
+      "full_life": 2.068,
+      "passion": 4.82,
+      "reflection": 2.184
      }
     },
     "passion_specialist": {
-     "n": 2000,
-     "win": 0.8035,
-     "lo": 0.7855,
-     "hi": 0.8203,
+     "n": 22000,
+     "win": 0.586,
+     "lo": 0.5795,
+     "hi": 0.5925,
      "score": {
-      "n": 2000,
-      "mean": 32.022,
-      "sd": 5.2028
+      "n": 22000,
+      "mean": 31.5244,
+      "sd": 5.1822
      },
-     "rushes": 0.146,
-     "lost": 5.977,
-     "extraTurns": 4.005,
-     "turns": 14.301,
+     "rushes": 0.188,
+     "lost": 5.959,
+     "extraTurns": 4.469,
+     "turns": 14.228,
      "components": {
-      "cards": 23.368,
-      "full_life": 1.08,
-      "passion": 4.571,
-      "reflection": 3.003
-     }
-    },
-    "late_bloomer": {
-     "n": 2000,
-     "win": 0.802,
-     "lo": 0.784,
-     "hi": 0.8189,
-     "score": {
-      "n": 2000,
-      "mean": 32.338,
-      "sd": 4.7669
-     },
-     "rushes": 0,
-     "lost": 6.143,
-     "extraTurns": 4.844,
-     "turns": 14.331,
-     "components": {
-      "cards": 23.873,
-      "full_life": 2.358,
-      "passion": 3.195,
-      "reflection": 2.913
+      "cards": 23.092,
+      "full_life": 1.052,
+      "passion": 4.489,
+      "reflection": 2.891
      }
     },
     "early_leaver": {
-     "n": 2000,
-     "win": 0.799,
-     "lo": 0.7809,
-     "hi": 0.816,
+     "n": 22000,
+     "win": 0.5752,
+     "lo": 0.5687,
+     "hi": 0.5817,
      "score": {
-      "n": 2000,
-      "mean": 31.622,
-      "sd": 4.9967
+      "n": 22000,
+      "mean": 30.82,
+      "sd": 4.9735
      },
-     "rushes": 1.052,
-     "lost": 2.612,
-     "extraTurns": 1.779,
-     "turns": 11.86,
+     "rushes": 1.104,
+     "lost": 2.704,
+     "extraTurns": 2.116,
+     "turns": 11.882,
      "components": {
-      "cards": 24.373,
-      "full_life": 2.253,
-      "passion": 2.268,
-      "reflection": 2.729
+      "cards": 23.984,
+      "full_life": 2.006,
+      "passion": 2.255,
+      "reflection": 2.575
      }
     },
     "specialist": {
-     "n": 2000,
-     "win": 0.783,
-     "lo": 0.7644,
-     "hi": 0.8005,
+     "n": 22000,
+     "win": 0.5435,
+     "lo": 0.537,
+     "hi": 0.5501,
      "score": {
-      "n": 2000,
-      "mean": 31.487,
-      "sd": 5.3201
+      "n": 22000,
+      "mean": 31.0113,
+      "sd": 5.3022
      },
      "rushes": 0.006,
-     "lost": 6.865,
-     "extraTurns": 4.634,
-     "turns": 15.047,
+     "lost": 6.915,
+     "extraTurns": 5.168,
+     "turns": 15.017,
      "components": {
-      "cards": 23.278,
-      "full_life": 0.741,
-      "passion": 4.321,
-      "reflection": 3.148
-     }
-    },
-    "rusher": {
-     "n": 2000,
-     "win": 0.7305,
-     "lo": 0.7106,
-     "hi": 0.7495,
-     "score": {
-      "n": 2000,
-      "mean": 29.4085,
-      "sd": 5.6351
-     },
-     "rushes": 2.755,
-     "lost": 1.301,
-     "extraTurns": 1.189,
-     "turns": 11.772,
-     "components": {
-      "cards": 23.05,
-      "full_life": 1.746,
-      "passion": 2.279,
-      "reflection": 2.334
-     }
-    },
-    "tempo": {
-     "n": 2000,
-     "win": 0.692,
-     "lo": 0.6714,
-     "hi": 0.7118,
-     "score": {
-      "n": 2000,
-      "mean": 28.3585,
-      "sd": 5.4733
-     },
-     "rushes": 0,
-     "lost": 10.701,
-     "extraTurns": 7.916,
-     "turns": 18.708,
-     "components": {
-      "cards": 20.791,
-      "full_life": 1.161,
-      "passion": 4.175,
-      "reflection": 2.232
+      "cards": 23.073,
+      "full_life": 0.782,
+      "passion": 4.203,
+      "reflection": 2.953
      }
     },
     "greedy": {
-     "n": 12000,
-     "win": 0.5394,
-     "lo": 0.5305,
-     "hi": 0.5483,
+     "n": 22000,
+     "win": 0.4703,
+     "lo": 0.4637,
+     "hi": 0.4769,
      "score": {
-      "n": 12000,
-      "mean": 29.2589,
-      "sd": 5.3515
+      "n": 22000,
+      "mean": 28.8024,
+      "sd": 5.375
      },
      "rushes": 0,
-     "lost": 7.095,
-     "extraTurns": 4.971,
-     "turns": 15.219,
+     "lost": 7.184,
+     "extraTurns": 5.202,
+     "turns": 15.231,
      "components": {
-      "cards": 22.008,
-      "full_life": 1.213,
-      "passion": 4.021,
-      "reflection": 2.017
+      "cards": 21.777,
+      "full_life": 1.173,
+      "passion": 3.897,
+      "reflection": 1.956
+     }
+    },
+    "rusher": {
+     "n": 22000,
+     "win": 0.4377,
+     "lo": 0.4312,
+     "hi": 0.4443,
+     "score": {
+      "n": 22000,
+      "mean": 27.6832,
+      "sd": 5.8583
+     },
+     "rushes": 3.236,
+     "lost": 0.938,
+     "extraTurns": 1.182,
+     "turns": 11.55,
+     "components": {
+      "cards": 21.972,
+      "full_life": 1.334,
+      "passion": 2.289,
+      "reflection": 2.088
+     }
+    },
+    "tempo": {
+     "n": 22000,
+     "win": 0.406,
+     "lo": 0.3995,
+     "hi": 0.4125,
+     "score": {
+      "n": 22000,
+      "mean": 28.242,
+      "sd": 5.617
+     },
+     "rushes": 0.001,
+     "lost": 10.881,
+     "extraTurns": 8.73,
+     "turns": 18.837,
+     "components": {
+      "cards": 20.7,
+      "full_life": 1.292,
+      "passion": 4.107,
+      "reflection": 2.143
      }
     },
     "random": {
-     "n": 13000,
-     "win": 0.0799,
-     "lo": 0.0754,
-     "hi": 0.0847,
+     "n": 22000,
+     "win": 0.0486,
+     "lo": 0.0459,
+     "hi": 0.0516,
      "score": {
-      "n": 13000,
-      "mean": 9.4411,
-      "sd": 5.1377
+      "n": 22000,
+      "mean": 9.1617,
+      "sd": 5.1057
      },
-     "rushes": 9.194,
-     "lost": 0.064,
-     "extraTurns": 1.6,
-     "turns": 13.769,
+     "rushes": 9.041,
+     "lost": 0.061,
+     "extraTurns": 1.721,
+     "turns": 13.514,
      "components": {
-      "cards": 8.579,
-      "full_life": 0.366,
-      "passion": 0.343,
+      "cards": 8.341,
+      "full_life": 0.331,
+      "passion": 0.335,
       "reflection": 0.154
      }
     }
    },
    "bySeat": {
     "1": {
-     "n": 21000,
-     "win": 0.2631,
-     "lo": 0.2572,
-     "hi": 0.2691,
+     "n": 120000,
+     "win": 0.4985,
+     "lo": 0.4957,
+     "hi": 0.5013,
      "fair": 0.5,
-     "diffPP": -23.69,
-     "diffRel": -0.4738
+     "diffPP": -0.15,
+     "diffRel": -0.003
     },
     "2": {
-     "n": 21000,
-     "win": 0.7369,
-     "lo": 0.7309,
-     "hi": 0.7428,
+     "n": 120000,
+     "win": 0.5015,
+     "lo": 0.4987,
+     "hi": 0.5043,
      "fair": 0.5,
-     "diffPP": 23.69,
-     "diffRel": 0.4738
+     "diffPP": 0.15,
+     "diffRel": 0.003
     }
    },
    "byArrival": {
     "1": {
-     "n": 21000,
-     "allowance": 9.076,
-     "tower": 11.327,
-     "towerSd": 4.809,
-     "kept": 7.877,
-     "lost": 3.45,
-     "lostSd": 3.152,
-     "shareLostAny": 0.676
+     "n": 120000,
+     "allowance": 9.091,
+     "tower": 12.216,
+     "towerSd": 3.905,
+     "kept": 8.587,
+     "lost": 3.629,
+     "lostSd": 3.094,
+     "shareLostAny": 0.7679
     },
     "2": {
-     "n": 21000,
-     "allowance": 7.08,
-     "tower": 10.914,
-     "towerSd": 5.458,
-     "kept": 6.139,
-     "lost": 4.774,
-     "lostSd": 4.214,
-     "shareLostAny": 0.6544
+     "n": 120000,
+     "allowance": 7.102,
+     "tower": 12.648,
+     "towerSd": 4.337,
+     "kept": 6.794,
+     "lost": 5.854,
+     "lostSd": 3.747,
+     "shareLostAny": 0.8642
     }
    },
-   "nonFirstLost": 4.774,
-   "shareLostAny": 0.6652,
+   "nonFirstLost": 5.854,
+   "shareLostAny": 0.8161,
    "score": {
-    "n": 42000,
-    "mean": 23.8566,
-    "sd": 11.0055
+    "n": 240000,
+    "mean": 28.2342,
+    "sd": 8.0849
    },
    "scoreHist": {
     "lo": 0,
     "width": 5,
     "counts": [
-     2185,
-     5033,
-     3658,
-     1858,
-     4278,
-     9253,
-     9454,
-     4868,
-     1196,
-     205,
-     12
+     3804,
+     7886,
+     5635,
+     4989,
+     22867,
+     58948,
+     59182,
+     29183,
+     6564,
+     904,
+     38
     ]
    },
    "components": {
     "cards": {
-     "mean": 18.322,
-     "share": 0.768
+     "mean": 21.222,
+     "share": 0.7516
     },
     "full_life": {
-     "mean": 1.369,
-     "share": 0.0574
+     "mean": 1.874,
+     "share": 0.0664
     },
     "passion": {
-     "mean": 2.476,
-     "share": 0.1038
+     "mean": 2.935,
+     "share": 0.1039
     },
     "reflection": {
-     "mean": 1.69,
-     "share": 0.0708
+     "mean": 2.204,
+     "share": 0.078
     }
    },
    "rushBuckets": {
     "0": {
-     "n": 24651,
-     "win": 0.6717,
-     "lo": 0.6658,
-     "hi": 0.6775,
+     "n": 158566,
+     "win": 0.5577,
+     "lo": 0.5553,
+     "hi": 0.5602,
      "fair": 0.5
     },
     "1": {
-     "n": 1223,
-     "win": 0.8021,
-     "lo": 0.7789,
-     "hi": 0.8235,
+     "n": 14009,
+     "win": 0.5733,
+     "lo": 0.5651,
+     "hi": 0.5815,
      "fair": 0.5
     },
     "2": {
-     "n": 929,
-     "win": 0.8159,
-     "lo": 0.7897,
-     "hi": 0.8395,
+     "n": 10198,
+     "win": 0.5877,
+     "lo": 0.5781,
+     "hi": 0.5972,
      "fair": 0.5
     },
     "3–4": {
-     "n": 1364,
-     "win": 0.7258,
-     "lo": 0.7015,
-     "hi": 0.7488,
+     "n": 21064,
+     "win": 0.4997,
+     "lo": 0.4929,
+     "hi": 0.5064,
      "fair": 0.5
     },
     "5+": {
-     "n": 13833,
-     "win": 0.1238,
-     "lo": 0.1184,
-     "hi": 0.1294,
+     "n": 36163,
+     "win": 0.194,
+     "lo": 0.1899,
+     "hi": 0.1981,
      "fair": 0.5
     }
    },
    "turnsPerPlayer": {
-    "n": 42000,
-    "mean": 14.2713,
-    "sd": 2.2194
+    "n": 240000,
+    "mean": 14.0466,
+    "sd": 2.5113
    },
    "extraTurns": {
-    "n": 42000,
-    "mean": 3.398,
-    "sd": 2.5241
+    "n": 240000,
+    "mean": 4.0291,
+    "sd": 2.6969
    },
-   "extraTurnShare": 0.225,
+   "extraTurnShare": 0.269,
    "noQuestTurns": {
-    "n": 42000,
+    "n": 240000,
     "mean": 0.0001,
-    "sd": 0.0109
+    "sd": 0.0129
    },
    "noQuestShare": 0,
    "rushes": {
-    "n": 42000,
-    "mean": 3.151,
-    "sd": 4.3212
+    "n": 240000,
+    "mean": 1.6146,
+    "sd": 2.9132
    },
-   "rushDistance": 2.945,
-   "rushDiscardShare": 0.869,
+   "rushDistance": 3.072,
+   "rushDiscardShare": 0.8248,
    "quests": {
-    "n": 42000,
-    "mean": 11.1204,
-    "sd": 5.148
+    "n": 240000,
+    "mean": 12.432,
+    "sd": 4.1327
    },
    "savedExperience": {
-    "n": 42000,
-    "mean": 6.5236,
-    "sd": 6.3111
+    "n": 240000,
+    "mean": 7.3714,
+    "sd": 6.1123
    },
    "savedPowers": {
-    "n": 42000,
-    "mean": 1.1888,
-    "sd": 1.8753
+    "n": 240000,
+    "mean": 1.3658,
+    "sd": 1.902
    },
    "costByLifeQuarter": [
-    2.944,
-    2.838,
-    2.782,
-    2.824
+    2.914,
+    2.86,
+    2.925,
+    2.953
    ],
    "powersHeldPerPlayer": {
-    "swap_now": 0.2498,
-    "discount": 0.713,
-    "age_reach_once": 0.1183,
-    "ignore_requirement_once": 0.2366,
-    "next_quest_discount": 0.1644,
-    "doorway_bonus": 0.078,
-    "rush_bonus": 0.0782
+    "discount": 0.8291,
+    "next_quest_discount": 0.1904,
+    "doorway_bonus": 0.0966,
+    "rush_bonus": 0.0892,
+    "swap_now": 0.2796,
+    "age_reach_once": 0.1432,
+    "ignore_requirement_once": 0.2586
    },
    "oncePowerUseRate": {
     "age_reach_once": {
-     "held": 4967,
-     "used": 1531,
-     "rate": 0.3082
+     "held": 34375,
+     "used": 13653,
+     "rate": 0.3972
     },
     "ignore_requirement_once": {
-     "held": 9937,
-     "used": 5249,
-     "rate": 0.5282
+     "held": 62060,
+     "used": 34428,
+     "rate": 0.5548
     },
     "next_quest_discount": {
-     "held": 6905,
-     "used": 6414,
-     "rate": 0.9289
+     "held": 45687,
+     "used": 43175,
+     "rate": 0.945
     }
    },
    "swaps": {
-    "made": 66501,
-    "declined": 52458,
-    "auto": 17534
+    "made": 391594,
+    "declined": 348436,
+    "auto": 47079
    }
   }
  },
  "predictors": {
   "main-2p": {
    "method": "Logistic regression of \"won (sole or shared)\" on standardized components, IRLS; plus point-biserial r.",
-   "n": 42000,
+   "n": 60000,
    "coefficients": {
-    "cards": 1.2174,
-    "full_life": 0.6046,
-    "passion": 0.3661,
-    "reflection": 0.3215,
-    "kept": 1.0997
+    "cards": 1.4877,
+    "full_life": 1.0205,
+    "passion": 0.9303,
+    "reflection": 0.7606,
+    "kept": 1.5193
    },
    "pointBiserial": {
-    "cards": 0.6476,
-    "full_life": 0.2995,
-    "passion": 0.3001,
-    "reflection": 0.3671,
-    "kept": 0.623
+    "cards": 0.5312,
+    "full_life": 0.1704,
+    "passion": 0.1678,
+    "reflection": 0.2719,
+    "kept": 0.5987
    }
   }
  },
@@ -723,144 +1416,144 @@
    [
     0.5,
     0.0035,
-    0.003,
+    0.0015,
     0.002,
     0.001,
+    0.0025,
+    0.0155,
     0.002,
-    0.015,
-    0.001,
-    0.001,
-    0.004,
-    0.003
+    0.0005,
+    0.0025,
+    0.004
    ],
    [
     0.9965,
     0.5,
-    0.431,
-    0.377,
-    0.401,
-    0.394,
-    0.601,
+    0.4315,
+    0.397,
+    0.3975,
+    0.3755,
+    0.5995,
+    0.5445,
+    0.343,
+    0.393,
+    0.195
+   ],
+   [
+    0.9985,
+    0.5685,
+    0.5,
+    0.449,
+    0.472,
+    0.4405,
+    0.6095,
+    0.6375,
+    0.4535,
+    0.446,
+    0.404
+   ],
+   [
+    0.998,
+    0.603,
+    0.551,
+    0.5,
     0.538,
-    0.349,
-    0.389,
-    null
-   ],
-   [
-    0.997,
-    0.569,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
-   ],
-   [
-    0.998,
-    0.623,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
+    0.463,
+    0.6685,
+    0.728,
+    0.4845,
+    0.5065,
+    0.584
    ],
    [
     0.999,
-    0.599,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
-   ],
-   [
-    0.998,
-    0.606,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
-   ],
-   [
-    0.985,
-    0.399,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
-   ],
-   [
-    0.999,
+    0.6025,
+    0.528,
     0.462,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
+    0.5,
+    0.445,
+    0.678,
+    0.6575,
+    0.4445,
+    0.471,
+    0.54
    ],
    [
-    0.999,
-    0.651,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
+    0.9975,
+    0.6245,
+    0.5595,
+    0.537,
+    0.555,
+    0.5,
+    0.6845,
+    0.7345,
+    0.5365,
+    0.554,
+    0.58
+   ],
+   [
+    0.9845,
+    0.4005,
+    0.3905,
+    0.3315,
+    0.322,
+    0.3155,
+    0.5,
+    0.411,
+    0.293,
+    0.334,
+    0.1835
+   ],
+   [
+    0.998,
+    0.4555,
+    0.3625,
+    0.272,
+    0.3425,
+    0.2655,
+    0.589,
+    0.5,
+    0.2495,
+    0.309,
+    0.4715
+   ],
+   [
+    0.9995,
+    0.657,
+    0.5465,
+    0.5155,
+    0.5555,
+    0.4635,
+    0.707,
+    0.7505,
+    0.5,
+    0.5335,
+    0.619
+   ],
+   [
+    0.9975,
+    0.607,
+    0.554,
+    0.4935,
+    0.529,
+    0.446,
+    0.666,
+    0.691,
+    0.4665,
+    0.5,
+    0.4955
    ],
    [
     0.996,
-    0.611,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
-   ],
-   [
-    0.997,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
+    0.805,
+    0.596,
+    0.416,
+    0.46,
+    0.42,
+    0.8165,
+    0.5285,
+    0.381,
+    0.5045,
     null
    ]
   ]
