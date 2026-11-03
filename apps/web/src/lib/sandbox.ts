@@ -12,8 +12,20 @@ export const DIALS: Dial[] = [
   { group: 'Market', key: 'market.middle', note: 'face-up Middle cards', min: 1, max: 4 },
   { group: 'Market', key: 'market.old', note: 'face-up Old cards', min: 1, max: 4 },
   { group: 'Costs and experience', key: 'experienceStep', note: 'discs per −1 year', min: 1, max: 4 },
-  { group: 'Costs and experience', key: 'experienceCap', note: 'largest discount (RULINGS R1)', min: 0, max: 6 },
-  { group: 'Costs and experience', key: 'minCost', note: 'cheapest a quest can be (0 allowed, R42)', min: 0, max: 3 },
+  {
+    group: 'Costs and experience',
+    key: 'experienceCap',
+    note: 'largest discount (RULINGS R1)',
+    min: 0,
+    max: 6,
+  },
+  {
+    group: 'Costs and experience',
+    key: 'minCost',
+    note: 'cheapest a quest can be (0 allowed, R42)',
+    min: 0,
+    max: 3,
+  },
   { group: 'Rush', key: 'rushNoPawnAhead', note: 'spaces when no pawn is ahead', min: 1, max: 6 },
   { group: 'Rush', key: 'rushDiscard', note: '1 = may discard a market card', min: 0, max: 1 },
   { group: 'Doorway (4 players)', key: 'doorway.4.0', note: 'discs kept, 1st arrival', min: 1, max: 14 },
@@ -43,7 +55,11 @@ export function setDial(r: Ruleset, key: string, v: number): Ruleset {
     const ms = Array.from({ length: count }, (_, i) => (i + 1) * step);
     const mid = r.ageBands.middle;
     const old: [number, number] = [mid[1] + 1, L - 1];
-    return applyOverrides(r, { trackLength: L, milestones: key === 'milestones' || L !== 40 ? ms : r.milestones, 'ageBands.old': old });
+    return applyOverrides(r, {
+      trackLength: L,
+      milestones: key === 'milestones' || L !== 40 ? ms : r.milestones,
+      'ageBands.old': old,
+    });
   }
   return applyOverrides(r, { [key]: v });
 }
@@ -53,7 +69,8 @@ export function diff(base: Ruleset, v: Ruleset): { key: string; from: string; to
   const walk = (a: unknown, b: unknown, p: string) => {
     if (JSON.stringify(a) === JSON.stringify(b)) return;
     if (a && b && typeof a === 'object' && typeof b === 'object' && !Array.isArray(a)) {
-      for (const k of new Set([...Object.keys(a), ...Object.keys(b as object)])) walk((a as Record<string, unknown>)[k], (b as Record<string, unknown>)[k], p ? `${p}.${k}` : k);
+      for (const k of new Set([...Object.keys(a), ...Object.keys(b as object)]))
+        walk((a as Record<string, unknown>)[k], (b as Record<string, unknown>)[k], p ? `${p}.${k}` : k);
       return;
     }
     out.push({ key: p, from: JSON.stringify(a), to: JSON.stringify(b) });
@@ -65,8 +82,24 @@ export function diff(base: Ruleset, v: Ruleset): { key: string; from: string; to
 }
 
 export const BOT_MIXES = {
-  field: { label: 'All strategies, seats drawn per game', bots: ['greedy', 'specialist', 'generalist', 'early_leaver', 'late_bloomer', 'tempo', 'rusher', 'set_collector', 'passion_specialist'] },
-  archetypes: { label: 'Four archetypes (spec), rotating seats', bots: ['specialist', 'generalist', 'early_leaver', 'late_bloomer'] },
+  field: {
+    label: 'All strategies, seats drawn per game',
+    bots: [
+      'greedy',
+      'specialist',
+      'generalist',
+      'early_leaver',
+      'late_bloomer',
+      'tempo',
+      'rusher',
+      'set_collector',
+      'passion_specialist',
+    ],
+  },
+  archetypes: {
+    label: 'Four archetypes (spec), rotating seats',
+    bots: ['specialist', 'generalist', 'early_leaver', 'late_bloomer'],
+  },
   lookahead: { label: 'Lookahead vs field', bots: ['lookahead', 'greedy', 'specialist', 'tempo'] },
 } as const;
 export type BotMix = keyof typeof BOT_MIXES;
@@ -83,7 +116,17 @@ export type SimAgg = {
   players: number;
 };
 
-export const emptyAgg = (): SimAgg => ({ games: 0, win: {}, seat: {}, score: 0, lost: {}, turns: 0, comp: { cards: 0, fullLife: 0, passion: 0, reflection: 0 }, rushes: 0, players: 0 });
+export const emptyAgg = (): SimAgg => ({
+  games: 0,
+  win: {},
+  seat: {},
+  score: 0,
+  lost: {},
+  turns: 0,
+  comp: { cards: 0, fullLife: 0, passion: 0, reflection: 0 },
+  rushes: 0,
+  players: 0,
+});
 
 export function seatsFor(mix: BotMix, players: number, g: number, seed: string): string[] {
   const bots = BOT_MIXES[mix].bots as readonly string[];
@@ -94,12 +137,28 @@ export function seatsFor(mix: BotMix, players: number, g: number, seed: string):
   return Array.from({ length: players }, (_, i) => bots[(i + g) % bots.length]);
 }
 
-export function runBatch(o: { ruleset: Ruleset; cards: Card[]; players: number; mix: BotMix; seed: string; from: number; to: number }): SimAgg {
+export function runBatch(o: {
+  ruleset: Ruleset;
+  cards: Card[];
+  players: number;
+  mix: BotMix;
+  seed: string;
+  from: number;
+  to: number;
+}): SimAgg {
   const a = emptyAgg();
   for (let g = o.from; g < o.to; g++) {
     const seats = seatsFor(o.mix, o.players, g, o.seed).map((p) => ({ policy: p }));
-    const pols = seats.map((s) => getPolicy(s.policy, s.policy === 'lookahead' ? { params: { determinizations: 4 } } : undefined));
-    const r = playGame({ ruleset: o.ruleset, cards: o.cards, seats, seed: `${o.seed}|g${g}`, policies: pols });
+    const pols = seats.map((s) =>
+      getPolicy(s.policy, s.policy === 'lookahead' ? { params: { determinizations: 4 } } : undefined),
+    );
+    const r = playGame({
+      ruleset: o.ruleset,
+      cards: o.cards,
+      seats,
+      seed: `${o.seed}|g${g}`,
+      policies: pols,
+    });
     a.games++;
     a.turns += r.turns;
     r.scores.forEach((s, i) => {
@@ -155,19 +214,59 @@ export function mergeAgg(x: SimAgg, y: SimAgg): SimAgg {
 
 export function metrics(a: SimAgg) {
   const nonFirst = Object.entries(a.lost).filter(([k]) => k !== '1');
-  const nf = nonFirst.reduce((s, [, v]) => s + v.sum, 0) / Math.max(1, nonFirst.reduce((s, [, v]) => s + v.n, 0));
+  const nf =
+    nonFirst.reduce((s, [, v]) => s + v.sum, 0) /
+    Math.max(
+      1,
+      nonFirst.reduce((s, [, v]) => s + v.n, 0),
+    );
   const top = Object.entries(a.win).sort((p, q) => q[1].w / q[1].n - p[1].w / p[1].n)[0];
   const seat1 = a.seat['1'];
   const tot = a.comp.cards + a.comp.fullLife + a.comp.passion + a.comp.reflection || 1;
   return [
-    { name: 'Average score', v: a.score / Math.max(1, a.players), fmt: (x: number) => x.toFixed(1), better: 0 },
-    { name: 'Turns per game', v: a.turns / Math.max(1, a.games), fmt: (x: number) => x.toFixed(1), better: 0 },
+    {
+      name: 'Average score',
+      v: a.score / Math.max(1, a.players),
+      fmt: (x: number) => x.toFixed(1),
+      better: 0,
+    },
+    {
+      name: 'Turns per game',
+      v: a.turns / Math.max(1, a.games),
+      fmt: (x: number) => x.toFixed(1),
+      better: 0,
+    },
     { name: 'Discs lost (non-first arrivals)', v: nf, fmt: (x: number) => x.toFixed(2), better: 0 },
-    { name: `Top strategy win (${top?.[0] ?? '—'})`, v: top ? top[1].w / top[1].n : NaN, fmt: (x: number) => `${(x * 100).toFixed(1)}%`, better: -1 },
-    { name: 'Seat 1 win − fair (pts)', v: seat1 ? ((seat1.w - seat1.fair) / seat1.n) * 100 : NaN, fmt: (x: number) => x.toFixed(1), better: 0 },
-    { name: 'Rushes per player', v: a.rushes / Math.max(1, a.players), fmt: (x: number) => x.toFixed(2), better: 0 },
-    { name: 'Full life share of points', v: a.comp.fullLife / tot, fmt: (x: number) => `${(x * 100).toFixed(1)}%`, better: 0 },
-    { name: 'Passion share of points', v: a.comp.passion / tot, fmt: (x: number) => `${(x * 100).toFixed(1)}%`, better: 0 },
+    {
+      name: `Top strategy win (${top?.[0] ?? '—'})`,
+      v: top ? top[1].w / top[1].n : NaN,
+      fmt: (x: number) => `${(x * 100).toFixed(1)}%`,
+      better: -1,
+    },
+    {
+      name: 'Seat 1 win − fair (pts)',
+      v: seat1 ? ((seat1.w - seat1.fair) / seat1.n) * 100 : NaN,
+      fmt: (x: number) => x.toFixed(1),
+      better: 0,
+    },
+    {
+      name: 'Rushes per player',
+      v: a.rushes / Math.max(1, a.players),
+      fmt: (x: number) => x.toFixed(2),
+      better: 0,
+    },
+    {
+      name: 'Full life share of points',
+      v: a.comp.fullLife / tot,
+      fmt: (x: number) => `${(x * 100).toFixed(1)}%`,
+      better: 0,
+    },
+    {
+      name: 'Passion share of points',
+      v: a.comp.passion / tot,
+      fmt: (x: number) => `${(x * 100).toFixed(1)}%`,
+      better: 0,
+    },
   ];
 }
 

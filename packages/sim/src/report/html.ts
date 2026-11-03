@@ -6,14 +6,30 @@ import { buildModel, COLORS as C, fx, label, ordinal, pct, TARGETS, type Summary
 const esc = (x: unknown) =>
   String(x).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
 
-function mix(a: number[], b: number[], t: number) {
-  return `rgb(${a.map((x, i) => Math.round(x + (b[i] - x) * t)).join(',')})`;
+function mixRgb(a: number[], b: number[], t: number) {
+  return a.map((x, i) => Math.round(x + (b[i] - x) * t));
 }
+function lum(c: number[]) {
+  const f = (v: number) => {
+    const x = v / 255;
+    return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]);
+}
+const contrast = (a: number, b: number) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 /** Diverging colour: blue (below) → surface → orange (above). */
 export function diverging(v: number, mid: number, span: number) {
-  const t = Math.min(1, Math.abs(v - mid) / span);
-  const bg = mix([27, 29, 46], v >= mid ? [240, 160, 75] : [91, 141, 239], t);
-  return { bg, fg: t > 0.55 ? C.ink : C.text };
+  let t = Math.min(1, Math.abs(v - mid) / span);
+  const to = v >= mid ? [240, 160, 75] : [91, 141, 239];
+  // nudge mid-strength cells until one text colour clears 4.5:1
+  const ok = (c: number[]) =>
+    Math.max(contrast(lum(c), lum([18, 19, 31])), contrast(lum(c), lum([236, 232, 223]))) >= 4.5;
+  while (t < 1 && !ok(mixRgb([27, 29, 46], to, t))) t = Math.min(1, t + 0.05);
+  const rgb = mixRgb([27, 29, 46], v >= mid ? [240, 160, 75] : [91, 141, 239], t);
+  const L = lum(rgb);
+  // pick whichever text colour reads better on this cell (WCAG contrast)
+  const fg = contrast(L, lum([18, 19, 31])) >= contrast(L, lum([236, 232, 223])) ? C.ink : C.text;
+  return { bg: `rgb(${rgb.join(',')})`, fg };
 }
 
 export function winChart(

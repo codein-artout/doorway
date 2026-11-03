@@ -78,18 +78,18 @@ export function Disc({
         width: w,
         height: h,
         borderRadius: h / 2,
-        background: info.css,
+        background: state === 'left' ? `color-mix(in srgb, ${info.css} 30%, var(--surface))` : info.css,
+        color: state === 'left' ? 'var(--text)' : 'var(--ink)',
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: 4,
         boxShadow: 'inset 0 -3px 0 rgba(0,0,0,.18)',
         flex: 'none',
-        opacity: state === 'left' ? 0.28 : 1,
       }}
     >
       <DomainIcon domain={domain} size={h >= 30 ? 16 : 14} />
-      {showCode && <span className="font-mono text-[11px] font-bold text-ink">{info.code}</span>}
+      {showCode && <span className="font-mono text-[11px] font-bold">{info.code}</span>}
       <span className="sr-only">{info.name}</span>
     </span>
   );

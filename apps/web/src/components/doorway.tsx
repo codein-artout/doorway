@@ -61,7 +61,7 @@ function Rows({
 }) {
   const idx = tower.map((_, i) => i).reverse();
   return (
-    <div role="listbox" aria-label="Choose the stretch you keep" className="flex flex-col gap-[3px]">
+    <div role="group" aria-label="Choose the stretch you keep" className="flex flex-col gap-[3px]">
       {idx.map((i) => {
         const id = tower[i];
         const c = state.cards[id];
@@ -77,12 +77,10 @@ function Rows({
         return (
           <div
             key={i}
-            role="option"
-            aria-selected={kept}
             className={`grid items-center gap-2.5 dw-tween ${locked && !kept ? 'dw-left-behind' : ''}`}
             style={{
               gridTemplateColumns: '14px 26px minmax(0,220px) minmax(0,1fr) 54px',
-              opacity: kept ? 1 : 0.32,
+              opacity: 1,
               transform: locked && !kept ? 'translateX(-18px)' : locked && kept ? 'translateY(-4px)' : 'none',
               transitionDelay:
                 locked && !kept ? `${Math.min(Math.abs(i - start), Math.abs(i - end)) * 30}ms` : '0ms',
@@ -117,13 +115,19 @@ function Rows({
               type="button"
               onClick={() => !locked && onJump(i)}
               disabled={locked}
-              aria-label={`Disc ${i + 1}, ${DOMAIN[c.color].name}, ${c.name}${kept ? ', kept' : ', stays behind'}. Start the stretch here.`}
               className="flex h-[34px] min-w-0 cursor-pointer items-center gap-2 rounded-[17px] border-none px-3.5 text-ink"
-              style={{ background: DOMAIN[c.color].css, boxShadow: 'inset 0 -4px 0 rgba(0,0,0,.18)' }}
+              style={{
+                background: kept
+                  ? DOMAIN[c.color].css
+                  : `color-mix(in srgb, ${DOMAIN[c.color].css} 30%, var(--surface))`,
+                color: kept ? 'var(--ink)' : 'var(--text)',
+                boxShadow: 'inset 0 -4px 0 rgba(0,0,0,.18)',
+              }}
             >
               <DomainIcon domain={c.color} size={16} />
               <span className="font-mono text-xs font-bold">{DOMAIN[c.color].code}</span>
               <span className="truncate text-[13px] font-bold">{c.name}</span>
+              <span className="sr-only">{`, disc ${i + 1}, ${DOMAIN[c.color].name}${kept ? ', kept' : ', stays behind'}. Start the stretch here.`}</span>
             </button>
             <span className="text-xs" style={{ color: kept ? 'var(--text)' : 'var(--muted)' }}>
               {note}

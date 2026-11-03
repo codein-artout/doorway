@@ -37,7 +37,7 @@ export function QuestCard({
       onClick={clickable ? onPick : undefined}
       aria-disabled={!clickable}
       aria-pressed={selected || discarding}
-      aria-label={v.aria}
+      aria-describedby={undefined}
       tabIndex={tabIndex}
       onKeyDown={onKeyDown}
       data-card={c.id}

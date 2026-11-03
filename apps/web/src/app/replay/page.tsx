@@ -23,7 +23,10 @@ export default function ReplayPage() {
     const q = new URLSearchParams(window.location.search);
     const id = q.get('id');
     const cur = loadCurrent();
-    setList([...(cur && cur.replay.moves.length ? [cur] : []), ...loadSaved().filter((g) => g.id !== cur?.id)]);
+    setList([
+      ...(cur && cur.replay.moves.length ? [cur] : []),
+      ...loadSaved().filter((g) => g.id !== cur?.id),
+    ]);
     const g = id ? findGame(id) : null;
     if (g) open(g, q.get('move'));
   }, []);
@@ -33,7 +36,10 @@ export default function ReplayPage() {
       const r = engineReplay(g.replay, { ruleset: g.setup.ruleset, cards: CARDS }, { keepStates: true });
       setGame(g);
       setStates(r.states!);
-      const m = moveParam !== null && moveParam !== undefined && moveParam !== '' ? Math.max(0, Math.min(r.states!.length - 1, Number(moveParam))) : r.states!.length - 1;
+      const m =
+        moveParam !== null && moveParam !== undefined && moveParam !== ''
+          ? Math.max(0, Math.min(r.states!.length - 1, Number(moveParam)))
+          : r.states!.length - 1;
       setMove(m);
       setError(null);
     } catch (e) {
@@ -68,7 +74,10 @@ export default function ReplayPage() {
   const lastLines = useMemo(() => {
     if (!states || move === 0) return [];
     const before = states[move - 1].log.length;
-    return states[move].log.slice(before).map((e) => logLine(states[move], e)).filter(Boolean) as string[];
+    return states[move].log
+      .slice(before)
+      .map((e) => logLine(states[move], e))
+      .filter(Boolean) as string[];
   }, [states, move]);
 
   return (
@@ -78,7 +87,10 @@ export default function ReplayPage() {
         <div className="flex flex-wrap items-end gap-4">
           <div className="flex-1">
             <h1 className="m-0 font-display text-[34px] font-extrabold">Replay</h1>
-            <p className="m-0 text-muted">Every game rebuilds from its seed and its move list. Step through it, or share a link to a single move.</p>
+            <p className="m-0 text-muted">
+              Every game rebuilds from its seed and its move list. Step through it, or share a link to a
+              single move.
+            </p>
           </div>
           <label className="inline-flex min-h-[44px] cursor-pointer items-center rounded-xl border border-line px-4 text-sm">
             Open a replay file (.json)
@@ -104,12 +116,19 @@ export default function ReplayPage() {
         {!game && (
           <section className="mt-5 rounded-2xl border border-line bg-surface p-5">
             <h2 className="m-0 mb-2 font-display text-xl">Games on this device</h2>
-            {list.length === 0 && <p className="m-0 text-muted">No games yet. Finished and in-progress games appear here.</p>}
+            {list.length === 0 && (
+              <p className="m-0 text-muted">No games yet. Finished and in-progress games appear here.</p>
+            )}
             <ul className="m-0 flex list-none flex-col gap-2 p-0">
               {list.map((g) => (
                 <li key={g.id}>
-                  <button type="button" className="min-h-[44px] cursor-pointer rounded-xl border border-line bg-surface-2 px-4 text-left text-text" onClick={() => open(g)}>
-                    {g.setup.seats.map((x) => x.name).join(' · ')} — {g.replay.moves.length} moves · seed {g.setup.seed} · {new Date(g.savedAt).toLocaleString()}
+                  <button
+                    type="button"
+                    className="min-h-[44px] cursor-pointer rounded-xl border border-line bg-surface-2 px-4 text-left text-text"
+                    onClick={() => open(g)}
+                  >
+                    {g.setup.seats.map((x) => x.name).join(' · ')} — {g.replay.moves.length} moves · seed{' '}
+                    {g.setup.seed} · {new Date(g.savedAt).toLocaleString()}
                   </button>
                 </li>
               ))}
@@ -118,27 +137,75 @@ export default function ReplayPage() {
         )}
         {s && states && game && (
           <>
-            <section aria-label="Replay controls" className="mt-5 flex flex-wrap items-center gap-3 rounded-2xl border border-line bg-surface p-4">
-              <button type="button" onClick={() => setMove(0)} disabled={move === 0} className="min-h-[44px] cursor-pointer rounded-xl border border-line bg-surface-2 px-3 text-text disabled:opacity-45" aria-label="First move">
+            <section
+              aria-label="Replay controls"
+              className="mt-5 flex flex-wrap items-center gap-3 rounded-2xl border border-line bg-surface p-4"
+            >
+              <button
+                type="button"
+                onClick={() => setMove(0)}
+                disabled={move === 0}
+                className="min-h-[44px] cursor-pointer rounded-xl border border-line bg-surface-2 px-3 text-text disabled:opacity-45"
+                aria-label="First move"
+              >
                 ⏮
               </button>
-              <button type="button" onClick={() => setMove(Math.max(0, move - 1))} disabled={move === 0} className="min-h-[44px] cursor-pointer rounded-xl border border-line bg-surface-2 px-4 text-text disabled:opacity-45" data-testid="replay-back">
+              <button
+                type="button"
+                onClick={() => setMove(Math.max(0, move - 1))}
+                disabled={move === 0}
+                className="min-h-[44px] cursor-pointer rounded-xl border border-line bg-surface-2 px-4 text-text disabled:opacity-45"
+                data-testid="replay-back"
+              >
                 ← Back
               </button>
-              <input type="range" min={0} max={states.length - 1} value={move} onChange={(e) => setMove(Number(e.target.value))} aria-label="Move" className="min-w-[160px] flex-1" />
-              <button type="button" onClick={() => setMove(Math.min(states.length - 1, move + 1))} disabled={move === states.length - 1} className="min-h-[44px] cursor-pointer rounded-xl border border-line bg-surface-2 px-4 text-text disabled:opacity-45" data-testid="replay-forward">
+              <input
+                type="range"
+                min={0}
+                max={states.length - 1}
+                value={move}
+                onChange={(e) => setMove(Number(e.target.value))}
+                aria-label="Move"
+                className="min-w-[160px] flex-1"
+              />
+              <button
+                type="button"
+                onClick={() => setMove(Math.min(states.length - 1, move + 1))}
+                disabled={move === states.length - 1}
+                className="min-h-[44px] cursor-pointer rounded-xl border border-line bg-surface-2 px-4 text-text disabled:opacity-45"
+                data-testid="replay-forward"
+              >
                 Forward →
               </button>
-              <button type="button" onClick={() => setMove(states.length - 1)} disabled={move === states.length - 1} className="min-h-[44px] cursor-pointer rounded-xl border border-line bg-surface-2 px-3 text-text disabled:opacity-45" aria-label="Last move">
+              <button
+                type="button"
+                onClick={() => setMove(states.length - 1)}
+                disabled={move === states.length - 1}
+                className="min-h-[44px] cursor-pointer rounded-xl border border-line bg-surface-2 px-3 text-text disabled:opacity-45"
+                aria-label="Last move"
+              >
                 ⏭
               </button>
               <span className="font-mono text-sm" data-testid="replay-pos">
                 move {move} / {states.length - 1}
               </span>
-              <button type="button" onClick={() => download(`doorway-replay-${game.setup.seed}.json`, exportReplayJson(states[states.length - 1], game.setup))} className="min-h-[44px] cursor-pointer rounded-full border border-line bg-surface px-4 text-text">
+              <button
+                type="button"
+                onClick={() =>
+                  download(
+                    `doorway-replay-${game.setup.seed}.json`,
+                    exportReplayJson(states[states.length - 1], game.setup),
+                  )
+                }
+                className="min-h-[44px] cursor-pointer rounded-full border border-line bg-surface px-4 text-text"
+              >
                 Export replay
               </button>
-              <button type="button" onClick={() => download(`doorway-state-${game.setup.seed}-m${move}.json`, exportStateJson(s))} className="min-h-[44px] cursor-pointer rounded-full border border-line bg-surface px-4 text-text">
+              <button
+                type="button"
+                onClick={() => download(`doorway-state-${game.setup.seed}-m${move}.json`, exportStateJson(s))}
+                className="min-h-[44px] cursor-pointer rounded-full border border-line bg-surface px-4 text-text"
+              >
                 Export this state
               </button>
             </section>
@@ -163,16 +230,33 @@ export default function ReplayPage() {
             </div>
           ) : (
             <div className="flex flex-wrap items-start gap-5 px-4 pt-3.5 md:px-7">
-              <aside className="flex max-w-[330px] min-w-0 flex-[1_1_280px] flex-col gap-3" aria-label="Players">
+              <aside
+                className="flex max-w-[330px] min-w-0 flex-[1_1_280px] flex-col gap-3"
+                aria-label="Players"
+              >
                 {queue(s).map((e) => (
                   <QueueCard key={e.player.id} state={s} e={e} thinking={false} />
                 ))}
               </aside>
-              <section aria-label="Market at this move" className="min-w-0 flex-[999_1_600px] rounded-2xl border border-line-soft bg-sunk px-[18px] pt-4 pb-[18px]">
+              <section
+                aria-label="Market at this move"
+                className="min-w-0 flex-[999_1_600px] rounded-2xl border border-line-soft bg-sunk px-[18px] pt-4 pb-[18px]"
+              >
                 <h2 className="m-0 font-display text-xl font-bold">Quests</h2>
-                <Market state={s} viewer={currentPlayer(s)} myTurn={false} rushMode={false} selected={last?.move.type === 'quest' ? null : null} discard={null} onPick={() => {}} />
+                <Market
+                  state={s}
+                  viewer={currentPlayer(s)}
+                  myTurn={false}
+                  rushMode={false}
+                  selected={last?.move.type === 'quest' ? null : null}
+                  discard={null}
+                  onPick={() => {}}
+                />
               </section>
-              <aside className="flex max-w-[340px] min-w-0 flex-[1_1_290px] flex-col gap-3" aria-label="Towers">
+              <aside
+                className="flex max-w-[340px] min-w-0 flex-[1_1_290px] flex-col gap-3"
+                aria-label="Towers"
+              >
                 {s.players.map((p) => (
                   <section key={p.id} className="rounded-2xl border border-line bg-surface p-4">
                     <h2 className="m-0 mb-2 font-display text-base">

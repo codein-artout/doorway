@@ -216,7 +216,7 @@ export function PhoneMarket({
               type="button"
               aria-pressed={on}
               aria-disabled={!clickable}
-              aria-label={v.aria}
+
               data-card={id}
               onClick={clickable ? () => onPick(id) : undefined}
               className="grid items-center gap-2.5 rounded-[14px] bg-card p-3 text-left text-text"
