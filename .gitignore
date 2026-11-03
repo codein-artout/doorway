@@ -1,1 +1,14 @@
-doorway-kit.zip
+node_modules/
+dist/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+reports/runs/
+apps/web/test-results/
+apps/web/playwright-report/
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example

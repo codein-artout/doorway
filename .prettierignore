@@ -1,0 +1,10 @@
+node_modules
+dist
+.next
+reports
+spec
+design
+pnpm-lock.yaml
+*.md
+apps/web/next-env.d.ts
+packages/content/rulesets
