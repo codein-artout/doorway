@@ -73,7 +73,7 @@ export function renderMarkdown(s: Summary): string {
     );
   }
   P(
-    `**Dominance check (spec: no strategy above 35% in 4p):** ${m.top4 ? `${m.top4.label} tops 4p at ${pct(m.top4.win)} [${pct(m.top4.lo)}, ${pct(m.top4.hi)}] → ${m.top4.win <= TARGETS.maxStrategyWin4p ? 'pass' : 'fail'}.` : 'no 4p data.'}`,
+    `**Dominance check (spec: no archetype above 35% in 4p):** ${m.topArch4 ? `the best archetype, ${m.topArch4.label}, wins ${pct(m.topArch4.win)} [${pct(m.topArch4.lo)}, ${pct(m.topArch4.hi)}] → ${m.topArch4.win <= TARGETS.maxStrategyWin4p ? 'pass' : 'fail'}.` : 'no 4p data.'}${m.look4 ? ` The lookahead search bot (not an archetype) wins ${pct(m.look4.win)} [${pct(m.look4.lo)}, ${pct(m.look4.hi)}] → ${m.look4.win <= TARGETS.maxStrategyWin4p ? 'also under' : 'over'} the ceiling on the stricter reading.` : ''}`,
   );
   if (m.noisy)
     P(
@@ -391,7 +391,9 @@ export function answers(m: Model) {
   if (m.top4)
     a.push({
       q: 'Does any strategy dominate?',
-      a: `${m.top4.win <= TARGETS.maxStrategyWin4p ? 'No.' : 'Yes.'} The best 4p strategy (${m.top4.label}) wins ${pct(m.top4.win)} of games [${pct(m.top4.lo)}, ${pct(m.top4.hi)}] against a 35% ceiling; the weakest non-random one wins ${pct(m.strat4.filter((x) => x.id !== 'random').slice(-1)[0]?.win)}.`,
+      a: m.topArch4
+        ? `${m.topArch4.win <= TARGETS.maxStrategyWin4p ? 'No archetype does.' : 'Yes.'} The best 4p archetype (${m.topArch4.label}) wins ${pct(m.topArch4.win)} [${pct(m.topArch4.lo)}, ${pct(m.topArch4.hi)}] against a 35% ceiling; the weakest wins ${pct(m.strat4.filter((x) => x.id !== 'random' && x.id !== 'lookahead').slice(-1)[0]?.win)}.${m.look4 ? ` The lookahead search bot wins ${pct(m.look4.win)}${m.look4.win > TARGETS.maxStrategyWin4p ? ', just over the ceiling — skilful play is rewarded, mostly by Rushing more (' + fx(m.look4.rushes, 1) + ' per game) and arriving earlier' : ''}.` : ''}`
+        : `The best 4p strategy (${m.top4.label}) wins ${pct(m.top4.win)}.`,
       chip: 'BALANCE',
     });
   const s4 = m.seats.find((x) => x.players === 4);
@@ -434,7 +436,15 @@ export function answers(m: Model) {
   if (m.flagged.length || m.unused.length)
     a.push({
       q: 'Any cards out of line?',
-      a: `${m.flagged.length ? m.flagged.map((c: any) => `${c.name} (${c.id}, ${c.flag}, ${fx(c.relWin)}× fair)`).join('; ') : 'No card is flagged at the ±10% margin'}.${m.unused.length ? ` Rarely picked: ${m.unused.map((c: any) => c.name).join(', ')}.` : ''}`,
+      a: `${
+        m.flagged.length
+          ? `${m.flagged.length} of 60 are flagged at ±10%. Strongest: ` +
+            m.flagged
+              .slice(0, 5)
+              .map((c: any) => `${c.name} (${c.id}, ${c.flag}, ${fx(c.relWin)}× fair)`)
+              .join('; ')
+          : 'No card is flagged at the ±10% margin'
+      }.${m.unused.length ? ` Rarely picked: ${m.unused.map((c: any) => c.name).join(', ')}.` : ''}`,
       chip: 'CARDS',
     });
   return a;

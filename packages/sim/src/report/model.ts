@@ -75,6 +75,9 @@ export function buildModel(s: Summary) {
     : [];
   strat4.sort((a, b) => b.win - a.win);
   const top4 = strat4[0];
+  /** archetype bots only: the search baseline (lookahead) and random are not archetypes */
+  const topArch4 = strat4.find((x) => x.id !== 'lookahead' && x.id !== 'random');
+  const look4 = strat4.find((x) => x.id === 'lookahead');
 
   // ---- Doorway headline
   const doorway = counts.map((n) => {
@@ -227,9 +230,22 @@ export function buildModel(s: Summary) {
     {
       signal: 'Bot sims, 4p: no single strategy archetype wins more than',
       target: '35% of games',
-      value: top4 ? `${top4.label} ${pct(top4.win)} [${pct(top4.lo)}, ${pct(top4.hi)}]` : '—',
-      verdict: top4 ? (top4.win <= TARGETS.maxStrategyWin4p ? 'pass' : 'fail') : 'n/a',
+      value: topArch4
+        ? `${topArch4.label} ${pct(topArch4.win)} [${pct(topArch4.lo)}, ${pct(topArch4.hi)}] (archetypes)`
+        : '—',
+      verdict: topArch4 ? (topArch4.win <= TARGETS.maxStrategyWin4p ? 'pass' : 'fail') : 'n/a',
+      note: 'Archetypes = the 9 heuristic strategies (D-SIM-6).',
     },
+    ...(look4
+      ? [
+          {
+            signal: 'Bot sims, 4p: the search baseline (lookahead) stays under',
+            target: '35% of games (stricter reading)',
+            value: `${look4.label} ${pct(look4.win)} [${pct(look4.lo)}, ${pct(look4.hi)}]`,
+            verdict: (look4.win <= TARGETS.maxStrategyWin4p ? 'pass' : 'fail') as Verdict,
+          },
+        ]
+      : []),
     ...seats.map((x) => ({
       signal: `Bot sims, ${x.players}p: first-seat win rate within`,
       target: '±5% of fair share',
@@ -309,7 +325,9 @@ export function buildModel(s: Summary) {
     g3,
     g4,
     noisy: s.groups['noisy-4p'],
-    tweaks: suggestTweaks(sweeps),
+    topArch4,
+    look4,
+    tweaks: suggestTweaks(sweeps, confirm),
   };
 }
 
@@ -321,11 +339,15 @@ export type Tweak = { title: string; why: string; evidence: string; sweep: strin
  * - Doorway: a value that keeps non-first losses ≥ 2 while making first arrival matter (gap first vs last)
  * - scoring mix: a value that raises an under-used scoring path's share without hurting balance
  */
-export function suggestTweaks(sweeps: any[]): Tweak[] {
+export function suggestTweaks(sweeps: any[], confirm: any[] = []): Tweak[] {
   const out: Tweak[] = [];
   const byKey = Object.fromEntries((sweeps as any[]).map((w) => [w.key, w]));
+  const conf = Object.fromEntries((confirm as any[]).map((w) => [w.key, w]));
+  const lookWin = (key: string, label: string) =>
+    conf[key]?.values.find((v: any) => v.label === label)?.lookahead?.win as number | undefined;
+  const gap = (v: any) => v.lastLost - v.firstLost;
   const fmt = (v: any) =>
-    `${v.label}: top strategy ${v.topPolicy} ${pct(v.topWin)}, spread ${pct(v.spread)}, non-first arrivals lose ${fx(v.nonFirstLost)} (1st ${fx(v.firstLost)}, last ${fx(v.lastLost)}), Full life ${pct(v.fullLifeShare)} of points, ${fx(v.turns, 1)} turns/game`;
+    `${v.label}: top strategy ${v.topPolicy} ${pct(v.topWin)}, spread ${pct(v.spread)}, non-first arrivals lose ${fx(v.nonFirstLost)} (1st ${fx(v.firstLost)}, last ${fx(v.lastLost)}), Full life ${pct(v.fullLifeShare)} of points, avg score ${fx(v.avgScore, 1)}`;
   const consider = (
     key: string,
     pick: (vals: any[], base: any) => any | null,
@@ -341,54 +363,78 @@ export function suggestTweaks(sweeps: any[]): Tweak[] {
     );
     if (!v) return;
     const t = mk(v, base);
+    const lw = lookWin(key, v.label);
+    const lb = lookWin(key, base.label);
+    const c =
+      lw !== undefined && lb !== undefined
+        ? ` S4C (lookahead in every game, 2,000 games): lookahead wins ${pct(lw)} vs ${pct(lb)} at baseline.`
+        : '';
     out.push({
       ...t,
-      evidence: `${w.key} sweep (S4, ${v.games.toLocaleString()} games per value) — ${fmt(v)}; baseline ${fmt(base)}.`,
+      evidence: `${w.key} sweep (S4, ${v.games.toLocaleString()} games per value) — ${fmt(v)}; baseline ${fmt(base)}.${c}`,
       sweep: w.key,
       value: v.label,
     });
   };
-  // Doorway tiles: the value with the biggest first-vs-last loss gap (makes arriving first matter more)
+  // 4p tiles: widen the first-vs-last gap without handing the strongest player more (prefer S4C evidence)
   consider(
     'doorway.4',
     (vals, base) => {
-      const gap = (v: any) => v.lastLost - v.firstLost;
-      const best = vals.slice().sort((a: any, b: any) => gap(b) - gap(a))[0];
-      return best && gap(best) > gap(base) + 0.5 ? best : null;
+      const wider = vals.filter((v: any) => gap(v) > gap(base) + 0.5);
+      if (!wider.length) return null;
+      const score = (v: any) => lookWin('doorway.4', v.label) ?? v.topWin;
+      return wider.sort((a: any, b: any) => score(a) - score(b) || gap(b) - gap(a))[0];
     },
     (v, base) => ({
       title: `Try 4-player Doorway tiles ${v.label}`,
-      why: `It widens the gap between arriving first and last (${fx(v.lastLost - v.firstLost)} discs vs ${fx(base.lastLost - base.firstLost)} today), so the race to the Doorway becomes a real decision.`,
+      why: `Arriving first starts to matter more: the gap between first and last arrival grows to ${fx(gap(v))} discs (from ${fx(gap(base))}) while the strongest bot does not gain. Scores drop by about ${fx(base.avgScore - v.avgScore, 1)} points, so the scoring scale would need a look.`,
     }),
   );
-  // Experience cap: the value that most reduces the top strategy's edge
-  consider(
-    'experienceCap',
-    (vals, base) => {
-      const best = vals.slice().sort((a: any, b: any) => a.spread - b.spread)[0];
-      return best && best.spread < base.spread - 0.01 ? best : null;
-    },
-    (v, base) => ({
-      title: `Consider experienceCap = ${v.label}`,
-      why: `Strategies end closer together (spread ${pct(v.spread)} vs ${pct(base.spread)}), which suggests the engine snowball is part of the imbalance.`,
-    }),
-  );
-  // Full life: if sets are a small share of points, a bigger bonus that raises the share without widening the spread
+  // 3p / 2p tiles: narrower spread between strategies
+  for (const key of ['doorway.3', 'doorway.2'])
+    consider(
+      key,
+      (vals, base) => {
+        const best = vals.slice().sort((a: any, b: any) => a.spread - b.spread)[0];
+        return best && best.spread < base.spread - 0.02 ? best : null;
+      },
+      (v, base) => ({
+        title: `Try ${key.endsWith('3') ? '3' : '2'}-player tiles ${v.label}`,
+        why: `Strategies end closer together (spread ${pct(v.spread)} vs ${pct(base.spread)}) and arriving first matters more (gap ${fx(gap(v))} vs ${fx(gap(base))} discs).`,
+      }),
+    );
+  // Full life: sets are a small share of points
   consider(
     'fullLifeBonus',
     (vals, base) => {
       if (base.fullLifeShare > 0.12) return null;
       const ok = vals.filter(
-        (v: any) => v.fullLifeShare > base.fullLifeShare && v.spread <= base.spread + 0.02,
+        (v: any) => v.fullLifeShare > base.fullLifeShare && v.spread <= base.spread + 0.01,
       );
       return ok.sort((a: any, b: any) => b.fullLifeShare - a.fullLifeShare)[0] ?? null;
     },
     (v, base) => ({
       title: `Raise the Full life bonus to ${v.label}`,
-      why: `Sets are only ${pct(base.fullLifeShare)} of all points today; at ${v.label} they become ${pct(v.fullLifeShare)} without widening the gap between strategies, so the generalist path stays alive.`,
+      why: `Sets are only ${pct(base.fullLifeShare)} of all points today; at ${v.label} they become ${pct(v.fullLifeShare)} without widening the gap between strategies, so the generalist path matters more.`,
     }),
   );
-  // Passion table: the value with the smallest spread
+  // Experience cap: if it never binds, it is rules text you can drop
+  consider(
+    'experienceCap',
+    (vals, base) => {
+      const none = vals.find((v: any) => Number(v.label) >= 99);
+      return none &&
+        Math.abs(none.topWin - base.topWin) < 0.005 &&
+        Math.abs(none.nonFirstLost - base.nonFirstLost) < 0.05
+        ? none
+        : null;
+    },
+    (v, base) => ({
+      title: 'Drop the experience cap from the rules (or keep it only as a safety rail)',
+      why: `With no cap the game plays the same (top win ${pct(v.topWin)} vs ${pct(base.topWin)}, same discs lost): towers rarely reach 8 discs of one domain, so the −4 cap almost never binds.`,
+    }),
+  );
+  // Passion
   consider(
     'passion',
     (vals, base) => {
@@ -400,18 +446,5 @@ export function suggestTweaks(sweeps: any[]): Tweak[] {
       why: `It narrows the spread between strategies to ${pct(v.spread)} (from ${pct(base.spread)}).`,
     }),
   );
-  // 3p / 2p tiles
-  for (const key of ['doorway.3', 'doorway.2'])
-    consider(
-      key,
-      (vals, base) => {
-        const best = vals.slice().sort((a: any, b: any) => Math.abs(a.seat1PP) - Math.abs(b.seat1PP))[0];
-        return best && Math.abs(best.seat1PP) + 1 < Math.abs(base.seat1PP) ? best : null;
-      },
-      (v, base) => ({
-        title: `Try ${key.endsWith('3') ? '3' : '2'}-player tiles ${v.label}`,
-        why: `The first seat's edge shrinks to ${fx(v.seat1PP, 1)} pts (from ${fx(base.seat1PP, 1)}).`,
-      }),
-    );
   return out.slice(0, 6);
 }

@@ -114,3 +114,10 @@ Every judgement call made while building, with date, decision, why and alternati
 
 ### D-WEB-7 — Tailwind token names (2026-11-03)
 - `--base` (tower base plate) is exposed to Tailwind as `plate`, because a `base` colour collides with Tailwind's `text-base` font-size utility.
+
+### D-SIM-6 — "Strategy archetype" in the 35% signal (2026-11-03)
+- **Decision:** the spec's "no single strategy archetype wins more than 35% (4p)" is judged on the nine heuristic archetype bots. `lookahead` is a search baseline (spec §6: "stronger opponent; finds degenerate lines"), not an archetype, so it is reported on its own row as a stricter reading (36.1% in S2 4p → fail on that reading). `random` is excluded as a fuzzing bot.
+- **Why:** an archetype is a play style a human might adopt; a search bot measures how much skill the rules reward.
+
+### D-SIM-7 — Tweak selection (2026-11-03)
+- **Decision:** tweaks are chosen by fixed rules over the S4 rows (and S4C when present): 4p tiles that widen the first-vs-last loss gap without raising lookahead's S4C win rate; 3p/2p tiles that narrow the strategy spread by ≥ 2 pts; a Full life bonus that raises sets' share of points without widening the spread; dropping the experience cap when "no cap" is indistinguishable from the default. Each suggestion prints the exact rows it relies on.
