@@ -1,0 +1,18 @@
+{
+  "args": [
+    "--players",
+    "4",
+    "--games",
+    "1000",
+    "--bots",
+    "greedy,tempo,specialist,generalist",
+    "--seed",
+    "v2-regress",
+    "--quiet"
+  ],
+  "files": {
+    "games.csv.gz": "8212060a2219b2f9648c190fa448594e655bb254e3df8e63811284d6ec9b6041",
+    "players.csv.gz": "d334e0f0a6236fa9a6997da97873b84b7fd2c9d0d4e129737620ce3443bd6c25",
+    "picks.csv.gz": "b7e4cfa61b207400adb59a310c40d621d24670753272db6010528a4c0e93dbaf"
+  }
+}

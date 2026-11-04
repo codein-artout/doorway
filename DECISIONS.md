@@ -124,3 +124,14 @@ Every judgement call made while building, with date, decision, why and alternati
 
 ### D-ENV-4 — PR base branch (2026-11-03)
 - **Decision:** the prompt says "PR into `main`", but the repository's only base branch is `master`, so the PR targets `master`.
+
+## v2
+
+### V2-1 — Branch and base (2026-11-04)
+- The repository has no `main`; its default branch is `master`, which already contains v1 and the v2 design kit. The session branch was fast-forwarded to `origin/master` before any v2 work, and the v2 PR targets `master`.
+
+### V2-2 — `replays/` excluded from Prettier (2026-11-04)
+- CIAO's sample export in `replays/` is data, not source, and failed `prettier --check`, which turned `pnpm verify` red before any v2 change. It is added to `.prettierignore` instead of being reformatted.
+
+### V2-3 — Regression baseline lives in `scripts/regression/` (2026-11-04)
+- `reports/runs/` is gitignored (and `reports/` must not change), so a fresh clone has no `v2-before`. The N1 output is fingerprinted (SHA-256 of the uncompressed `games.csv`, `players.csv`, `picks.csv`) in `scripts/regression/v2-baseline.json`; `pnpm regress` compares a new run against the fingerprint and, when present, byte-for-byte against `reports/runs/v2-before`.

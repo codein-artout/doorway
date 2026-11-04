@@ -61,3 +61,35 @@ pnpm verify
 - 22:20–22:45 — M10–M14 web app pushed; e2e green.
 - 23:37 — study complete (437,730 games); aggregate + report.
 - 23:55 — fresh-clone verification; PR opened.
+
+---
+
+## v2 — Board & Analyst modes
+
+**Current milestone:** N2 — themes and the view switch
+
+### Finished milestones
+| # | What | Commit |
+|---|---|---|
+| N1 | Orientation, `pnpm verify` green, regression baseline + check script in `pnpm verify` | (this commit) |
+
+### Next
+- N2 themes + view switch → N3 engine/bot hooks → N4–N5 Board → N6–N7 Analyst → N8 designer → N9 quality → N10 wrap-up.
+
+### Blockers
+- none.
+
+### Map of the web app (v1, as found in N1)
+- `apps/web/src/app/` — routes: `/` new game (`page.tsx`), `/play` table (`play/page.tsx`: Table, SwapPrompt, IfYouWalked; phone vs desktop by `useIsPhone`), `/replay` (step/slider/`?move=N`), `/rules`, `/designer` (server page reads `reports/data/summary.json` → `analysis.tsx`), `/designer/sandbox`, `/designer/cards`, `/design-check`.
+- `apps/web/src/lib/` — `game-client.ts` (GameClient + LocalGameClient, undo, bot scheduling), `bot-move.ts` (deterministic bot move), `table-model.ts` (pure copy/preview/queue/banner/log helpers), `use-game.ts` (subscribe hook + pawn hop animation), `storage.ts` (localStorage), `import-export.ts`, `sandbox.ts` (dials, worker batches), `ui-rules.ts`, `domains.ts` (icons, domain meta).
+- `apps/web/src/components/` — `primitives` (Icon, Disc, Pawn, Button…), `track`, `market` (QuestCard), `turn` (TurnBanner, QueueCard), `actions` (ActionBar), `score` (ScoreTiles, TowerList), `doorway` (DoorwaySelect), `results`, `phone` (OverviewBar, NearStrip, PhoneMarket), nav components.
+- `apps/web/src/workers/` — `bot.worker.ts`, `sim.worker.ts`. `apps/web/e2e/` — Playwright specs.
+- Styling: Tailwind 4 with tokens in `src/app/globals.css` (`@theme inline` maps CSS variables), fonts via `next/font` in `layout.tsx`.
+
+### Regression check
+- Baseline (N1): `pnpm sim --players 4 --games 1000 --bots greedy,tempo,specialist,generalist --seed v2-regress --out reports/runs/v2-before` (v1 flags unchanged). Its SHA-256 fingerprint is committed in `scripts/regression/v2-baseline.json` because `reports/runs/` is gitignored.
+- `pnpm regress` reruns it into `reports/runs/v2-after` and requires identical games/players/picks; it is part of `pnpm verify`.
+
+### Time log (UTC, 2026-11-04)
+- 12:59 — v2 start; fast-forwarded the branch to `master` (v2 design kit).
+- 13:10 — N1: verify green, baseline recorded.
