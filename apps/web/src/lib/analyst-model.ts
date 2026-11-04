@@ -100,6 +100,8 @@ export function decisionRows(s: GameState, viewer: PlayerId, myTurn: boolean): D
   const view = myTurn ? makeBotView(s, viewer) : null;
   const g = ranks(view ? (getPolicy('greedy').explain?.(view) ?? null) : null);
   const t = ranks(view ? (getPolicy('tempo').explain?.(view) ?? null) : null);
+  // Lookahead ranks only the candidates it shortlists; the rest show "–"
+  const l = ranks(view ? (getPolicy('lookahead').explain?.(view) ?? null) : null);
   const rows: DecisionRow[] = [];
   for (const age of AGES)
     for (const id of s.market[age]) {
@@ -160,7 +162,7 @@ export function decisionRows(s: GameState, viewer: PlayerId, myTurn: boolean): D
         lands: nx ? nx.pv.landing : null,
         next: nx ? nx.text : myTurn ? reason : '',
         delta: legal ? delta : null,
-        bots: legal ? `G#${g.get(id) ?? '–'} T#${t.get(id) ?? '–'}` : '',
+        bots: legal ? `G#${g.get(id) ?? '–'} T#${t.get(id) ?? '–'} L#${l.get(id) ?? '–'}` : '',
         legal,
         reason,
         needsPower,

@@ -176,3 +176,9 @@ Every judgement call made while building, with date, decision, why and alternati
 - **Scrollable regions are focusable.** Panels that scroll sideways (ruler, decision table, window matrix, final table, economy, swaps) and the replay log are `tabIndex=0` regions with labels (axe `scrollable-region-focusable`).
 - **Coloured text on highlighted rows turns ink.** Green/red numbers fall under 4.5:1 on the highlight yellow, so selected and "you" rows show them in ink; the sign or ✓/✗ still carries the meaning.
 - **Tests added, v1 tests untouched.** `e2e/v2.spec.ts` (+ `helpers-v2.ts`): a full 2p game at Instant in each view (Doorway, results, replay, axe on each), switching views mid-game with a selected move (and the V key, and a reload), the Doorway window surviving a switch, 360 px in both views, axe on every page in both views, /designer forced Analyst. `test/contrast-v2.test.ts` checks 42 text/background pairs from both token sets in `globals.css`. /design-check now also renders the Board pieces and Analyst panels.
+
+### V2-12 — Stretch items (2026-11-04)
+All three stretch items were done; none were skipped.
+- **L# column.** The decision table's Bots column also shows the Lookahead rank (`G#1 T#1 L#2`). Lookahead's `explain()` scores only its shortlist (about five candidates), so cards outside it show `L#–`. It costs about 60 ms per position and is memoised per move.
+- **SVG wobble filter.** The Board sheet's bends and doodles go through a still `feTurbulence` + `feDisplacementMap` filter (scale 2.6) for a hand-drawn edge. It does not animate, so it is kept under reduced motion. Each sheet's filter id is unique (`useId`).
+- **Card-to-chip flight.** Taking a quest from the Board tray (desktop or phone) flies a domain-coloured ghost from the card to the top of "Your life", where it squashes into a chip (520 ms, Web Animations). It is presentation only: the move is submitted at once. It is skipped under reduced motion and for keyboard Enter.

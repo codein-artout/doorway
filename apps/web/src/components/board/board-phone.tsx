@@ -2,6 +2,7 @@
 // Board table at phone width (Board-Phone.dc.html), working down to 360 px. R38: the market shows one age at a
 // time as tabs, defaulting to the player's own age.
 
+import { confirmWithFlight } from './flight';
 import { useEffect, useState } from 'react';
 import { AGES, scoreCards, type Age } from '@doorway/engine';
 import { AGE_NAME, DOMAIN } from '@/lib/domains';
@@ -355,7 +356,7 @@ export function BoardPhone({ t }: { t: TableController }) {
           </button>
           <button
             type="button"
-            onClick={t.confirm}
+            onClick={() => confirmWithFlight(t)}
             disabled={!t.myTurn || !t.selectedMove}
             data-testid="confirm"
             className="min-h-[52px] cursor-pointer rounded-[14px] font-display text-[17px] disabled:opacity-50"

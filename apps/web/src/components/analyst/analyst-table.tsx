@@ -259,7 +259,11 @@ export function DecisionTable({ t, rows }: { t: TableController; rows: DecisionR
               <th className="px-1 py-1.5 text-right font-semibold">Lands</th>
               <th className="hidden md:table-cell px-1 py-1.5 font-semibold">Next up</th>
               <th className="px-1 py-1.5 text-right font-semibold">Δ now</th>
-              <th className="hidden md:table-cell px-1.5 py-1.5 font-semibold">Bots</th>
+              <th className="hidden md:table-cell px-1.5 py-1.5 font-semibold">
+                <span title="Rank among legal cards: G = Greedy, T = Tempo, L = Lookahead (its shortlist)">
+                  Bots
+                </span>
+              </th>
             </tr>
           </thead>
           <tbody>

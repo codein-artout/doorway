@@ -2,7 +2,7 @@
 // The illustrated board (Board-Table.dc.html): a 980 × 600 paper sheet with three serpentine stage rows,
 // Bezier bends, doodles, rosettes on the Milestones, the Doorway arch and the tiles. Scales down below 1040 px.
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { AGES, type Age, type GameState, type PlayerId } from '@doorway/engine';
 import { initialOf } from '@/lib/ui-rules';
 import { INK, PawnFigure } from './pieces';
@@ -73,6 +73,7 @@ export function BoardSheet({
 }) {
   const wrap = useRef<HTMLDivElement>(null);
   const scale = useScale(wrap);
+  const wobbleId = `dw-wobble-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const rows = boardGeometry(state);
   const r = state.ruleset;
   const L = r.trackLength;
@@ -109,7 +110,20 @@ export function BoardSheet({
             className="pointer-events-none absolute"
             style={{ left: -4, top: -4 }}
           >
-            <g style={{ fill: 'none', strokeLinecap: 'butt' }}>
+            <defs>
+              {/* hand-drawn wobble (stretch item): a still displacement of the line art, no motion */}
+              <filter id={wobbleId} x="-5%" y="-5%" width="110%" height="110%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" result="n" />
+                <feDisplacementMap
+                  in="SourceGraphic"
+                  in2="n"
+                  scale="2.6"
+                  xChannelSelector="R"
+                  yChannelSelector="G"
+                />
+              </filter>
+            </defs>
+            <g style={{ fill: 'none', strokeLinecap: 'butt' }} filter={`url(#${wobbleId})`} data-wobble="">
               <path
                 d={`M ${xr} 131 C ${xr + 54} 131, ${xr + 54} 317, ${xr} 317`}
                 style={{ stroke: INK, strokeWidth: 48 }}
@@ -121,7 +135,9 @@ export function BoardSheet({
               <path d="M 58 317 C 4 317, 4 503, 58 503" style={{ stroke: INK, strokeWidth: 48 }} />
               <path d="M 58 317 C 4 317, 4 503, 58 503" style={{ stroke: '#EDE0CC', strokeWidth: 41 }} />
             </g>
-            <Doodles xr={xr} />
+            <g filter={`url(#${wobbleId})`}>
+              <Doodles xr={xr} />
+            </g>
           </svg>
           <StageLabel
             style={{ left: LEFT, top: 40 }}

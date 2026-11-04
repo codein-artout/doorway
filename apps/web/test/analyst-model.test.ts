@@ -55,12 +55,12 @@ describe('Analyst decision table (DESIGN-v2 §4) on the demo position', () => {
     ]);
   });
 
-  it('PK-Y3: cost 2 after Love −1, lands 13 on top of Arun, Δ now +5, best for Greedy and Tempo', () => {
+  it('PK-Y3: cost 2 after Love −1, lands 13 on top of Arun, Δ now +5, best for Greedy and Tempo, ranked by Lookahead', () => {
     const r = row('PK-Y3');
     expect([r.years, r.disc, r.cost, r.pts, r.ppy, r.lands]).toEqual([3, 1, 2, 2, '1.00', 13]);
     expect(r.next).toBe('Arun 12 · you stack on top');
     expect(r.delta).toBe(5);
-    expect(r.bots).toBe('G#1 T#1');
+    expect(r.bots).toMatch(/^G#1 T#1 L#(\d|–)$/);
     expect(r.discTitle).toContain('experience −1');
   });
 

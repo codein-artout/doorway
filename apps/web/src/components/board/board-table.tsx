@@ -1,6 +1,7 @@
 'use client';
 // Board mode table (design/v2/screens/Board-Table.dc.html). Renders the shared table controller; holds no rules.
 
+import { confirmWithFlight } from './flight';
 import { useState } from 'react';
 import { AGES, scoreCards, type GameState, type PlayerId, type PlayerState } from '@doorway/engine';
 import { AGE_NAME, DOMAIN, DOMAIN_ORDER, ICONS } from '@/lib/domains';
@@ -317,7 +318,12 @@ export function ActionTray({ t, sticky = false }: { t: TableController; sticky?:
       <TrayButton kind="ghost" onClick={t.undo} disabled={!t.snap.canUndo} testId="undo">
         Undo
       </TrayButton>
-      <TrayButton kind="ink" onClick={t.confirm} disabled={!t.myTurn || !t.selectedMove} testId="confirm">
+      <TrayButton
+        kind="ink"
+        onClick={() => confirmWithFlight(t)}
+        disabled={!t.myTurn || !t.selectedMove}
+        testId="confirm"
+      >
         {t.mode === 'rush' && t.rushTarget !== null
           ? `Rush to ${t.rushTarget}`
           : t.choice?.kind === 'quest'
@@ -480,7 +486,7 @@ export function YourLife({ t, p }: { t: TableController; p: PlayerState }) {
           ? `through the Doorway · keeps ${p.doorwayAllowance}`
           : `${s.ruleset.trackLength - p.position} years to the Doorway · newest on top`}
       </p>
-      <div className="flex flex-col">
+      <div className="flex flex-col" data-flight-target="">
         {p.tower
           .map((id, i) => ({ id, i }))
           .reverse()
