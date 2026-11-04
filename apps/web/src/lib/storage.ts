@@ -37,7 +37,8 @@ export const loadSettings = (): Settings => ({
 });
 export const saveSettings = (s: Partial<Settings>) => write(K.settings, { ...loadSettings(), ...s });
 
-export type StoredGame = { id: string; savedAt: string; setup: GameSetup; replay: Replay };
+/** `state` (a serialized GameState) is set for games that start from a fixed position (the v2 demo) and cannot be rebuilt from their seed. */
+export type StoredGame = { id: string; savedAt: string; setup: GameSetup; replay: Replay; state?: string };
 export const loadCurrent = (): StoredGame | null => read<StoredGame | null>(K.current, null);
 export const saveCurrent = (g: StoredGame) => write(K.current, g);
 export const clearCurrent = () => {

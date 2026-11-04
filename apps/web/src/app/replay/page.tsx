@@ -1,16 +1,23 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import { CARDS } from '@doorway/content';
-import { currentPlayer, replay as engineReplay, type GameState } from '@doorway/engine';
+import { apply, currentPlayer, replay as engineReplay, type GameState } from '@doorway/engine';
+import { AnalystResults } from '@/components/analyst/analyst-results';
+import { LineChart, PlayersLedger, TrackRuler } from '@/components/analyst/analyst-table';
+import { Panel } from '@/components/analyst/panel';
+import { BoardResults } from '@/components/board/board-results';
+import { BoardSheet } from '@/components/board/board-sheet';
+import { ChipStack } from '@/components/board/board-table';
+import { INK } from '@/components/board/pieces';
+import { logRows, positionChart, queueText, scoreChart, turnPoints } from '@/lib/analyst-model';
+import { demoBase } from '@/lib/demo';
+import { useView } from '@/lib/use-view';
 import { Market } from '@/components/market';
-import { Results } from '@/components/results';
 import { SiteNav } from '@/components/site-nav';
-import { Track } from '@/components/track';
-import { QueueCard } from '@/components/turn';
 import { TowerList } from '@/components/score';
 import { importFile, download, exportReplayJson, exportStateJson } from '@/lib/import-export';
 import { findGame, loadCurrent, loadSaved, type StoredGame } from '@/lib/storage';
-import { fullLog, logLine, queue } from '@/lib/table-model';
+import { fullLog, logLine } from '@/lib/table-model';
 
 export default function ReplayPage() {
   const [game, setGame] = useState<StoredGame | null>(null);
@@ -33,7 +40,18 @@ export default function ReplayPage() {
 
   function open(g: StoredGame, moveParam?: string | null) {
     try {
-      const r = engineReplay(g.replay, { ruleset: g.setup.ruleset, cards: CARDS }, { keepStates: true });
+      let all: GameState[];
+      if (g.state !== undefined && g.id === 'demo') {
+        // the demo starts from a stacked market, not from its seed: rebuild from the demo's base position
+        all = [demoBase()];
+        for (const pm of g.replay.moves) all.push(apply(all[all.length - 1], pm.move, pm.playerId).state);
+      } else
+        all = engineReplay(
+          g.replay,
+          { ruleset: g.setup.ruleset, cards: CARDS },
+          { keepStates: true },
+        ).states!;
+      const r = { states: all };
       setGame(g);
       setStates(r.states!);
       const m =
@@ -69,7 +87,16 @@ export default function ReplayPage() {
     return () => window.removeEventListener('keydown', onKey);
   }, [states]);
 
+  const [view] = useView();
   const s = states?.[move] ?? null;
+  const upTo = useMemo(
+    () =>
+      states
+        ? { states: states.slice(0, move + 1), thinkMs: states.slice(0, move + 1).map(() => null) }
+        : null,
+    [states, move],
+  );
+  const points = useMemo(() => (upTo ? turnPoints(upTo) : []), [upTo]);
   const last = useMemo(() => (s && move > 0 ? s.moves[move - 1] : null), [s, move]);
   const lastLines = useMemo(() => {
     if (!states || move === 0) return [];
@@ -221,26 +248,108 @@ export default function ReplayPage() {
           </>
         )}
       </main>
-      {s && (
-        <>
-          <Track state={s} current={currentPlayer(s)} />
+      {s && view === 'analyst' && upTo && (
+        <div className="px-4 text-ink md:px-7" data-testid="replay-analyst">
           {s.phase === 'over' ? (
-            <div className="px-4 pt-4 md:px-7">
-              <Results state={s} />
-            </div>
+            <AnalystResults
+              state={s}
+              timeline={upTo}
+              viewer={null}
+              replayHref={`/replay?id=${game?.id ?? ''}`}
+              storedId={game?.id}
+            />
           ) : (
-            <div className="flex flex-wrap items-start gap-5 px-4 pt-3.5 md:px-7">
-              <aside
-                className="flex max-w-[330px] min-w-0 flex-[1_1_280px] flex-col gap-3"
-                aria-label="Players"
-              >
-                {queue(s).map((e) => (
-                  <QueueCard key={e.player.id} state={s} e={e} thinking={false} />
+            <>
+              <TrackRuler
+                state={s}
+                current={currentPlayer(s)}
+                ghost={null}
+                queueNow={queueText(s)}
+                queueAfter={null}
+              />
+              <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-12">
+                <PlayersLedger state={s} viewer={null} />
+                <Panel label="Towers" title="Towers, top first" className="lg:col-span-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    {s.players.map((p) => (
+                      <div key={p.id}>
+                        <div className="text-[12.5px] font-semibold">
+                          {p.name} <span className="font-mono text-muted">· {p.position}</span>
+                        </div>
+                        <TowerList state={s} p={p} compact />
+                      </div>
+                    ))}
+                  </div>
+                </Panel>
+                <Panel label="Event log" title="Log" className="lg:col-span-4">
+                  <table className="w-full text-[12px]">
+                    <tbody>
+                      {logRows(s, points).map((l) => (
+                        <tr
+                          key={l.t}
+                          className="border-b border-rule"
+                          style={{ background: l.newest ? 'var(--highlight-soft)' : 'transparent' }}
+                        >
+                          <td className="px-[3px] py-1 font-mono text-muted">{l.t}</td>
+                          <td className="px-[3px] py-1">{l.who}</td>
+                          <td className="px-[3px] py-1">{l.move}</td>
+                          <td className="px-[3px] py-1 text-right font-mono">{l.path}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Panel>
+                <LineChart
+                  label="Position by turn"
+                  title="Position by turn"
+                  note="to this move"
+                  {...positionChart(s, points)}
+                  gridSteps={4}
+                  testId="chart-position"
+                />
+                <LineChart
+                  label="Score if you walked through now"
+                  title="Score if you walked through now"
+                  note="whole tower kept"
+                  {...scoreChart(s, points)}
+                  gridSteps={4}
+                  testId="chart-score"
+                />
+              </div>
+            </>
+          )}
+        </div>
+      )}
+      {s && view === 'board' && (
+        <div className="px-4 pt-4 md:px-7" data-testid="replay-board">
+          {s.phase === 'over' ? (
+            <BoardResults state={s} replayHref={`/replay?id=${game?.id ?? ''}`} />
+          ) : (
+            <div className="flex flex-col gap-4">
+              <BoardSheet
+                state={s}
+                current={currentPlayer(s)}
+                ghost={null}
+                bubble={lastLines.length ? { text: lastLines.join(' '), thinking: false } : null}
+              />
+              <div className="flex flex-wrap gap-3">
+                {s.players.map((p) => (
+                  <section
+                    key={p.id}
+                    aria-label={`${p.name}'s tower`}
+                    className="flex min-w-[150px] flex-1 flex-col items-center gap-2 rounded-2xl p-3 text-ink"
+                    style={{ background: 'var(--paper-mat)', border: `3px solid ${INK}` }}
+                  >
+                    <h2 className="m-0 font-display text-[18px] font-normal">
+                      {p.name} <span className="font-hand text-[16px] text-ink-soft">space {p.position}</span>
+                    </h2>
+                    <ChipStack state={s} p={p} />
+                  </section>
                 ))}
-              </aside>
+              </div>
               <section
                 aria-label="Market at this move"
-                className="min-w-0 flex-[999_1_600px] rounded-2xl border border-line-soft bg-sunk px-[18px] pt-4 pb-[18px]"
+                className="min-w-0 rounded-2xl border border-line-soft bg-sunk px-[18px] pt-4 pb-[18px]"
               >
                 <h2 className="m-0 font-display text-xl font-bold">Quests</h2>
                 <Market
@@ -248,29 +357,24 @@ export default function ReplayPage() {
                   viewer={currentPlayer(s)}
                   myTurn={false}
                   rushMode={false}
-                  selected={last?.move.type === 'quest' ? null : null}
+                  selected={null}
                   discard={null}
                   onPick={() => {}}
                 />
               </section>
-              <aside
-                className="flex max-w-[340px] min-w-0 flex-[1_1_290px] flex-col gap-3"
-                aria-label="Towers"
-              >
-                {s.players.map((p) => (
-                  <section key={p.id} className="rounded-2xl border border-line bg-surface p-4">
-                    <h2 className="m-0 mb-2 font-display text-base">
-                      {p.name} · space {p.position}
-                    </h2>
-                    <TowerList state={s} p={p} compact />
-                  </section>
-                ))}
-              </aside>
             </div>
           )}
+        </div>
+      )}
+      {s && (
+        <>
           <section className="mx-4 mt-4 rounded-2xl border border-line bg-surface p-4 md:mx-7">
             <h2 className="m-0 mb-2 font-display text-base">Log to this move</h2>
-            <ol className="m-0 flex max-h-[260px] list-none flex-col gap-1 overflow-y-auto p-0 text-[13px] text-muted">
+            <ol
+              tabIndex={0}
+              aria-label="Log to this move"
+              className="m-0 flex max-h-[260px] list-none flex-col gap-1 overflow-y-auto p-0 text-[13px] text-muted"
+            >
               {fullLog(s)
                 .slice()
                 .reverse()

@@ -2,7 +2,7 @@
   "name": "doorway",
   "private": true,
   "version": "0.1.0",
-  "description": "Doorway — digital playtest app (rules engine, bots, simulator, web table)",
+  "description": "Doorway \u2014 digital playtest app (rules engine, bots, simulator, web table)",
   "type": "module",
   "packageManager": "pnpm@10.28.0",
   "engines": {
@@ -20,7 +20,8 @@
     "lint": "eslint . && prettier --check \"**/*.{ts,tsx,mjs,json,css}\"",
     "format": "prettier --write \"**/*.{ts,tsx,mjs,json,css}\"",
     "typecheck": "pnpm -r --if-present typecheck",
-    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm sim --players 4 --games 200 --bots greedy,tempo,specialist,generalist --out reports/runs/verify-quick && pnpm build"
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm sim --players 4 --games 200 --bots greedy,tempo,specialist,generalist --out reports/runs/verify-quick && pnpm regress && pnpm build",
+    "regress": "node scripts/regression/check.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

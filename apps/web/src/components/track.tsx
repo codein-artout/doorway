@@ -82,7 +82,7 @@ export function DoorwayArch({
 }) {
   return (
     <div
-      className={`${swell ? 'dw-swell' : 'dw-glow'} flex flex-col items-center justify-end gap-1.5 bg-door pb-3 text-ink`}
+      className={`${swell ? 'dw-swell' : 'dw-glow'} flex flex-col items-center justify-end gap-1.5 bg-door pb-3 text-on-door`}
       style={{
         width,
         height,
@@ -93,7 +93,7 @@ export function DoorwayArch({
     >
       {children ?? (
         <>
-          <UiIcon name="door" size={26} stroke="var(--ink)" />
+          <UiIcon name="door" size={26} stroke="var(--on-door)" />
           <span className="font-display text-[15px] font-extrabold">Doorway</span>
         </>
       )}
@@ -125,7 +125,7 @@ export function DoorwayTiles({
             className="inline-flex items-baseline gap-1.5 rounded-lg border border-door px-2.5 py-1.5"
             style={{
               background: gone ? 'transparent' : 'var(--door)',
-              color: gone ? 'var(--muted)' : 'var(--ink)',
+              color: gone ? 'var(--muted)' : 'var(--on-door)',
             }}
             title={gone ? 'Taken' : 'Waiting at the Doorway'}
           >

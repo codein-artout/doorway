@@ -14,7 +14,7 @@ function Step({ n, title, children }: { n: number; title: string; children: Reac
     <li className="flex gap-4 rounded-2xl border border-line bg-surface-2 px-[18px] py-4">
       <span
         aria-hidden
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-door font-display text-base font-extrabold text-ink"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-door font-display text-base font-extrabold text-on-door"
       >
         {n}
       </span>

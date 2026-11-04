@@ -55,7 +55,7 @@ export function useAnimatedState(snap: ClientSnapshot | null): {
       return;
     }
     const dist = ev.to - ev.from;
-    const step = Math.min(60, 900 / dist);
+    const step = Math.min(70, 900 / dist);
     setDisp({ state: withPawnAt(s, ev.playerId, ev.from), moving: ev.playerId, passed: [] });
     for (let i = 1; i <= dist; i++) {
       const pos = ev.from + i;

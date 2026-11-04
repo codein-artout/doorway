@@ -14,12 +14,12 @@ import {
   type GameState,
   type Move,
   type PlayerId,
-  type Rng,
+  Rng,
 } from '@doorway/engine';
 import { cardValueFor, chooseSwap } from './features';
-import type { BotPolicy } from './types';
+import type { BotPolicy, ExplainedCandidate } from './types';
 import { bestWindowMove } from './view';
-import type { StrategyConfig } from './policies';
+import { finishExplanation, type StrategyConfig } from './policies';
 
 /** Fast greedy used inside rollouts: best points/year quest, else rush; skip swaps; best window. */
 function rolloutMove(s: GameState, pid: PlayerId): Move {
@@ -103,6 +103,33 @@ function candidates(s: GameState, me: PlayerId, legal: Move[], max: number): Mov
   return out;
 }
 
+/** Mean outcome per candidate over determinized rollouts (shared by choose and explain). */
+function evaluate(
+  s: GameState,
+  me: PlayerId,
+  cands: Move[],
+  params: { determinizations: number; rolloutsPerMove: number },
+  rng: Rng,
+): number[] {
+  const totals = new Array(cands.length).fill(0);
+  for (let d = 0; d < params.determinizations; d++) {
+    const det = determinize(s, rng);
+    for (let r = 0; r < params.rolloutsPerMove; r++)
+      for (let i = 0; i < cands.length; i++) {
+        const g = cloneState(det);
+        applyInPlace(g, cands[i], me, undefined, false);
+        rollout(g);
+        const sc = scoreAll(g);
+        const mine = sc.find((x) => x.playerId === me)!;
+        let bestOther = -Infinity;
+        for (const x of sc) if (x.playerId !== me) bestOther = Math.max(bestOther, x.total);
+        const margin = sc.length > 1 ? mine.total - bestOther : mine.total - 35;
+        totals[i] += mine.winShare + 0.02 * margin;
+      }
+  }
+  return totals;
+}
+
 export function makeLookahead(id: string, cfg: StrategyConfig): BotPolicy {
   const params = { determinizations: 6, rolloutsPerMove: 1, maxCandidates: 6, ...(cfg.params ?? {}) };
   return {
@@ -116,25 +143,44 @@ export function makeLookahead(id: string, cfg: StrategyConfig): BotPolicy {
       if (s.phase === 'pending_choice') return chooseSwap(s, view.me);
       const cands = candidates(s, view.me, view.legal, params.maxCandidates);
       if (cands.length === 1) return cands[0];
-      const totals = new Array(cands.length).fill(0);
-      for (let d = 0; d < params.determinizations; d++) {
-        const det = determinize(s, rng);
-        for (let r = 0; r < params.rolloutsPerMove; r++)
-          for (let i = 0; i < cands.length; i++) {
-            const g = cloneState(det);
-            applyInPlace(g, cands[i], view.me, undefined, false);
-            rollout(g);
-            const sc = scoreAll(g);
-            const mine = sc.find((x) => x.playerId === view.me)!;
-            let bestOther = -Infinity;
-            for (const x of sc) if (x.playerId !== view.me) bestOther = Math.max(bestOther, x.total);
-            const margin = sc.length > 1 ? mine.total - bestOther : mine.total - 35;
-            totals[i] += mine.winShare + 0.02 * margin;
-          }
-      }
+      const totals = evaluate(s, view.me, cands, params, rng);
       let bi = 0;
       for (let i = 1; i < cands.length; i++) if (totals[i] > totals[bi] + 1e-9) bi = i;
       return cands[bi];
+    },
+    /** Values per candidate from a private RNG stream (seeded by the position), so `choose`'s stream is untouched. */
+    explain(view, chosen) {
+      const s = view.state;
+      const me = s.players.find((x) => x.id === view.me)!;
+      if (me.arrivalOrder !== null || s.phase === 'pending_choice') return null;
+      const cands = candidates(s, view.me, view.legal, params.maxCandidates);
+      const rng = Rng.fromSeed(`explain|${s.seed}|${view.me}|${s.moves.length}`);
+      const totals =
+        cands.length > 1
+          ? evaluate(s, view.me, cands, params, rng)
+          : [params.determinizations * params.rolloutsPerMove];
+      const n = params.determinizations * params.rolloutsPerMove;
+      const rows: ExplainedCandidate[] = cands.map((m, i) => {
+        const v = totals[i] / n;
+        return {
+          move: m,
+          total: v,
+          parts: [{ feature: 'value', value: v, weight: 1, contribution: v }],
+          eligible: true,
+          chosen: false,
+        };
+      });
+      return finishExplanation(
+        {
+          strategy: id,
+          label: cfg.label,
+          options: view.legal.length,
+          kind: 'value',
+          note: `${n} determinized rollouts per candidate; value = win share + 0.02 × score margin`,
+        },
+        rows,
+        chosen,
+      );
     },
   };
 }

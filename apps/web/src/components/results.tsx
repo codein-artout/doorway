@@ -99,7 +99,7 @@ export function Results({ state, actions }: { state: GameState; actions?: React.
                               aria-hidden
                               style={{
                                 fill: 'none',
-                                stroke: 'var(--ink)',
+                                stroke: 'var(--on-domain)',
                                 strokeWidth: 2.6,
                                 strokeLinecap: 'round',
                                 strokeLinejoin: 'round',
@@ -119,7 +119,7 @@ export function Results({ state, actions }: { state: GameState; actions?: React.
                 </div>
                 <div>
                   <div
-                    className="flex h-[18px] overflow-hidden rounded-[9px] bg-ink"
+                    className="flex h-[18px] overflow-hidden rounded-[9px] bg-ground"
                     role="img"
                     aria-label={`Cards ${s.cards}, Full life ${s.fullLife}, Passion ${s.passion}, Reflection ${s.reflection}`}
                   >

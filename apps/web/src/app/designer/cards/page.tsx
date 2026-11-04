@@ -46,7 +46,7 @@ export default function Cards() {
     <div className="mx-auto max-w-[1440px] pb-8">
       <DesignerNav />
       <header className="px-4 pt-[22px] md:px-7">
-        <h1 className="m-0 font-display text-[36px] font-extrabold">Cards</h1>
+        <h1 className="m-0 text-[26px] font-bold tracking-[-0.01em]">Cards</h1>
         <p className="mt-1 text-muted">
           The 60 cards from <code className="font-mono">spec/cards.json</code>. Edit years and points here to
           try ideas, check the set, and export JSON or CSV. The game reads only{' '}
@@ -54,7 +54,7 @@ export default function Cards() {
         </p>
       </header>
       <section
-        className="mx-4 flex flex-wrap items-center gap-3 rounded-2xl border bg-surface p-4 text-sm md:mx-7"
+        className="mx-4 flex flex-wrap items-center gap-3 rounded-[10px] border-[1.5px] border-panel-border bg-panel p-4 text-sm md:mx-7"
         style={{ borderColor: v.ok ? 'var(--line)' : 'var(--alert)' }}
         data-testid="card-validation"
       >
@@ -71,23 +71,23 @@ export default function Cards() {
           onChange={(e) => setFilter(e.target.value)}
           placeholder="Filter"
           aria-label="Filter cards"
-          className="min-h-[44px] rounded-[10px] border border-line bg-ink px-3 text-text"
+          className="min-h-[44px] rounded-[10px] border border-line bg-ground px-3 text-text"
         />
         <button
           type="button"
           onClick={() => download('cards.json', JSON.stringify({ version: '0.2', cards }, null, 2))}
-          className="min-h-[44px] cursor-pointer rounded-xl border border-line bg-surface-2 px-4 text-text"
+          className="min-h-[44px] cursor-pointer rounded-lg border border-line bg-sheet px-4 text-text"
         >
           Export JSON
         </button>
         <button
           type="button"
           onClick={() => download('cards.csv', toCsv(cards))}
-          className="min-h-[44px] cursor-pointer rounded-xl border border-line bg-surface-2 px-4 text-text"
+          className="min-h-[44px] cursor-pointer rounded-lg border border-line bg-sheet px-4 text-text"
         >
           Export CSV
         </button>
-        <label className="inline-flex min-h-[44px] cursor-pointer items-center rounded-xl border border-line px-4">
+        <label className="inline-flex min-h-[44px] cursor-pointer items-center rounded-lg border border-line px-4">
           Import JSON
           <input
             type="file"
@@ -108,18 +108,18 @@ export default function Cards() {
         <button
           type="button"
           onClick={() => setCards(CARDS)}
-          className="min-h-[44px] cursor-pointer rounded-xl border-none bg-transparent px-2 text-muted underline"
+          className="min-h-[44px] cursor-pointer rounded-lg border-none bg-transparent px-2 text-muted underline"
         >
           Reset
         </button>
       </section>
-      <div className="mx-4 mt-4 overflow-x-auto rounded-2xl border border-line bg-surface md:mx-7">
+      <div className="mx-4 mt-4 overflow-x-auto rounded-[10px] border-[1.5px] border-panel-border bg-panel md:mx-7">
         <table className="w-full min-w-[900px] border-collapse text-[13px]">
           <thead>
             <tr className="text-left text-xs text-muted">
               {['ID', 'Name', 'Domain', 'Age', 'Years', 'Points', 'Requirement', 'Power / Reflection'].map(
                 (h) => (
-                  <th key={h} className="border-b border-line-soft px-3 py-2 font-normal">
+                  <th key={h} className="border-b border-rule px-3 py-2 font-normal">
                     {h}
                   </th>
                 ),
@@ -149,7 +149,7 @@ export default function Cards() {
                       value={c.years}
                       onChange={(e) => edit(i, { years: Number(e.target.value) })}
                       aria-label={`${c.id} years`}
-                      className="w-14 rounded-md border border-line bg-ink px-1 text-text"
+                      className="w-14 rounded-md border border-line bg-ground px-1 text-text"
                     />
                   </td>
                   <td className="border-b border-[var(--row-line)] px-3">
@@ -160,7 +160,7 @@ export default function Cards() {
                       value={c.points}
                       onChange={(e) => edit(i, { points: Number(e.target.value) })}
                       aria-label={`${c.id} points`}
-                      className="w-14 rounded-md border border-line bg-ink px-1 text-text"
+                      className="w-14 rounded-md border border-line bg-ground px-1 text-text"
                     />
                   </td>
                   <td className="border-b border-[var(--row-line)] px-3">

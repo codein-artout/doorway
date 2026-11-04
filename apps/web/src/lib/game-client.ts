@@ -53,6 +53,8 @@ export interface GameClient {
   undo(): void;
   setBotSpeed(speed: BotSpeed): void;
   toReplay(): Replay & { setup: Omit<GameSetup, 'ruleset'> };
+  /** every state so far (oldest first) with the think time of the move that produced it */
+  timeline(): { states: GameState[]; thinkMs: (number | null)[] };
   dispose(): void;
 }
 
@@ -119,21 +121,55 @@ export class LocalGameClient implements GameClient {
   private timer: ReturnType<typeof setTimeout> | null = null;
   private computer: { compute: Compute; dispose: () => void };
   private disposed = false;
+  /** states before `start` (demo), shown in the timeline but never undone into */
+  private prelude: GameState[] = [];
+  private preludeThink: (number | null)[] = [];
+  /** think time (ms) of the move that produced states[i]; null when unknown */
+  private thinkMs: (number | null)[] = [null];
+  private turnStarted = Date.now();
   onChange?: (c: LocalGameClient) => void;
 
   constructor(
     setup: GameSetup,
     cards: Card[],
-    opts: { from?: Replay; compute?: { compute: Compute; dispose: () => void } } = {},
+    opts: {
+      from?: Replay;
+      start?: GameState;
+      /** with `start`: the position `start.moves` were played from, so the timeline can show the moves before `start` */
+      base?: GameState;
+      /** think times (ms) for the quest/rush moves before `start`, in order (the demo's) */
+      baseThinkMs?: (number | null)[];
+      compute?: { compute: Compute; dispose: () => void };
+    } = {},
   ) {
     this.setup = setup;
     this.cards = cards;
     this.computer = opts.compute ?? workerCompute();
     const players = seatsToPlayers(setup.seats);
-    if (opts.from) {
+    if (opts.start) {
+      // start from a given position (the v2 demo); moves before it cannot be undone
+      this.states = [opts.start];
+      this.humanMoves = [];
+      if (opts.base) {
+        const pre: GameState[] = [opts.base];
+        const think: (number | null)[] = [null];
+        let k = 0;
+        for (const pm of opts.start.moves.slice(opts.base.moves.length)) {
+          pre.push(apply(pre[pre.length - 1], pm.move, pm.playerId).state);
+          think.push(
+            pm.move.type === 'quest' || pm.move.type === 'rush' ? (opts.baseThinkMs?.[k++] ?? null) : null,
+          );
+        }
+        // the last rebuilt state is `start` itself
+        this.prelude = pre.slice(0, -1);
+        this.preludeThink = think.slice(0, -1);
+        this.thinkMs = [think[think.length - 1]];
+      }
+    } else if (opts.from) {
       const r = engineReplay(opts.from, { ruleset: setup.ruleset, cards }, { keepStates: true });
       this.states = r.states!;
       this.humanMoves = opts.from.moves.map((m) => !players.find((p) => p.id === m.playerId)?.isBot);
+      this.thinkMs = this.states.map(() => null);
     } else {
       this.states = [init(setup.ruleset, cards, players, setup.seed)];
       this.humanMoves = [];
@@ -174,17 +210,18 @@ export class LocalGameClient implements GameClient {
     this.onChange?.(this);
   }
 
-  private push(move: Move, playerId: PlayerId, human: boolean): GameEvent[] {
+  private push(move: Move, playerId: PlayerId, human: boolean, ms: number | null = null): GameEvent[] {
     const { state, events } = apply(this.state, move, playerId);
     this.states.push(state);
     this.humanMoves.push(human);
+    this.thinkMs.push(ms);
     return events;
   }
 
   submit(move: Move, playerId: PlayerId): void {
     const p = this.state.players.find((x) => x.id === playerId);
     if (!p || p.isBot) throw new Error('Only human seats submit moves.');
-    this.lastEvents = this.push(move, playerId, true);
+    this.lastEvents = this.push(move, playerId, true, Date.now() - this.turnStarted);
     this.afterChange();
   }
 
@@ -201,6 +238,7 @@ export class LocalGameClient implements GameClient {
         more = more.concat(this.push(bestWindowMove(this.state, p.id), p.id, false));
     if (more.length) this.lastEvents = this.lastEvents.concat(more);
     this.thinking = null;
+    this.turnStarted = Date.now();
     const cp = currentPlayer(this.state);
     if (cp && this.isBot(cp)) this.scheduleBot(cp);
     this.emit();
@@ -214,10 +252,11 @@ export class LocalGameClient implements GameClient {
     const started = Date.now();
     this.computer.compute(state, pid).then((move) => {
       if (gen !== this.gen || this.disposed) return;
+      const ms = Date.now() - started;
       const wait = Math.max(0, delay - (Date.now() - started));
       this.timer = setTimeout(() => {
         if (gen !== this.gen || this.disposed) return;
-        this.lastEvents = this.push(move, pid, false);
+        this.lastEvents = this.push(move, pid, false, ms);
         this.afterChange();
       }, wait);
     });
@@ -232,12 +271,14 @@ export class LocalGameClient implements GameClient {
       if (this.states.length > 1) {
         this.states.pop();
         this.humanMoves.pop();
+        this.thinkMs.pop();
       }
     } else {
       const last = this.humanMoves.lastIndexOf(true);
       if (last < 0) return;
       this.states.length = last + 1;
       this.humanMoves.length = last;
+      this.thinkMs.length = last + 1;
     }
     this.lastEvents = [];
     this.thinking = null;
@@ -259,6 +300,14 @@ export class LocalGameClient implements GameClient {
   /** Every intermediate state (for the replay viewer). */
   history(): GameState[] {
     return this.states.slice();
+  }
+
+  /** Every state from the first known position (including the demo's moves before `start`), with think times. */
+  timeline(): { states: GameState[]; thinkMs: (number | null)[] } {
+    return {
+      states: [...this.prelude, ...this.states],
+      thinkMs: [...this.preludeThink, ...this.thinkMs],
+    };
   }
 
   dispose(): void {

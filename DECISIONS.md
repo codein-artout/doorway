@@ -124,3 +124,61 @@ Every judgement call made while building, with date, decision, why and alternati
 
 ### D-ENV-4 — PR base branch (2026-11-03)
 - **Decision:** the prompt says "PR into `main`", but the repository's only base branch is `master`, so the PR targets `master`.
+
+## v2
+
+### V2-1 — Branch and base (2026-11-04)
+- The repository has no `main`; its default branch is `master`, which already contains v1 and the v2 design kit. The session branch was fast-forwarded to `origin/master` before any v2 work, and the v2 PR targets `master`.
+
+### V2-2 — `replays/` excluded from Prettier (2026-11-04)
+- CIAO's sample export in `replays/` is data, not source, and failed `prettier --check`, which turned `pnpm verify` red before any v2 change. It is added to `.prettierignore` instead of being reformatted.
+
+### V2-3 — Regression baseline lives in `scripts/regression/` (2026-11-04)
+- `reports/runs/` is gitignored (and `reports/` must not change), so a fresh clone has no `v2-before`. The N1 output is fingerprinted (SHA-256 of the uncompressed `games.csv`, `players.csv`, `picks.csv`) in `scripts/regression/v2-baseline.json`; `pnpm regress` compares a new run against the fingerprint and, when present, byte-for-byte against `reports/runs/v2-before`.
+
+### V2-4 — Token naming (2026-11-04)
+- DESIGN-v2 uses `--ink` for the outline/text colour, but v1 used `--ink` for the page ground. v1's ground token is renamed `--ground` (and `bg-ink`/`text-ink` → `bg-ground`/`text-ground`); v1's other semantic tokens (`--surface`, `--text`, `--muted`, `--door`, …) are re-mapped per view, so every v1 page renders in both token sets without a rewrite.
+
+### V2-5 — `--door` keeps its v1 meaning (2026-11-04)
+- v1's `--door` is the primary/selection/focus colour; in Board it maps to lamplight, in Analyst to ink. DESIGN-v2's Board `--door` (`#3A3340`, the door leaf and card back) is exposed as `--door-leaf` to avoid the clash.
+
+### V2-6 — Hook signatures (2026-11-04)
+- `windowScores` takes the content it scores with as a first argument — `windowScores({ ruleset, cards }, tower, allowance)` — because the engine has no global content (D-ENG-1); a `GameState` works as that argument. `previewMove(state, move, playerId?)` skips any swaps the move grants (swaps never move pawns) and also returns `arrives`, `again` and `swaps`. `gameHistory(state)` replays the state's own seed and moves and returns one point per quest/rush turn, taken after that turn's swaps.
+- `explain(view, chosen?)`: weighted bots return every candidate with weight × feature contributions (same arithmetic as `choose`); greedy returns points/year; `random` returns `null`; `lookahead` returns the mean rollout value per candidate, computed on a private RNG seeded by the position (`explain|seed|player|moveIndex`), so the bot's own stream is untouched. The noisy wrapper forwards to its base. Tests run whole games with and without `explain` and require identical moves and RNG states.
+
+### V2-7 — Demo fixture (2026-11-04)
+- `apps/web/src/lib/demo.ts` plays `HIST0` (Analyst-Table mockup) through the real engine from a scenario whose decks hold the cards in the order they are taken. Milestone swaps on the way are skipped. The result is the shared turn-22 position (Priya 11, Arun 12, Meera 13, Kavi 15, Priya to move), verified by a test.
+
+### V2-8 — Analyst table details (2026-11-04)
+- **Timeline and think time.** `GameClient.timeline()` returns every state with the think time of the move that made it (bots: compute time, not the display delay; people: time from the turn starting to the submit). Think times are UI-only and not persisted; after a reload they show "—". The demo's 21 earlier turns are rebuilt from `demoBase()` and carry the mockup's THINK0 values.
+- **Charts** use one point per quest/rush turn (`turnPoints`), taken after that turn's swaps. The x-axis spans max(turns, 24) so early games do not stretch; the position chart's y-axis is 0–20 and grows in steps of 10.
+- **Bots column** ranks legal cards by the Greedy and Tempo policies' own `explain()` order (G#/T#). L# (Lookahead) is a stretch item and is skipped.
+- **"Why <bot> did that"** shows the four best candidates of the last bot quest/rush plus the played one if it was not in the top four. Positive contributions stack left to right; contributions that count against a move are drawn hatched after them, so a bar's length is the sum of absolute contributions. Features are grouped (pts per year, focus domain, experience, tempo, scoring & other) for colour; the tooltip names each feature.
+- **Phone (Analyst).** Below 768 px the decision table drops Age, Needs, Yrs, Disc., Pts/yr, Next up and Bots; the ruler scrolls inside its panel and starts at the current pawn. The page itself never scrolls sideways.
+- **Once-per-game powers.** A card that needs Old friends / Say yes more is selectable in the table; Confirm stays disabled (and the preview says so) until its power is ticked, matching the Board tray.
+
+### V2-9 — Window scorer and game report (2026-11-04)
+- **Shared Doorway selection.** The stretch being considered lives in the table controller (`doorStart`), so the Board Doorway and the Analyst window scorer show the same window when the view is switched. Both open on the top window (as in v1); the Analyst scores table marks the best one. In a blind test (best-window hints off) the "vs best" column and the allowance sensitivity are hidden.
+- **Allowance sensitivity** "Means" names the arrival positions whose tile (plus this player's own Doorway bonus) gives that allowance; "—" when none does.
+- **Played most like** reruns every study strategy except Random and Lookahead (too slow to rerun in the browser) on each of the player's quest/rush decisions, with the same seeded stream a bot in that seat would use. Moves agree when they are the same quest card, or a rush with the same discard (power flags ignored).
+- **Turning points**: Δ now ≥ 5 or ≤ −5 on a quest; a swap that makes a run of 3+ (and raises the run); a rush discard of a card the next player could take; an arrival that keeps everything; an arrival that loses 3+. Each links to `/replay?id=…&move=N` (the state just after it).
+- **This game vs the study** reads `reports/data/summary.json` through a static route (`/api/study`, built at `next build`), trimmed to the `main-Np` groups. "Winning score" is not in the summary, so the report compares the mean score per player; back-to-back share is the study's `extraTurnShare`; rush share = rushes ÷ turns per player.
+- **Replay viewer** renders in the current view: Board shows the illustrated board, chip towers and the market; Analyst shows the ruler, ledger, towers, log and both charts up to the move, and the game report on the last move. The demo replays from `demoBase()` (it cannot be rebuilt from its seed).
+
+### V2-10 — /designer in Analyst style (2026-11-04)
+- The Analysis, Sandbox and Cards pages keep their content and behaviour; panels, section titles, numbers and the header use the Analyst tokens. The header is a Doorway wordmark plus an Analysis / Sandbox / Cards segmented control; the Board / Analyst switch is not shown (the boot script already forces Analyst on /designer).
+- The study charts come from `@doorway/sim`'s HTML helpers, which bake in v1's dark palette. Rather than change the sim package (its output is what `reports/` was built with), the designer maps those colours to Analyst ones (`lib/designer-colors.ts`), and the head-to-head grid uses a light diverging scale that nudges mid-tones until the number clears 4.5:1 (unit-tested).
+- Verdict and flag chips pair colour with a symbol or word (✓ PASS, ✗ FAIL, STRONG, WEAK) and use light text on good/bad fills.
+- No placeholder banners were left in /designer; the one "PLACEHOLDER" demo chip on /design-check is renamed.
+
+### V2-11 — Quality pass (2026-11-04)
+- **`?view=` is remembered.** A `?view=` link now also stores the choice (boot script), so a link like `/?view=analyst` keeps Analyst through New game → table. /designer never stores a view.
+- **Scrollable regions are focusable.** Panels that scroll sideways (ruler, decision table, window matrix, final table, economy, swaps) and the replay log are `tabIndex=0` regions with labels (axe `scrollable-region-focusable`).
+- **Coloured text on highlighted rows turns ink.** Green/red numbers fall under 4.5:1 on the highlight yellow, so selected and "you" rows show them in ink; the sign or ✓/✗ still carries the meaning.
+- **Tests added, v1 tests untouched.** `e2e/v2.spec.ts` (+ `helpers-v2.ts`): a full 2p game at Instant in each view (Doorway, results, replay, axe on each), switching views mid-game with a selected move (and the V key, and a reload), the Doorway window surviving a switch, 360 px in both views, axe on every page in both views, /designer forced Analyst. `test/contrast-v2.test.ts` checks 42 text/background pairs from both token sets in `globals.css`. /design-check now also renders the Board pieces and Analyst panels.
+
+### V2-12 — Stretch items (2026-11-04)
+All three stretch items were done; none were skipped.
+- **L# column.** The decision table's Bots column also shows the Lookahead rank (`G#1 T#1 L#2`). Lookahead's `explain()` scores only its shortlist (about five candidates), so cards outside it show `L#–`. It costs about 60 ms per position and is memoised per move.
+- **SVG wobble filter.** The Board sheet's bends and doodles go through a still `feTurbulence` + `feDisplacementMap` filter (scale 2.6) for a hand-drawn edge. It does not animate, so it is kept under reduced motion. Each sheet's filter id is unique (`useId`).
+- **Card-to-chip flight.** Taking a quest from the Board tray (desktop or phone) flies a domain-coloured ghost from the card to the top of "Your life", where it squashes into a chip (520 ms, Web Animations). It is presentation only: the move is submitted at once. It is skipped under reduced motion and for keyboard Enter.

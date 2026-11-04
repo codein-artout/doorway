@@ -70,7 +70,7 @@ export function TurnBanner({
         Why is it {whyWho} turn?
       </button>
       {open && (
-        <div className="flex flex-[1_1_100%] flex-col gap-1 rounded-xl bg-ink px-3.5 py-3 text-sm">
+        <div className="flex flex-[1_1_100%] flex-col gap-1 rounded-xl bg-ground px-3.5 py-3 text-sm">
           <span>
             There are no rounds. Whoever is furthest back on the track moves next — even several times in a
             row.
@@ -128,7 +128,7 @@ export function QueueCard({
           className="rounded-full px-2 py-1 font-mono text-[11px] font-bold"
           style={{
             background: e.current ? 'var(--door)' : 'var(--surface-2)',
-            color: e.current ? 'var(--ink)' : 'var(--text)',
+            color: e.current ? 'var(--on-door)' : 'var(--text)',
           }}
         >
           {e.slot}

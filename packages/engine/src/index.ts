@@ -7,3 +7,4 @@ export * from './scoring';
 export * from './replay';
 export * from './scenario';
 export * from './invariants';
+export * from './analysis';

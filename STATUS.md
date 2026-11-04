@@ -61,3 +61,51 @@ pnpm verify
 - 22:20–22:45 — M10–M14 web app pushed; e2e green.
 - 23:37 — study complete (437,730 games); aggregate + report.
 - 23:55 — fresh-clone verification; PR opened.
+
+---
+
+## v2 — Board & Analyst modes
+
+**Current milestone:** done — v0.2 PR open into `master`
+
+### Finished milestones
+| # | What | Commit |
+|---|---|---|
+| N1 | Orientation, `pnpm verify` green, regression baseline + check script in `pnpm verify` | eaea865 |
+| N2 | Board + Analyst token sets, fonts, Board/Analyst switch (header, `?view=`, localStorage, V key) | 0444788 |
+| N3 | Engine hooks (previewMove, windowScores, scoreIfWalkedNow, gameHistory), bot `explain()`, demo fixture; regression identical | 74df5af |
+| N4 | Board table (shared `useTable` controller, illustrated board, cards, tray, mats, log drawer) | dbf065f |
+| N5 | Board Doorway, Board results, Board phone layout (360 px) | 010c504 |
+| N6 | Analyst table (ruler, decision table, preview, ledger, tower/projection, Why from explain(), log, charts) | ef00a32 |
+| N7 | Analyst window scorer, game report, replay viewer in both views | f3a35a6 |
+| N8 | /designer in Analyst style (chart colours mapped, contrast-safe head-to-head) | 477e74d |
+| N9 | v2 e2e in both views, axe in both views, token contrast test, design-check pieces | f6bc432 |
+| N10 | Stretch items (L# column, wobble filter, card flight); README, screenshots, fresh-clone verify + e2e, PR | a74f158, cfd0117, (this commit) |
+
+### Next
+- Review and merge the PR; human playtests of both views. → N8 designer → N9 quality → N10 wrap-up.
+
+### Blockers
+- none.
+
+### Map of the web app (v1, as found in N1)
+- `apps/web/src/app/` — routes: `/` new game (`page.tsx`), `/play` table (`play/page.tsx`: Table, SwapPrompt, IfYouWalked; phone vs desktop by `useIsPhone`), `/replay` (step/slider/`?move=N`), `/rules`, `/designer` (server page reads `reports/data/summary.json` → `analysis.tsx`), `/designer/sandbox`, `/designer/cards`, `/design-check`.
+- `apps/web/src/lib/` — `game-client.ts` (GameClient + LocalGameClient, undo, bot scheduling), `bot-move.ts` (deterministic bot move), `table-model.ts` (pure copy/preview/queue/banner/log helpers), `use-game.ts` (subscribe hook + pawn hop animation), `storage.ts` (localStorage), `import-export.ts`, `sandbox.ts` (dials, worker batches), `ui-rules.ts`, `domains.ts` (icons, domain meta).
+- `apps/web/src/components/` — `primitives` (Icon, Disc, Pawn, Button…), `track`, `market` (QuestCard), `turn` (TurnBanner, QueueCard), `actions` (ActionBar), `score` (ScoreTiles, TowerList), `doorway` (DoorwaySelect), `results`, `phone` (OverviewBar, NearStrip, PhoneMarket), nav components.
+- `apps/web/src/workers/` — `bot.worker.ts`, `sim.worker.ts`. `apps/web/e2e/` — Playwright specs.
+- Styling: Tailwind 4 with tokens in `src/app/globals.css` (`@theme inline` maps CSS variables), fonts via `next/font` in `layout.tsx`.
+
+### Regression check
+- Baseline (N1): `pnpm sim --players 4 --games 1000 --bots greedy,tempo,specialist,generalist --seed v2-regress --out reports/runs/v2-before` (v1 flags unchanged). Its SHA-256 fingerprint is committed in `scripts/regression/v2-baseline.json` because `reports/runs/` is gitignored.
+- `pnpm regress` reruns it into `reports/runs/v2-after` and requires identical games/players/picks; it is part of `pnpm verify`.
+
+### Time log (UTC, 2026-11-04)
+- 12:59 — v2 start; fast-forwarded the branch to `master` (v2 design kit).
+- 13:10 — N1: verify green, baseline recorded.
+- N2–N4 committed (see hashes above).
+- 13:29 — N5 pushed (Board Doorway/results/phone; all 12 v1 e2e + 212 unit tests pass).
+- 13:38 — N6 pushed (Analyst table; 224 unit tests).
+- N7 — window scorer, game report, view-aware replay; 232 unit tests, 12/12 v1 e2e.
+- 13:54 — N8 pushed (/designer Analyst style; v1 e2e 12/12).
+- 14:06 — N9: 277 unit tests, 31 e2e (12 v1 unchanged + 19 v2) green.
+- 14:14 — N10: fresh clone `pnpm install && pnpm verify && pnpm e2e` green (277 unit tests, rule coverage 201/201, regression identical to N1, 31 e2e). Stretch items all done; none skipped. PR opened.

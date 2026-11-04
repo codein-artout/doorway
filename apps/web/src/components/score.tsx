@@ -23,7 +23,7 @@ export function ScoreTiles({
     return (
       <div className="grid grid-cols-2 gap-2">
         {items.map(([k, v]) => (
-          <div key={k} className="rounded-xl bg-ink px-3 py-2.5" data-testid={`score-${k}`}>
+          <div key={k} className="rounded-xl bg-ground px-3 py-2.5" data-testid={`score-${k}`}>
             <div className="flex items-baseline justify-between">
               <span className="text-[13px] text-muted">{labels[k]}</span>
               <b className="font-mono text-xl">{v}</b>
@@ -37,7 +37,7 @@ export function ScoreTiles({
     <div>
       <div className="grid grid-cols-4 gap-1.5 text-center">
         {items.map(([k, v]) => (
-          <div key={k} className="rounded-[10px] bg-ink px-1 py-2" data-testid={`score-${k}`}>
+          <div key={k} className="rounded-[10px] bg-ground px-1 py-2" data-testid={`score-${k}`}>
             <div className="font-mono text-lg font-bold">{v}</div>
             <div className="text-[11px] text-muted">{labels[k]}</div>
           </div>

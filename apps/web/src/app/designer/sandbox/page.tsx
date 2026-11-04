@@ -20,7 +20,7 @@ import {
 } from '@/lib/sandbox';
 import { loadRulesets, saveRuleset } from '@/lib/storage';
 
-const sel = 'min-h-[44px] rounded-[10px] border border-line bg-ink px-2 text-text';
+const sel = 'min-h-[44px] rounded-[10px] border border-line bg-ground px-2 text-text';
 
 export default function Sandbox() {
   const [rulesets, setRulesets] = useState<Ruleset[]>([DEFAULT_RULESET]);
@@ -127,7 +127,7 @@ export default function Sandbox() {
       <DesignerNav />
       <header className="flex flex-wrap items-end gap-x-6 gap-y-3 px-4 pt-[22px] pb-2.5 md:px-7">
         <div className="flex-[1_1_520px]">
-          <h1 className="m-0 font-display text-[36px] font-extrabold tracking-[-0.015em]">Sandbox</h1>
+          <h1 className="m-0 text-[26px] font-bold tracking-[-0.01em]">Sandbox</h1>
           <p className="mt-1 mb-0 text-muted">
             Turn a dial, run the bots, compare with the baseline. Nothing reaches real games until you save it
             as a new ruleset.
@@ -159,9 +159,9 @@ export default function Sandbox() {
           {groups.map((g) => (
             <fieldset
               key={g}
-              className="m-0 min-w-0 rounded-2xl border border-line bg-surface px-[18px] py-4"
+              className="m-0 min-w-0 rounded-[10px] border-[1.5px] border-panel-border bg-panel px-[18px] py-4"
             >
-              <legend className="px-1.5 font-display text-[17px] font-bold">{g}</legend>
+              <legend className="px-1.5 text-[13px] font-bold tracking-[0.06em] uppercase">{g}</legend>
               <div className="flex flex-col gap-2.5">
                 {DIALS.filter((d) => d.group === g).map((d) => {
                   const v = dialValue(variant, d.key);
@@ -182,7 +182,7 @@ export default function Sandbox() {
                           aria-label={`Decrease ${d.key}`}
                           disabled={v <= d.min}
                           onClick={() => setVariant(setDial(variant, d.key, v - 1))}
-                          className="h-10 w-10 cursor-pointer border-none bg-surface-2 text-lg text-text disabled:opacity-40"
+                          className="h-10 w-10 cursor-pointer border-none bg-sheet text-lg text-text disabled:opacity-40"
                           data-testid={`dec-${d.key}`}
                         >
                           −
@@ -199,7 +199,7 @@ export default function Sandbox() {
                           aria-label={`Increase ${d.key}`}
                           disabled={v >= d.max}
                           onClick={() => setVariant(setDial(variant, d.key, v + 1))}
-                          className="h-10 w-10 cursor-pointer border-none bg-surface-2 text-lg text-text disabled:opacity-40"
+                          className="h-10 w-10 cursor-pointer border-none bg-sheet text-lg text-text disabled:opacity-40"
                           data-testid={`inc-${d.key}`}
                         >
                           +
@@ -229,10 +229,12 @@ export default function Sandbox() {
           className="flex max-w-[560px] min-w-0 flex-[1_1_440px] flex-col gap-3.5"
         >
           <section
-            className="rounded-2xl bg-surface p-[18px]"
+            className="rounded-[10px] bg-panel p-[18px]"
             style={{ border: `1px solid ${changes.length ? 'var(--door)' : 'var(--line)'}` }}
           >
-            <h2 className="m-0 mb-2 font-display text-lg font-bold">Changes from baseline</h2>
+            <h2 className="m-0 mb-2 text-[13px] font-bold tracking-[0.06em] uppercase">
+              Changes from baseline
+            </h2>
             {!changes.length && <p className="m-0 text-[13px] text-muted">None yet. Use the − / + dials.</p>}
             <ul
               className="m-0 flex list-none flex-col gap-1 p-0 font-mono text-[13px] font-medium"
@@ -251,8 +253,8 @@ export default function Sandbox() {
               </p>
             )}
           </section>
-          <section className="rounded-2xl border border-line bg-surface p-[18px]">
-            <h2 className="m-0 mb-3 font-display text-lg font-bold">Run the bots</h2>
+          <section className="rounded-[10px] border-[1.5px] border-panel-border bg-panel p-[18px]">
+            <h2 className="m-0 mb-3 text-[13px] font-bold tracking-[0.06em] uppercase">Run the bots</h2>
             <div className="grid grid-cols-2 gap-2.5">
               <label className="flex flex-col gap-1 text-xs text-muted">
                 Players
@@ -301,7 +303,7 @@ export default function Sandbox() {
                   type="button"
                   onClick={run}
                   disabled={running || problems.length > 0}
-                  className="min-h-[44px] w-full cursor-pointer rounded-xl border-none bg-door font-bold text-ink disabled:opacity-45"
+                  className="min-h-[44px] w-full cursor-pointer rounded-lg border-none bg-door font-bold text-on-door disabled:opacity-45"
                   data-testid="run"
                 >
                   {running ? `Running… ${Math.round(progress * 100)}%` : 'Run baseline and variant'}
@@ -310,7 +312,7 @@ export default function Sandbox() {
             </div>
             {running && (
               <div className="mt-3">
-                <div className="h-2 overflow-hidden rounded bg-ink">
+                <div className="h-2 overflow-hidden rounded bg-ground">
                   <div className="dw-tween h-full bg-door" style={{ width: `${progress * 100}%` }} />
                 </div>
                 <p className="mt-1.5 mb-0 text-xs text-muted">
@@ -322,11 +324,11 @@ export default function Sandbox() {
           {result && mb && mv && (
             <section
               aria-label="Comparison"
-              className="rounded-2xl border border-door bg-surface p-[18px]"
+              className="rounded-[10px] border-[1.5px] border-ink bg-panel p-[18px]"
               data-testid="comparison"
             >
               <div className="flex items-baseline justify-between gap-2">
-                <h2 className="m-0 font-display text-lg font-bold">Variant vs baseline</h2>
+                <h2 className="m-0 text-[13px] font-bold tracking-[0.06em] uppercase">Variant vs baseline</h2>
                 <span className="text-xs text-muted">
                   {result.games.toLocaleString()} games each · {players}p · same seeds
                 </span>
@@ -373,7 +375,7 @@ export default function Sandbox() {
                 setRulesets([DEFAULT_RULESET, ...loadRulesets().map((x) => x.ruleset)]);
                 setSaved(r.id);
               }}
-              className="min-h-[44px] cursor-pointer rounded-xl border-none bg-door px-4 font-bold text-ink disabled:opacity-45"
+              className="min-h-[44px] cursor-pointer rounded-lg border-none bg-door px-4 font-bold text-on-door disabled:opacity-45"
               data-testid="save-ruleset"
             >
               Save as new ruleset
@@ -381,7 +383,7 @@ export default function Sandbox() {
             {saved && (
               <a
                 href={`/?ruleset=${encodeURIComponent(saved)}`}
-                className="inline-flex min-h-[44px] items-center rounded-xl border border-line px-4 text-text no-underline"
+                className="inline-flex min-h-[44px] items-center rounded-lg border border-line px-4 text-text no-underline"
               >
                 Play it at a table
               </a>
