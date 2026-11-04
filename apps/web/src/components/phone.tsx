@@ -113,7 +113,7 @@ export function NearStrip({
             {stack.length > 2 && <span className="font-mono text-[9px] text-text">+{stack.length - 2}</span>}
             <span
               className="font-mono text-[10px] font-medium"
-              style={{ color: i === L ? 'var(--ground)' : 'var(--muted)' }}
+              style={{ color: i === L ? 'var(--on-door)' : 'var(--muted)' }}
             >
               {i}
             </span>
@@ -189,7 +189,7 @@ export function PhoneMarket({
             className="min-h-[40px] flex-1 cursor-pointer rounded-[9px] border-none text-sm"
             style={{
               background: tab === t.age ? 'var(--door)' : 'transparent',
-              color: tab === t.age ? 'var(--ground)' : 'var(--muted)',
+              color: tab === t.age ? 'var(--on-door)' : 'var(--muted)',
               fontWeight: tab === t.age ? 700 : 400,
             }}
           >

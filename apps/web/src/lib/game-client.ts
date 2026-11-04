@@ -124,13 +124,17 @@ export class LocalGameClient implements GameClient {
   constructor(
     setup: GameSetup,
     cards: Card[],
-    opts: { from?: Replay; compute?: { compute: Compute; dispose: () => void } } = {},
+    opts: { from?: Replay; start?: GameState; compute?: { compute: Compute; dispose: () => void } } = {},
   ) {
     this.setup = setup;
     this.cards = cards;
     this.computer = opts.compute ?? workerCompute();
     const players = seatsToPlayers(setup.seats);
-    if (opts.from) {
+    if (opts.start) {
+      // start from a given position (the v2 demo); moves before it cannot be undone
+      this.states = [opts.start];
+      this.humanMoves = [];
+    } else if (opts.from) {
       const r = engineReplay(opts.from, { ruleset: setup.ruleset, cards }, { keepStates: true });
       this.states = r.states!;
       this.humanMoves = opts.from.moves.map((m) => !players.find((p) => p.id === m.playerId)?.isBot);

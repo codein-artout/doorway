@@ -99,7 +99,7 @@ export function Results({ state, actions }: { state: GameState; actions?: React.
                               aria-hidden
                               style={{
                                 fill: 'none',
-                                stroke: 'var(--ground)',
+                                stroke: 'var(--on-domain)',
                                 strokeWidth: 2.6,
                                 strokeLinecap: 'round',
                                 strokeLinejoin: 'round',

@@ -103,11 +103,11 @@
   --door: var(--ink);
   --on-door: var(--panel);
   --alert: #1d6476;
-  --young: #e7e2d6;
+  --young: #f6f2ea;
   --young-rule: #a79f8e;
-  --middle: #ddd7c9;
+  --middle: #f0ebe2;
   --middle-rule: #948c7b;
-  --old: #d2cbbc;
+  --old: #ebe5da;
   --old-rule: #827a69;
   --base: var(--ink);
   --grey: #8c8496;
@@ -149,6 +149,11 @@
   --family: #e69f00;
   --wonder: #56b4e9;
 }
+/* Okabe–Ito green is darker: deepen the ink on domain colours so codes keep ≥ 4.5:1 */
+[data-palette='colorblind'][data-view],
+[data-palette='colorblind'] [data-view] {
+  --on-domain: #16131b;
+}
 
 @theme inline {
   --color-ground: var(--ground);
@@ -162,6 +167,7 @@
   --color-muted: var(--muted);
   --color-door: var(--door);
   --color-on-door: var(--on-door);
+  --color-on-domain: var(--on-domain);
   --color-alert: var(--alert);
   --color-young: var(--young);
   --color-middle: var(--middle);
@@ -392,4 +398,63 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* Board motion (DESIGN-v2 §3) */
+@keyframes dw-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes dw-pop {
+  from {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes dw-breathe {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 10px rgba(247, 212, 122, 0.35));
+  }
+  50% {
+    filter: drop-shadow(0 0 22px rgba(247, 212, 122, 0.6));
+  }
+}
+@keyframes dw-thud {
+  0% {
+    transform: scale(1.15) rotate(-6deg);
+  }
+  100% {
+    transform: scale(1) rotate(-6deg);
+  }
+}
+.dw-bob {
+  animation: dw-bob 1.4s ease-in-out infinite;
+}
+.dw-pop {
+  animation: dw-pop 160ms ease-out;
+  transform-origin: 30% 100%;
+}
+.dw-breathe {
+  animation: dw-breathe 3s ease-in-out infinite;
+}
+.dw-thud {
+  animation: dw-thud 200ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dw-bob,
+  .dw-pop,
+  .dw-breathe,
+  .dw-thud {
+    animation: none;
+  }
 }

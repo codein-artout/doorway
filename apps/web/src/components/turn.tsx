@@ -128,7 +128,7 @@ export function QueueCard({
           className="rounded-full px-2 py-1 font-mono text-[11px] font-bold"
           style={{
             background: e.current ? 'var(--door)' : 'var(--surface-2)',
-            color: e.current ? 'var(--ground)' : 'var(--text)',
+            color: e.current ? 'var(--on-door)' : 'var(--text)',
           }}
         >
           {e.slot}

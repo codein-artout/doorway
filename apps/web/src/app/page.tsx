@@ -109,7 +109,7 @@ export default function NewGame() {
               </span>
               <a
                 href={`/play?id=${resume.id}`}
-                className="inline-flex min-h-[44px] items-center rounded-xl bg-door px-5 font-bold text-ground no-underline"
+                className="inline-flex min-h-[44px] items-center rounded-xl bg-door px-5 font-bold text-on-door no-underline"
               >
                 Resume
               </a>
@@ -321,7 +321,7 @@ export default function NewGame() {
                 type="button"
                 disabled={cantStart}
                 onClick={start}
-                className="min-h-[52px] cursor-pointer rounded-[14px] border-none bg-door px-7 text-[17px] font-bold text-ground disabled:opacity-45"
+                className="min-h-[52px] cursor-pointer rounded-[14px] border-none bg-door px-7 text-[17px] font-bold text-on-door disabled:opacity-45"
                 data-testid="start"
               >
                 {seats.length === 1 ? 'Start the solo challenge' : `Start a ${seats.length}-player game`}

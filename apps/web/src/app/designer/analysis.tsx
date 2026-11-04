@@ -75,8 +75,8 @@ export function Analysis({ summary }: { summary: Summary | null }) {
             <span className="font-display text-2xl leading-tight font-extrabold">{a.a.split('. ')[0]}.</span>
             <span className="text-[13px]">{a.a.split('. ').slice(1).join('. ')}</span>
             <span
-              className="self-start rounded-full px-2 py-1 font-mono text-[11px] font-bold text-ground"
-              style={{ background: a.chip === 'HEADLINE' ? 'var(--alert)' : 'var(--door)' }}
+              className="self-start rounded-full px-2 py-1 font-mono text-[11px] font-bold text-ink"
+              style={{ background: 'var(--highlight)' }}
             >
               {a.chip}
             </span>
@@ -272,7 +272,7 @@ export function Analysis({ summary }: { summary: Summary | null }) {
                     <td className="border-b border-[var(--row-line)]">
                       {c.flag && (
                         <span
-                          className="rounded-full px-2 py-0.5 font-mono text-[11px] font-bold text-ground"
+                          className="rounded-full px-2 py-0.5 font-mono text-[11px] font-bold text-ink"
                           style={{ background: c.flag === 'strong' ? C.passion : C.fullLife }}
                         >
                           {c.flag.toUpperCase()}
@@ -372,7 +372,7 @@ export function Analysis({ summary }: { summary: Summary | null }) {
                       <span className="text-muted">human playtests</span>
                     ) : (
                       <span
-                        className="rounded-full px-2 py-0.5 font-mono text-[11px] font-bold text-ground"
+                        className="rounded-full px-2 py-0.5 font-mono text-[11px] font-bold text-ink"
                         style={{ background: r.verdict === 'pass' ? C.door : C.passion }}
                       >
                         {r.verdict.toUpperCase()}

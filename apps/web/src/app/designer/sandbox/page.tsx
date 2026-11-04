@@ -301,7 +301,7 @@ export default function Sandbox() {
                   type="button"
                   onClick={run}
                   disabled={running || problems.length > 0}
-                  className="min-h-[44px] w-full cursor-pointer rounded-xl border-none bg-door font-bold text-ground disabled:opacity-45"
+                  className="min-h-[44px] w-full cursor-pointer rounded-xl border-none bg-door font-bold text-on-door disabled:opacity-45"
                   data-testid="run"
                 >
                   {running ? `Running… ${Math.round(progress * 100)}%` : 'Run baseline and variant'}
@@ -373,7 +373,7 @@ export default function Sandbox() {
                 setRulesets([DEFAULT_RULESET, ...loadRulesets().map((x) => x.ruleset)]);
                 setSaved(r.id);
               }}
-              className="min-h-[44px] cursor-pointer rounded-xl border-none bg-door px-4 font-bold text-ground disabled:opacity-45"
+              className="min-h-[44px] cursor-pointer rounded-xl border-none bg-door px-4 font-bold text-on-door disabled:opacity-45"
               data-testid="save-ruleset"
             >
               Save as new ruleset

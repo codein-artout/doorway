@@ -6,7 +6,7 @@ import { pawnStyle } from '@/lib/ui-rules';
 export function Icon({
   d,
   size = 16,
-  stroke = 'var(--ground)',
+  stroke = 'var(--on-domain)',
   width = 2.2,
   label,
 }: {
@@ -79,7 +79,7 @@ export function Disc({
         height: h,
         borderRadius: h / 2,
         background: state === 'left' ? `color-mix(in srgb, ${info.css} 30%, var(--surface))` : info.css,
-        color: state === 'left' ? 'var(--text)' : 'var(--ground)',
+        color: state === 'left' ? 'var(--text)' : 'var(--on-domain)',
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -164,7 +164,7 @@ export function Pawn({
 export function Chip({
   children,
   bg = 'var(--door)',
-  fg = 'var(--ground)',
+  fg = 'var(--on-door)',
   className = '',
 }: {
   children: ReactNode;
@@ -215,7 +215,7 @@ export function Button({
     'inline-flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed min-h-[44px]';
   const v =
     variant === 'primary'
-      ? 'rounded-xl bg-door text-ground font-bold px-[22px] min-h-[48px] text-base disabled:opacity-45'
+      ? 'rounded-xl bg-door text-on-door font-bold px-[22px] min-h-[48px] text-base disabled:opacity-45'
       : variant === 'ghost'
         ? 'rounded-xl border border-line bg-transparent text-text px-4 disabled:opacity-45'
         : variant === 'pill'
