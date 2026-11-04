@@ -1,0 +1,36 @@
+{
+  "name": "doorway",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Doorway — digital playtest app (rules engine, bots, simulator, web table)",
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node scripts/check-rule-coverage.mjs && vitest run",
+    "test:watch": "vitest",
+    "e2e": "pnpm --filter @doorway/web e2e",
+    "sim": "tsx packages/sim/src/cli.ts",
+    "sim:study": "tsx packages/sim/src/study.ts && pnpm sim:aggregate",
+    "sim:aggregate": "tsx packages/sim/src/aggregate.ts",
+    "sim:report": "tsx packages/sim/src/report/index.ts",
+    "build": "pnpm -r --if-present build",
+    "lint": "eslint . && prettier --check \"**/*.{ts,tsx,mjs,json,css}\"",
+    "format": "prettier --write \"**/*.{ts,tsx,mjs,json,css}\"",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm sim --players 4 --games 200 --bots greedy,tempo,specialist,generalist --out reports/runs/verify-quick && pnpm build"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/node": "^22.20.5",
+    "eslint": "^9.39.5",
+    "fast-check": "^4.10.2",
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
+    "typescript": "5.9.3",
+    "typescript-eslint": "^8.72.1",
+    "vitest": "5.1.0"
+  }
+}

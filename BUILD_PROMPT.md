@@ -2,6 +2,8 @@
 
 You are building, unattended and overnight, the digital playtest app for **Doorway**, a board game designed by CIAO. Nobody is watching. Work through everything below, in order, until it all passes.
 
+**Tonight's scope is local only:** the rules engine, the bots, the simulation study and its analysis, a playable table on this machine, and the local designer tools. Online rooms, sharing with friends, the database, feedback collection and deployment come later (§7). Don't build them tonight, but keep the architecture ready for them.
+
 ## 0. How to work tonight (read first, re-read after every context compaction)
 
 1. **Never stop to ask.**
@@ -18,16 +20,14 @@ You are building, unattended and overnight, the digital playtest app for **Doorw
    - a short time log in UTC.
 
    After any context compaction, first read `STATUS.md`, `DECISIONS.md`, `spec/RULINGS.md` and this prompt (saved at `BUILD_PROMPT.md`; if it is missing from the repo, save this prompt there in M1), then continue.
-3. **Commit and push after every milestone**, and at least every 45 minutes, to the branch this session works on. Commit messages start with `M<n>:`. Never force-push. Never rewrite history. At the end, open a pull request into `main` (see M18).
+3. **Commit and push after every milestone**, and at least every 45 minutes, to the branch this session works on. Commit messages start with `M<n>:`. Never force-push. Never rewrite history. At the end, open a pull request into `main` (see M15).
 4. **Deadline.** CIAO's cloud credits expire on **2026-11-05 at 08:00 UTC** (13:30 IST).
    - Everything must be committed and pushed by **07:00 UTC**. Check the clock (`date -u`) at every milestone.
    - If you are behind, keep the milestone order and cut the lowest-priority items marked *(stretch)* first. Never skip tests for the parts you do ship.
 5. **Long commands.**
    - Foreground commands must finish within 10 minutes. Anything longer runs in the background, and no background job should need more than about 25 minutes: split simulations into resumable shards (`--shard i/n`, `--resume`).
    - While the study runs, carry on with UI milestones. Check on it periodically and restart failed shards.
-6. **Don't deploy, don't sign up for anything, don't add secrets.**
-   - Write `DEPLOY.md` so CIAO can deploy in about 10 minutes.
-   - Only `.env.example` files with placeholder values may be committed.
+6. **Don't deploy, don't sign up for anything, don't add secrets.** There is no database and no server state tonight.
 7. **Only stop when "Done means" (§9) is fully true**, or the deadline in rule 4 forces a stop. If the deadline forces it, `STATUS.md` must say exactly what is left.
 
 ## 1. Sources of truth (non-negotiable)
@@ -47,7 +47,7 @@ Read all of these before writing code:
 
 **Precedence.**
 - On game rules: `RULINGS.md` > rulebook > build spec.
-- On tooling and stack: **this prompt** > build spec §4. For example, Next.js replaces "React + Vite" and Next.js route handlers replace a separate room server.
+- On tooling and stack: **this prompt** > build spec §4. For example, Next.js replaces "React + Vite", and there is no room server tonight.
 - On look and copy: `design/` is binding.
 
 **`spec/` and `design/` are read-only.** If you find a contradiction or a new gap, don't edit them. Add a "Proposed ruling" entry to `DECISIONS.md`, implement your proposed default, and cite its ID in the tests.
@@ -68,11 +68,7 @@ The mockups' `{{…}}`, `<sc-for>` and `<sc-if>` are a mockup template language.
 - **`packages/bots`.** Every bot behind one interface, with strategy weights in config.
 - **`packages/sim`.** A headless Node CLI using `worker_threads`, plus the report generator.
 - **`apps/web`.** Next.js (App Router) + Tailwind. Tokens come from DESIGN.md as CSS variables and Tailwind theme values. Fonts load via `next/font/google`.
-- **Database.**
-  - Prisma + Postgres for rooms, telemetry, surveys, flags and saved rulesets.
-  - **Locally:** if `DATABASE_URL` is unset, fall back to **PGlite** (in-process, data in `.data/`) through a Prisma driver adapter.
-  - If Prisma + PGlite proves unworkable within about 45 minutes, use a local PostgreSQL for dev and tests (the VM is expected to have PostgreSQL 16: `service postgresql start`; otherwise Docker), and record why.
-  - **Production target:** Neon via Vercel. Use Neon's serverless driver adapter where Prisma's docs recommend it, with `DATABASE_URL` (pooled) at runtime and `DATABASE_URL_UNPOOLED` (direct) for migrations.
+- **No database tonight.** Games run in the browser on the shared engine. Local state (settings, saved games, custom rulesets) lives in localStorage and in exported JSON files. Keep game logic out of React components so a server can host the same engine later.
 - **Tests.** Vitest (with fast-check for property tests) and Playwright with `@axe-core/playwright`. Install Playwright's Chromium in the session (`pnpm exec playwright install --with-deps chromium`). If the download is blocked, record it and keep going; don't remove the e2e suite.
 - **Root scripts** (must exist and work):
   - `pnpm test` — all unit and property tests;
@@ -98,7 +94,7 @@ The mockups' `{{…}}`, `<sc-for>` and `<sc-if>` are a mockup template language.
 
 **Rule coverage is a checklist, not a vibe.**
 - Create `packages/engine/test/RULE_COVERAGE.md` listing every bullet and table row in rulebook §3–§13 (including that each §13 tunable key is honoured), the §15 count claims (25/20/15 by age, 12 per domain, 11 powers, 5 Reflection, no Young requirements), every engine-relevant item in build spec §5, and every ruling R1–R46. Give each one an ID, for example `RB-4.2` or `R9`.
-- Every ID needs at least one test whose name contains it.
+- Every ID needs at least one test whose name contains it, except IDs in a **Deferred** section of the file: rulings that only concern later features (online undo in R32, R36, R37, the `revealAt` part of R39, R40, R44). Those carry no test tonight.
 - A script (run inside `pnpm test`) fails if any ID has no test.
 
 **Required tests.**
@@ -177,7 +173,8 @@ pnpm sim --players 4 --bots tempo,specialist,lookahead,greedy --games 10000 \
 - `--sweep` values are separated by `;` and must be quoted. Keys use dotted paths: `doorway.4` is the whole array, `doorway.4.0` one element.
 - Raw runs go to `reports/runs/` (gitignored). `pnpm sim:aggregate` folds them into `reports/data/`. `pnpm sim:study` runs the whole study, then aggregates.
 - Same arguments give identical output.
-- Speed target (spec §7): a sweep of 3 values × 10,000 games with heuristic bots finishes in under 2 minutes. Each run writes `games` rows (spec §7 fields, plus per-player score components, arrival order, tower height, discs lost, rushes, extra turns, years saved by experience, powers used) and per-card pick records.
+- Speed target (spec §7): a sweep of 3 values × 10,000 games with heuristic bots finishes in under 2 minutes.
+- Each run writes `games` rows (spec §7 fields, plus per-player score components, arrival order, tower height, discs lost, rushes, extra turns, years saved by experience, powers used) and per-card pick records.
 
 **Run the full study yourself and commit the results.** "Main configuration" means each row below; each needs at least 10,000 games.
 
@@ -222,8 +219,10 @@ Sweep values for S4:
 
 Match `Main.dc.html`, `Doorway.dc.html`, `Results.dc.html` and `TablePhone.dc.html`.
 
+- **New game screen:** pick 1–4 seats, each Human or Bot (strategy and skill), the ruleset, an optional seed, bot speed, and Blind test. Base it on the **Seats** panel and settings row of `Lobby.dc.html`, without the invite link or join flow. Include the short "How to play, in five breaths" panel from the same mockup.
+
 - **Hot-seat and solo** for 1–4 seats. Any seat can be human or a bot with selectable strategy and skill.
-- **Bot speed:** Slow, Normal, Instant (R39). The bot "thinking" state is shown on its queue card and in the banner.
+- **Bot speed:** Slow (2 s), Normal (1 s), Instant (R39). Bots compute in a Web Worker so the UI stays responsive. The bot "thinking" state is shown on its queue card and in the banner.
 - **Track:** age bands, Milestones, stacked pawns with the top pawn on top, a pulse on the current pawn, a ghost pawn on preview, and the Doorway with its tiles.
 - **Turn banner** with "Why is it my turn?"; the turn queue; legal-move highlighting with reasons for illegal cards; effective cost (`4 → 3 yrs`).
 - **Move preview** showing the landing space and who moves next ("you move again").
@@ -231,7 +230,7 @@ Match `Main.dc.html`, `Doorway.dc.html`, `Results.dc.html` and `TablePhone.dc.ht
 - **Swap prompt** for Milestones and *Keep a diary*, with a Passion and Full life preview.
 - **Doorway selection:** bracket, live score, compare windows, best-window hint unless blind mode is on (R35), lock in.
 - **Results:** breakdown with each kept stretch highlighted.
-- **Move log, rules reference panel, undo** (R32), and a live score preview.
+- **Move log, rules reference panel, unlimited undo** (R32, local games), and a live score preview.
 - **Full replay** from the action log (step forward and back, `?move=N` deep links).
 - **Export / import** of the replay JSON and of full state.
 - **Keyboard play:** arrows, Enter, R, U, Esc.
@@ -239,34 +238,24 @@ Match `Main.dc.html`, `Doorway.dc.html`, `Results.dc.html` and `TablePhone.dc.ht
 - **First-game hint mode** (spec §8.5): contextual tips on the first Quest, Rush, age change, Milestone and arrival. On by default; off in Blind test (R35).
 - Works down to **360 px** wide (spec §8.6) with the phone layout; the mockup is drawn at 390 px.
 
-## 7. Shareable version with feedback (goal C)
+## 7. Designer tools (local) and what comes later
 
-**Rooms.** Match `Lobby.dc.html` and `LobbyPhone.dc.html`, including the host and friend views and the short how-to-play.
-- Create a room → a 6-character code and a link `/r/<code>`.
-- Join with a nickname only; no signup.
-- The host fills empty seats with bots and starts the game.
-- **Server-authoritative engine:** the server validates every move, with optimistic concurrency via a `version` column.
-- **Reconnect:** a seat token in localStorage plus a cookie, so reopening the link restores the seat.
-- **Bots** run server-side immediately after a human move, until the next human turn. Their events carry `revealAt` timestamps so clients animate at the room's bot speed (R39).
-- **Realtime:** choose what deploys cleanly on Vercel and record the choice in `DECISIONS.md`. The default recommendation is **HTTP polling** of `GET /api/rooms/<code>/state?since=<version>`, every 1 s while visible and every 5 s while hidden, behind a small transport interface so a hosted realtime service can be swapped in later.
-- Spectators with read-only links, plus the optional observer-notes panel (spec §9).
-
-**Tutorial.** About 2 minutes and interactive. A scripted scenario (fixed seed, scripted bot) teaches, in order: quest and cost, a discount, the furthest-back extra turn, Rush, a Milestone swap, and the Doorway window. It is skippable, offered on first visit and from the lobby.
-
-**Feedback.**
-- **Survey** after every game, on one screen (R36).
-- **"Something feels off"** is always visible and captures the full state, the move index and a comment (R37).
-- **Privacy line** shown as specified (R40). Store nothing beyond R44: no IPs, user agents or analytics.
-
-**Telemetry.** Log every decision: game id, move index, actor (human or bot plus policy), move, legal-move count, decision time in ms, and the **serialized state before the move**.
-- `pnpm telemetry:export` writes human games into the same CSV schema as the sims (`reports/data/human_*.csv`).
-- `sim:report` adds a "people vs bots" section when those files exist.
-
-**Private dashboard** at `/designer`, behind `DASHBOARD_PASSWORD` (an HMAC-signed cookie using `SESSION_SECRET`). It has:
-- **Feedback:** survey results; flagged moments, each opening the replay at that move; recent games with replay links; people vs. bots comparisons; CSV export; delete a game's logs (R44). Match `Feedback.dc.html`.
+**Designer tools** at `/designer`. No password tonight, since nothing is deployed.
 - **Analysis:** renders the committed `reports/data/summary.json`. Match `SimDashboard.dc.html`, with real numbers and no placeholder banner.
-- **Sandbox:** ruleset dials, a diff against the baseline, and running sims **in the browser with Web Workers** (same engine and bots), comparing variant vs. baseline on the same seeds. "Save as new ruleset" stores to the DB and offers a JSON download. Match `Sandbox.dc.html`.
+- **Sandbox:** ruleset dials, a diff against the baseline, and sims run **in the browser with Web Workers** (same engine and bots), comparing variant vs. baseline on the same seeds. "Save as new ruleset" stores it in localStorage, offers a JSON download, and makes it selectable on the New game screen. Match `Sandbox.dc.html`.
 - *(stretch)* Card editor with validation (spec §11.2), CSV and JSON import/export.
+
+**Later — do not build tonight.** CIAO will test the local build first. Keep these possible without rewrites:
+- online rooms, nickname join and reconnect (`Lobby.dc.html`, `LobbyPhone.dc.html`), with a server-authoritative engine;
+- the tutorial, the post-game survey (R36), "Something feels off" (R37), telemetry and the private feedback dashboard (`Feedback.dc.html`);
+- Postgres and deployment (Vercel + Neon).
+
+In practice that means:
+- the engine and bots run unchanged in Node and in the browser;
+- every move is a serializable action, and a replay is `{ ruleset, seed, seats, moves }`;
+- the table UI talks to the game through a small `GameClient` interface (local implementation tonight), so a networked client can be added later.
+
+Record this design in `DECISIONS.md`.
 
 ## 8. Milestones (in order; commit and push after each)
 
@@ -282,38 +271,25 @@ Match `Main.dc.html`, `Doorway.dc.html`, `Results.dc.html` and `TablePhone.dc.ht
 | M8 | **Start the full study (S1–S5) in background shards now.** Continue with M10+ while it runs; monitor and restart shards |
 | M9 | `sim:report`: ANALYSIS.md, analysis.html, data exports. Build it early on a quick run; run it for real when the study finishes (usually after M10–M13), and commit |
 | M10 | Web shell: Tailwind tokens, fonts, core components (Disc, Pawn, TrackCell, Doorway, QuestCard, TurnBanner, TurnQueue, ActionBar, ScoreTiles); a `/design-check` page showing them in every state |
-| M11 | Local table (hot-seat, solo, bots, previews, undo, log, rules, keyboard) |
+| M11 | New game screen and local table (hot-seat, solo, bots, previews, undo, log, rules, keyboard) |
 | M12 | Swaps, Doorway selection, results, replay viewer, export/import |
-| M13 | Phone layouts plus an accessibility pass; Playwright e2e: a full 2p game vs. a bot at Instant speed, a 390 px smoke test, and axe on every page with zero serious or critical violations |
-| M14 | Prisma schema, PGlite fallback, migrations, telemetry logging |
-| M15 | Online rooms: create, join, seats, bot fill, polling sync, reconnect, spectators. e2e with two browser contexts and a mid-game disconnect and rejoin; final scores must be identical in both |
-| M16 | Tutorial, survey, "Something feels off" capture |
-| M17 | `/designer` auth plus the Feedback, Analysis and Sandbox pages; card editor *(stretch)* |
-| M18 | Docs and wrap-up (below), then the clean-clone verification and the PR |
+| M13 | Phone layouts plus an accessibility pass; Playwright e2e: a full 2p game vs. a bot at Instant speed, a 360 px smoke test, and axe on every page with zero serious or critical violations |
+| M14 | `/designer` Analysis and Sandbox pages; card editor *(stretch)* |
+| M15 | Docs and wrap-up (below), then the clean-clone verification and the PR |
 
-**M18 docs.**
+**M15 docs.**
 - `README.md`:
   - what this is;
-  - a Mermaid architecture diagram (packages → web app → DB);
+  - a Mermaid architecture diagram (content → engine → bots → sim / web app);
   - how to run locally;
   - **how to change rules** (edit the ruleset JSON or `cards.json` → tests → sim → report);
   - **how to add a bot strategy** (a config entry plus an optional feature);
   - how to read the reports;
-  - a link to DEPLOY.md.
-- `DEPLOY.md`: Vercel + Neon in about 10 minutes, covering:
-  - importing the repo and the root directory;
-  - install and build commands, including `prisma migrate deploy`;
-  - adding Neon from the Vercel Marketplace and connecting it to the project (it injects `DATABASE_URL` and `DATABASE_URL_UNPOOLED`);
-  - setting `DASHBOARD_PASSWORD` and `SESSION_SECRET`;
-  - the first deploy, and smoke-testing a room on a phone;
-  - a troubleshooting section.
-
-  Verify everything in it against a local production build (`pnpm build && pnpm start` with Postgres).
-- `.env.example`.
+  - a short "Later" section listing the §7 items not built yet.
 
 **Then:**
 1. Clone the pushed branch into a fresh directory and run the commands in §9.
-2. Open a PR into `main` titled "Doorway playtest app — overnight build". Its body summarizes the analysis headline results, what's done, any *(stretch)* items skipped, and the links to `ANALYSIS.md` and `DEPLOY.md`.
+2. Open a PR into `main` titled "Doorway playtest app — overnight build". Its body summarizes the analysis headline results, what's done, any *(stretch)* items skipped, and links to `ANALYSIS.md`.
 
 ## 9. Done means
 
@@ -323,6 +299,6 @@ All of the following are true, checked from a **fresh clone** of the pushed bran
 - [ ] Every ID in `RULE_COVERAGE.md` has a passing test; the §16 worked example passes; the property tests pass at 10,000 games; the perf target is met.
 - [ ] All 11 strategies plus noisy variants are reachable through one interface, configured in `strategies.json`.
 - [ ] The full study (S1–S5) has run with at least 10k games per main configuration. `reports/data/*`, `reports/ANALYSIS.md` and `reports/analysis.html` are committed with real numbers, and the Doorway headline is answered first.
-- [ ] The table, Doorway, results, lobby, tutorial, rooms, survey, flags, telemetry and `/designer` dashboards work and match `design/`.
-- [ ] `README.md`, `DEPLOY.md`, `.env.example`, `STATUS.md` (final state) and `DECISIONS.md` are complete.
+- [ ] The New game screen, table, Doorway, results, replay and `/designer` Analysis and Sandbox work and match `design/`.
+- [ ] `README.md`, `STATUS.md` (final state) and `DECISIONS.md` are complete.
 - [ ] Everything is pushed and the PR is open.

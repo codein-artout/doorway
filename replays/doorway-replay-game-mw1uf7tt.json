@@ -1,0 +1,499 @@
+{
+ "format": "doorway-replay@1",
+ "rulesetId": "v0.2-default",
+ "rulesetHash": "aff43758f928de6e59da01360931644e608aadd2a59bb5b20df7c553a183f9be",
+ "cardsHash": "e1d3a6fd1d95c83eab56fdc4b5594fa80d09160ce0c18335a74cf4d3428e94f8",
+ "seed": "game-mw1uf7tt",
+ "seats": [
+  {
+   "id": "p1",
+   "name": "CIAO",
+   "isBot": false
+  },
+  {
+   "id": "p2",
+   "name": "Eden",
+   "isBot": true,
+   "botPolicy": "tempo@eps0.08"
+  },
+  {
+   "id": "p3",
+   "name": "Palmer",
+   "isBot": true,
+   "botPolicy": "specialist@eps0.25"
+  }
+ ],
+ "moves": [
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "quest",
+    "cardId": "PK-Y5"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "PU-Y2"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "rush"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "PU-Y3"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "quest",
+    "cardId": "GR-Y5"
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "quest",
+    "cardId": "GD-Y3"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "PU-Y1"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "PU-Y5"
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "quest",
+    "cardId": "PK-Y3"
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "swap",
+    "index": 0
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "quest",
+    "cardId": "GR-Y1"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "quest",
+    "cardId": "GD-Y5"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "skip_swap"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "GD-Y2"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "skip_swap"
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "quest",
+    "cardId": "PK-Y2"
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "quest",
+    "cardId": "GR-Y3"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "GD-Y4"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "quest",
+    "cardId": "OR-Y5"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "PU-Y4"
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "quest",
+    "cardId": "OR-M1"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "rush",
+    "discardCardId": "GR-Y4"
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "quest",
+    "cardId": "GR-M2"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "quest",
+    "cardId": "GR-Y2"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "swap",
+    "index": 3
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "quest",
+    "cardId": "OR-M4"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "swap",
+    "index": 1
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "PU-M4"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "skip_swap"
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "quest",
+    "cardId": "OR-M2"
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "swap",
+    "index": 5
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "OR-Y1"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "OR-Y3"
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "quest",
+    "cardId": "GR-M3"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "quest",
+    "cardId": "OR-Y4"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "quest",
+    "cardId": "OR-Y2"
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "quest",
+    "cardId": "OR-O3",
+    "useAgeReach": true
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "swap",
+    "index": 5
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "quest",
+    "cardId": "PU-M3"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "skip_swap"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "GD-Y1"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "PK-Y4"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "skip_swap"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "OR-M3"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "quest",
+    "cardId": "GD-M2"
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "quest",
+    "cardId": "GD-O3"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "PU-O1"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "GR-M1"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "quest",
+    "cardId": "GD-O1"
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "quest",
+    "cardId": "PK-O3"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "quest",
+    "cardId": "GR-O3"
+   }
+  },
+  {
+   "playerId": "p3",
+   "move": {
+    "type": "choose_window",
+    "start": 4,
+    "end": 11
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "quest",
+    "cardId": "PK-M1"
+   }
+  },
+  {
+   "playerId": "p2",
+   "move": {
+    "type": "choose_window",
+    "start": 9,
+    "end": 15
+   }
+  },
+  {
+   "playerId": "p1",
+   "move": {
+    "type": "choose_window",
+    "start": 3,
+    "end": 11
+   }
+  }
+ ],
+ "ruleset": {
+  "id": "v0.2-default",
+  "trackLength": 40,
+  "ageBands": {
+   "young": [
+    0,
+    13
+   ],
+   "middle": [
+    14,
+    27
+   ],
+   "old": [
+    28,
+    39
+   ]
+  },
+  "milestones": [
+   10,
+   20,
+   30
+  ],
+  "market": {
+   "young": 3,
+   "middle": 2,
+   "old": 2
+  },
+  "experienceStep": 2,
+  "experienceCap": 4,
+  "minCost": 1,
+  "rushNoPawnAhead": 3,
+  "rushDiscard": true,
+  "doorway": {
+   "2": [
+    9,
+    7
+   ],
+   "3": [
+    9,
+    8,
+    7
+   ],
+   "4": [
+    9,
+    8,
+    7,
+    6
+   ]
+  },
+  "fullLifeBonus": 6,
+  "passion": {
+   "3": 3,
+   "4": 6,
+   "5": 10
+  },
+  "reflectionPerDisc": 1,
+  "solo": {
+   "doorway": 8,
+   "rush": 4
+  },
+  "hints": {
+   "bestWindow": true
+  },
+  "cardsFile": "cards.json"
+ },
+ "setup": {
+  "seats": [
+   {
+    "name": "CIAO",
+    "kind": "human"
+   },
+   {
+    "name": "Eden",
+    "kind": "bot",
+    "strategy": "tempo",
+    "skill": "normal"
+   },
+   {
+    "name": "Palmer",
+    "kind": "bot",
+    "strategy": "specialist",
+    "skill": "casual"
+   }
+  ],
+  "seed": "game-mw1uf7tt",
+  "botSpeed": "normal",
+  "blind": false
+ }
+}

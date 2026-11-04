@@ -1,0 +1,23 @@
+{
+  "name": "@doorway/sim",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./model": "./src/report/model.ts",
+    "./html": "./src/report/html.ts",
+    "./report-answers": "./src/report/markdown.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@doorway/bots": "workspace:*",
+    "@doorway/content": "workspace:*",
+    "@doorway/engine": "workspace:*",
+    "hyparquet-writer": "0.18.0"
+  }
+}
