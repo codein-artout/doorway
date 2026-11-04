@@ -37,15 +37,25 @@ export const DEMO_SEATS: PlayerSetup[] = [
 ];
 const SEAT: Record<string, string> = { P: 'p1', A: 'p2', M: 'p3', K: 'p4' };
 
-/** The demo game after HIST0 (21 turns; turn 22 is Priya's). Milestone swaps on the way are skipped. */
-export function demoState(): GameState {
+/** Think times of the HIST0 turns, from the mockup's THINK0 (people in seconds, bots in ms). */
+export const DEMO_THINK_MS = [
+  12400, 38, 2100, 44, 52, 8000, 61, 4300, 15200, 35, 6600, 47, 29, 3900, 21700, 58, 33, 5200, 40, 7100, 41,
+];
+
+/** The demo's starting position, before HIST0 (the market is stacked so HIST0's cards come up in order). */
+export function demoBase(): GameState {
   const taken = HIST0.filter((h) => h[3]).map((h) => h[3]!);
   const young = [...taken, 'PK-Y3', 'OR-Y5', 'PU-Y3', 'GR-Y5', 'OR-Y3', 'PU-Y4', 'GD-Y5'];
-  const s = scenario(DEFAULT_RULESET, CARDS, DEMO_SEATS, {
+  return scenario(DEFAULT_RULESET, CARDS, DEMO_SEATS, {
     seed: 'v2-demo',
     market: { young: young.slice(0, 3), middle: ['PU-M2', 'GR-M2'], old: ['PK-O2', 'OR-O3'] },
     decks: { young: young.slice(3), middle: ['OR-M2', 'GR-M3'], old: ['PU-O1'] },
   });
+}
+
+/** The demo game after HIST0 (21 turns; turn 22 is Priya's). Milestone swaps on the way are skipped. */
+export function demoState(): GameState {
+  const s = demoBase();
   for (const [who, kind, to, card] of HIST0) {
     const pid = SEAT[who];
     const move: Move = kind === 'Q' ? { type: 'quest', cardId: card! } : { type: 'rush' };

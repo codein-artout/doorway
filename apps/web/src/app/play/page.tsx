@@ -9,7 +9,8 @@ import { othersLine } from '@/lib/table-model';
 import { useIsPhone } from '@/components/phone';
 import { LocalGameClient, type GameClient } from '@/lib/game-client';
 import { findGame, loadCurrent, saveCurrent, type StoredGame } from '@/lib/storage';
-import { demoState, DEMO_SEATS } from '@/lib/demo';
+import { demoBase, demoState, DEMO_SEATS, DEMO_THINK_MS } from '@/lib/demo';
+import { AnalystTable } from '@/components/analyst/analyst-table';
 import { DEFAULT_RULESET } from '@doorway/content';
 import { deserialize, serialize, toReplay } from '@doorway/engine';
 import { seatFromPlayer } from '@/lib/import-export';
@@ -35,7 +36,14 @@ export default function PlayPage() {
       const c = new LocalGameClient(
         g.setup,
         CARDS,
-        g.state ? { start: deserialize(g.state) } : g.replay.moves.length ? { from: g.replay } : {},
+        g.state
+          ? {
+              start: deserialize(g.state),
+              ...(g.id === 'demo' ? { base: demoBase(), baseThinkMs: DEMO_THINK_MS } : {}),
+            }
+          : g.replay.moves.length
+            ? { from: g.replay }
+            : {},
       );
       setStored(g);
       setClient(c);
@@ -67,7 +75,6 @@ function Table({ client, stored }: { client: GameClient; stored: StoredGame }) {
   const [view] = useView();
   const phone = useIsPhone();
   const s = t.state;
-  if (view === 'analyst') return <BoardTable t={t} />;
   if (s.phase === 'over')
     return (
       <div className="mx-auto max-w-[1440px] px-4 pb-8 md:px-7">
@@ -108,6 +115,7 @@ function Table({ client, stored }: { client: GameClient; stored: StoredGame }) {
         )}
       </div>
     );
+  if (view === 'analyst') return <AnalystTable t={t} />;
   return phone ? <BoardPhone t={t} /> : <BoardTable t={t} />;
 }
 
