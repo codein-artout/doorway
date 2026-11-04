@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Doorway — Analyst mode table</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F0E6}
+a{color:#23202A}a:hover{color:#000000}
+button,select,input{font:inherit}
+button:focus-visible,select:focus-visible,a:focus-visible,tr:focus-visible{outline:2px solid #23202A;outline-offset:2px}
+table{border-collapse:collapse}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; min-height: 1560px; background: #F4F0E6; background-image: linear-gradient(#E9E3D5 1px, transparent 1px), linear-gradient(90deg, #E9E3D5 1px, transparent 1px); background-size: 24px 24px; color: #23202A; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 14px; line-height: 1.45; padding: 0 28px 32px">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 14px 0 12px; border-bottom: 2px solid #23202A">
+  <span style="font-family: 'Caprasimo', serif; font-size: 26px; line-height: 1">Doorway</span>
+  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: #6B6475">turn {{turn}} · seed 7f3a-92 · v0.2-default · 4 players · {{toMove}} to move</span>
+  <div style="flex: 1"></div>
+  <nav aria-label="View mode" style="display: inline-flex; border: 1.5px solid #23202A; border-radius: 8px; overflow: hidden">
+    <a href="Board-Table.dc.html" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; font-weight: 600; text-decoration: none; color: #23202A">Board</a>
+    <a href="Analyst-Table.dc.html" aria-current="page" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; font-weight: 600; text-decoration: none; background: #23202A; color: #F4F0E6">Analyst</a>
+  </nav>
+  <button type="button" style="min-height: 36px; padding: 0 12px; border-radius: 8px; border: 1.5px solid #23202A; background: #FBF9F4; font-weight: 600; cursor: pointer">Export replay</button>
+</header>
+
+<section aria-label="Track" style="margin-top: 16px; padding: 14px 16px 12px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px">
+  <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; margin-bottom: 8px">
+    <h2 style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Track</h2>
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px">queue now: {{queueNow}}</span>
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: {{afterColor}}">{{queueAfter}}</span>
+  </div>
+  <div style="overflow-x: auto">
+    <div style="min-width: 1100px">
+      <div style="display: grid; grid-template-columns: repeat(41, minmax(0, 1fr)); gap: 1px; align-items: end; height: 58px">
+        <sc-for list="{{cells}}" as="c" hint-placeholder-count="41">
+          <div style="display: flex; flex-direction: column-reverse; align-items: center; gap: 2px">
+            <sc-for list="{{c.pawns}}" as="p" hint-placeholder-count="0">
+              <span title="{{p.title}}" style="font: 600 10.5px 'IBM Plex Mono', monospace; padding: 1px 4px; border-radius: 4px; background: {{p.bg}}; color: {{p.fg}}; border: 1.5px {{p.style}} #23202A">{{p.label}}</span>
+            </sc-for>
+            <sc-if value="{{c.ghost}}" hint-placeholder-val="{{ false }}"><span style="font: 600 10.5px 'IBM Plex Mono', monospace; padding: 1px 4px; border-radius: 4px; border: 1.5px dashed #23202A; background: #F6E27A">P?</span></sc-if>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(41, minmax(0, 1fr)); gap: 1px; margin-top: 4px">
+        <sc-for list="{{cells}}" as="c" hint-placeholder-count="41">
+          <div style="height: 18px; background: {{c.band}}; border-left: 1px solid #CFC6B3; display: grid; place-items: center; font: {{c.font}}; color: {{c.numColor}}">{{c.label}}</div>
+        </sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: 14fr 14fr 12fr 1fr; gap: 1px; margin-top: 4px; font-size: 11.5px; color: #6B6475">
+        <span>Young 0–13 · Young cards</span><span>Middle 14–27 · + Middle cards</span><span>Old 28–39 · + Old cards</span><span style="text-align: right">40</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; margin-top: 16px">
+
+<section aria-label="Decision table" style="grid-column: span 8; padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px; min-width: 0">
+  <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; margin-bottom: 8px">
+    <h2 style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Every move you can make</h2>
+    <span style="font-size: 12.5px; color: #6B6475">click a row to preview · Δ = points if you walked through right after</span>
+  </div>
+  <div style="overflow-x: auto">
+    <table style="width: 100%; min-width: 860px; font-size: 13px">
+      <thead>
+        <tr style="text-align: left; font-size: 11.5px; color: #6B6475; border-bottom: 1.5px solid #23202A">
+          <th style="padding: 6px 6px; font-weight: 600">Move</th>
+          <th style="padding: 6px 4px; font-weight: 600">Age</th>
+          <th style="padding: 6px 4px; font-weight: 600">Needs</th>
+          <th style="padding: 6px 4px; font-weight: 600; text-align: right">Yrs</th>
+          <th style="padding: 6px 4px; font-weight: 600; text-align: right">Disc.</th>
+          <th style="padding: 6px 4px; font-weight: 600; text-align: right">Cost</th>
+          <th style="padding: 6px 4px; font-weight: 600; text-align: right">Pts</th>
+          <th style="padding: 6px 4px; font-weight: 600; text-align: right">Pts/yr</th>
+          <th style="padding: 6px 4px; font-weight: 600; text-align: right">Lands</th>
+          <th style="padding: 6px 4px; font-weight: 600">Next up</th>
+          <th style="padding: 6px 4px; font-weight: 600; text-align: right">Δ now</th>
+          <th style="padding: 6px 6px; font-weight: 600">Bots</th>
+        </tr>
+      </thead>
+      <tbody>
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+          <tr style="border-bottom: 1px solid #E2DACA; background: {{r.bg}}; color: {{r.fg}}">
+            <td style="padding: 3px 4px">
+              <button type="button" onClick="{{r.pick}}" aria-pressed="{{r.on}}" disabled="{{r.disabled}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 4px; border: none; background: none; color: inherit; text-align: left; cursor: {{r.cursor}}">
+                <span style="width: 12px; height: 12px; flex: none; border-radius: 50%; background: {{r.dot}}; border: 1.5px solid #23202A"></span>
+                <span><b style="font-weight: 600">{{r.name}}</b> <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #6B6475">{{r.id}}</span></span>
+              </button>
+            </td>
+            <td style="padding: 7px 4px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: {{r.ageColor}}">{{r.age}}</td>
+            <td style="padding: 7px 4px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: {{r.reqColor}}">{{r.req}}</td>
+            <td style="padding: 7px 4px; text-align: right; font-family: 'IBM Plex Mono', monospace">{{r.years}}</td>
+            <td style="padding: 7px 4px; text-align: right; font-family: 'IBM Plex Mono', monospace; color: #2F7D4F">{{r.disc}}</td>
+            <td style="padding: 7px 4px; text-align: right; font-family: 'IBM Plex Mono', monospace; font-weight: 600">{{r.cost}}</td>
+            <td style="padding: 7px 4px; text-align: right; font-family: 'IBM Plex Mono', monospace">{{r.pts}}</td>
+            <td style="padding: 7px 4px; text-align: right; font-family: 'IBM Plex Mono', monospace">{{r.ppy}}</td>
+            <td style="padding: 7px 4px; text-align: right; font-family: 'IBM Plex Mono', monospace">{{r.lands}}</td>
+            <td style="padding: 7px 4px; font-size: 12.5px">{{r.next}}</td>
+            <td style="padding: 7px 4px; text-align: right; font-family: 'IBM Plex Mono', monospace; font-weight: 600; color: {{r.deltaColor}}">{{r.delta}}</td>
+            <td style="padding: 7px 6px; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px">{{r.bots}}</td>
+          </tr>
+        </sc-for>
+      </tbody>
+    </table>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: #EFE9DC">
+    <sc-if value="{{rushOn}}" hint-placeholder-val="{{ false }}">
+      <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px">Discard first
+        <select onChange="{{setDiscard}}" style="min-height: 34px; border-radius: 6px; border: 1.5px solid #23202A; background: #FBF9F4; padding: 0 6px">
+          <option value="">nothing</option>
+          <sc-for list="{{discardOptions}}" as="o" hint-placeholder-count="7"><option value="{{o.id}}" selected="{{o.on}}">{{o.label}}</option></sc-for>
+        </select>
+      </label>
+    </sc-if>
+    <p role="status" style="flex: 1 1 360px; margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px">{{preview}}</p>
+    <button type="button" onClick="{{undo}}" disabled="{{cantUndo}}" style="min-height: 38px; padding: 0 14px; border-radius: 8px; border: 1.5px solid #23202A; background: transparent; font-weight: 600; cursor: pointer; opacity: {{undoOpacity}}">Undo</button>
+    <button type="button" onClick="{{confirm}}" disabled="{{confirmDisabled}}" style="min-height: 38px; padding: 0 18px; border-radius: 8px; border: 1.5px solid #23202A; background: #23202A; color: #F4F0E6; font-weight: 600; cursor: pointer; opacity: {{confirmOpacity}}">{{confirmLabel}}</button>
+  </div>
+</section>
+
+<section aria-label="Players" style="grid-column: span 4; padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px; min-width: 0">
+  <h2 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Players</h2>
+  <table style="width: 100%; font-size: 12.5px">
+    <thead>
+      <tr style="font-size: 11px; color: #6B6475; border-bottom: 1.5px solid #23202A; text-align: right">
+        <th style="text-align: left; padding: 5px 4px; font-weight: 600">Player</th>
+        <th style="padding: 5px 3px; font-weight: 600">Pos</th>
+        <th style="padding: 5px 3px; font-weight: 600" title="Love"><span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #EBA6B0; border: 1px solid #23202A"></span> Lv</th>
+        <th style="padding: 5px 3px; font-weight: 600" title="Work"><span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #E6B84F; border: 1px solid #23202A"></span> Wk</th>
+        <th style="padding: 5px 3px; font-weight: 600" title="Play"><span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #8DB884; border: 1px solid #23202A"></span> Pl</th>
+        <th style="padding: 5px 3px; font-weight: 600" title="Family"><span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #D9733F; border: 1px solid #23202A"></span> Fm</th>
+        <th style="padding: 5px 3px; font-weight: 600" title="Wonder"><span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #A097D6; border: 1px solid #23202A"></span> Wd</th>
+        <th style="padding: 5px 4px; font-weight: 600">Now</th>
+      </tr>
+    </thead>
+    <tbody>
+      <sc-for list="{{players}}" as="p" hint-placeholder-count="4">
+        <tr style="border-bottom: 1px solid #E2DACA; background: {{p.bg}}; text-align: right; font-family: 'IBM Plex Mono', monospace">
+          <td style="text-align: left; padding: 6px 4px; font-family: 'IBM Plex Sans', sans-serif"><b style="font-weight: 600">{{p.name}}</b><br><span style="font-size: 11px; color: #6B6475">{{p.role}}</span></td>
+          <td style="padding: 6px 3px">{{p.pos}}</td>
+          <td style="padding: 6px 3px">{{p.c0}}</td><td style="padding: 6px 3px">{{p.c1}}</td><td style="padding: 6px 3px">{{p.c2}}</td><td style="padding: 6px 3px">{{p.c3}}</td><td style="padding: 6px 3px">{{p.c4}}</td>
+          <td style="padding: 6px 4px; font-weight: 600">{{p.score}}</td>
+        </tr>
+      </sc-for>
+    </tbody>
+  </table>
+  <ul style="margin: 10px 0 0; padding-left: 16px; font-size: 12.5px; display: flex; flex-direction: column; gap: 4px">
+    <sc-for list="{{discLines}}" as="d" hint-placeholder-count="4"><li>{{d.t}}</li></sc-for>
+  </ul>
+  <div style="margin-top: 12px; padding: 10px 12px; border-radius: 8px; border-left: 0; background: #F6E27A33; border: 1.5px dashed #23202A; font-size: 12.5px">
+    <b style="font-weight: 600">Spread {{spread}} spaces.</b> The leader always moved last from the back, so pawns stay within one move of each other. Rush jumps are short for the same reason.
+  </div>
+</section>
+
+<section aria-label="Your tower and projection" style="grid-column: span 4; padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px; min-width: 0">
+  <h2 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Your tower, top first</h2>
+  <table style="width: 100%; font-size: 12.5px">
+    <tbody>
+      <sc-for list="{{myTower}}" as="d" hint-placeholder-count="4">
+        <tr style="border-bottom: 1px solid #E2DACA; background: {{d.bg}}">
+          <td style="padding: 5px 4px; font-family: 'IBM Plex Mono', monospace; color: #6B6475; width: 22px">{{d.n}}</td>
+          <td style="padding: 5px 4px; width: 46px"><span style="display: inline-block; width: 40px; height: 12px; border-radius: 999px; background: {{d.color}}; border: 1.5px solid #23202A"></span></td>
+          <td style="padding: 5px 4px">{{d.name}}</td>
+          <td style="padding: 5px 4px; text-align: right; font-family: 'IBM Plex Mono', monospace">{{d.pts}}</td>
+        </tr>
+      </sc-for>
+    </tbody>
+  </table>
+  <dl style="margin: 12px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 12.5px">
+    <dt style="color: #6B6475">Pace</dt><dd style="margin: 0; font-family: 'IBM Plex Mono', monospace">{{pace}}</dd>
+    <dt style="color: #6B6475">Projected</dt><dd style="margin: 0; font-family: 'IBM Plex Mono', monospace">{{projected}}</dd>
+    <dt style="color: #6B6475">At the door</dt><dd style="margin: 0; font-family: 'IBM Plex Mono', monospace">{{doorLoss}}</dd>
+  </dl>
+</section>
+
+<section aria-label="Last bot decision" style="grid-column: span 4; padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px; min-width: 0">
+  <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 8px">
+    <h2 style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Why Kavi did that</h2>
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #6B6475">turn 21 · specialist · 6 options · 41 ms</span>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <sc-for list="{{reasons}}" as="c" hint-placeholder-count="4">
+      <div style="padding: 6px 8px; border-radius: 6px; background: {{c.bg}}; border: 1px solid {{c.border}}">
+        <div style="display: flex; justify-content: space-between; font-size: 12.5px"><span><b style="font-weight: 600">{{c.name}}</b> <span style="color: #6B6475">{{c.tag}}</span></span><span style="font-family: 'IBM Plex Mono', monospace; font-weight: 600">{{c.total}}</span></div>
+        <div style="display: flex; height: 8px; margin-top: 5px; border-radius: 2px; overflow: hidden; background: #EFE9DC">
+          <sc-for list="{{c.parts}}" as="f" hint-placeholder-count="4"><span title="{{f.title}}" style="width: {{f.w}}; background: {{f.c}}"></span></sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 8px; font-size: 11px; color: #6B6475">
+    <span><span style="display: inline-block; width: 9px; height: 9px; background: #23202A"></span> pts per year</span>
+    <span><span style="display: inline-block; width: 9px; height: 9px; background: #4F7290"></span> focus domain</span>
+    <span><span style="display: inline-block; width: 9px; height: 9px; background: #9A7A4A"></span> experience</span>
+    <span><span style="display: inline-block; width: 9px; height: 9px; background: #B9AE9A"></span> tempo</span>
+  </div>
+</section>
+
+<section aria-label="Event log" style="grid-column: span 4; padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px; min-width: 0">
+  <h2 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Log</h2>
+  <table style="width: 100%; font-size: 12px">
+    <thead><tr style="font-size: 11px; color: #6B6475; text-align: left; border-bottom: 1.5px solid #23202A"><th style="padding: 4px 3px; font-weight: 600">T</th><th style="padding: 4px 3px; font-weight: 600">Who</th><th style="padding: 4px 3px; font-weight: 600">Move</th><th style="padding: 4px 3px; font-weight: 600; text-align: right">Path</th><th style="padding: 4px 3px; font-weight: 600; text-align: right">Think</th></tr></thead>
+    <tbody>
+      <sc-for list="{{log}}" as="l" hint-placeholder-count="8">
+        <tr style="border-bottom: 1px solid #E2DACA; background: {{l.bg}}">
+          <td style="padding: 4px 3px; font-family: 'IBM Plex Mono', monospace; color: #6B6475">{{l.t}}</td>
+          <td style="padding: 4px 3px">{{l.who}}</td>
+          <td style="padding: 4px 3px">{{l.move}}</td>
+          <td style="padding: 4px 3px; text-align: right; font-family: 'IBM Plex Mono', monospace">{{l.path}}</td>
+          <td style="padding: 4px 3px; text-align: right; font-family: 'IBM Plex Mono', monospace; color: #6B6475">{{l.think}}</td>
+        </tr>
+      </sc-for>
+    </tbody>
+  </table>
+</section>
+
+<section aria-label="Position by turn" style="grid-column: span 6; padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px; min-width: 0">
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 6px">
+    <h2 style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Position by turn</h2>
+    <span style="font-size: 12px; color: #6B6475">flat runs are other people's turns · steps are yours</span>
+  </div>
+  <svg width="100%" height="220" viewBox="0 0 640 220" role="img" aria-label="{{chartAria}}" style="display: block; margin-top: 8px">
+    <g style="stroke: #E2DACA; stroke-width: 1">
+      <path d="M40 20H630M40 60H630M40 100H630M40 140H630M40 180H630"></path>
+    </g>
+    <g style="font: 400 10px 'IBM Plex Mono', monospace; fill: #6B6475">
+      <text x="34" y="24" text-anchor="end">20</text><text x="34" y="104" text-anchor="end">10</text><text x="34" y="184" text-anchor="end">0</text>
+      <text x="40" y="200">t0</text><text x="630" y="200" text-anchor="end">{{chartEnd}}</text>
+    </g>
+    <sc-for list="{{lines}}" as="l" hint-placeholder-count="4">
+      <path d="{{l.d}}" style="fill: none; stroke: {{l.c}}; stroke-width: {{l.w}}; stroke-dasharray: {{l.dash}}; stroke-linejoin: round"></path>
+    </sc-for>
+  </svg>
+  <div style="display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px">
+    <sc-for list="{{lines}}" as="l" hint-placeholder-count="4"><span style="display: inline-flex; align-items: center; gap: 6px"><svg width="22" height="8" aria-hidden="true"><path d="M0 4H22" style="stroke: {{l.c}}; stroke-width: {{l.w}}; stroke-dasharray: {{l.dash}}"></path></svg>{{l.name}} {{l.last}}</span></sc-for>
+  </div>
+</section>
+
+<section aria-label="Score if you walked through now" style="grid-column: span 6; padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px; min-width: 0">
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 6px">
+    <h2 style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Score if you walked through now</h2>
+    <span style="font-size: 12px; color: #6B6475">whole tower kept · ignores the Doorway cut</span>
+  </div>
+  <svg width="100%" height="220" viewBox="0 0 640 220" role="img" aria-label="{{scoreAria}}" style="display: block; margin-top: 8px">
+    <g style="stroke: #E2DACA; stroke-width: 1"><path d="M40 20H630M40 73H630M40 127H630M40 180H630"></path></g>
+    <g style="font: 400 10px 'IBM Plex Mono', monospace; fill: #6B6475"><text x="34" y="24" text-anchor="end">{{scoreMax}}</text><text x="34" y="184" text-anchor="end">0</text><text x="40" y="200">t0</text><text x="630" y="200" text-anchor="end">{{chartEnd}}</text></g>
+    <sc-for list="{{scoreLines}}" as="l" hint-placeholder-count="4">
+      <path d="{{l.d}}" style="fill: none; stroke: {{l.c}}; stroke-width: {{l.w}}; stroke-dasharray: {{l.dash}}; stroke-linejoin: round"></path>
+    </sc-for>
+  </svg>
+  <div style="display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px">
+    <sc-for list="{{scoreLines}}" as="l" hint-placeholder-count="4"><span style="display: inline-flex; align-items: center; gap: 6px"><svg width="22" height="8" aria-hidden="true"><path d="M0 4H22" style="stroke: {{l.c}}; stroke-width: {{l.w}}; stroke-dasharray: {{l.dash}}"></path></svg>{{l.name}} {{l.last}}</span></sc-for>
+  </div>
+</section>
+</div>
+<p style="margin: 14px 0 0; font-size: 12px; color: #6B6475">Bots in this demo play after a short pause so you can follow them. <button type="button" onClick="{{reset}}" style="background: none; border: none; padding: 0; text-decoration: underline; cursor: pointer; color: #23202A; font-size: 12px; min-height: 28px">Reset demo</button></p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1560}}'>
+var COL = { pink: '#EBA6B0', gold: '#E6B84F', green: '#8DB884', orange: '#D9733F', purple: '#A097D6' };
+var DOMS = { pink: 'Love', gold: 'Work', green: 'Play', orange: 'Family', purple: 'Wonder' };
+var ORDER = ['pink', 'gold', 'green', 'orange', 'purple'];
+function C(name, dom, age, years, pts, extra) { var c = { name: name, dom: dom, age: age, years: years, pts: pts }; if (extra) { for (var k in extra) c[k] = extra[k]; } return c; }
+var CARDS = {
+  'PK-Y1': C('First crush', 'pink', 'young', 2, 1), 'PK-Y2': C('Write a terrible love letter', 'pink', 'young', 2, 1),
+  'PK-Y3': C('Dance badly at a wedding', 'pink', 'young', 3, 2), 'PK-Y4': C('Have your heart broken', 'pink', 'young', 3, 2),
+  'PK-Y5': C('Fall in love', 'pink', 'young', 4, 3), 'PK-O2': C('Grow old with someone', 'pink', 'old', 5, 4, { reqDom: 'pink', reqN: 2 }),
+  'GD-Y1': C('First job', 'gold', 'young', 2, 1), 'GD-Y2': C('Get fired from a cafe', 'gold', 'young', 2, 1),
+  'GD-Y3': C('Learn a trade', 'gold', 'young', 3, 2), 'GD-Y4': C('Pull an all-nighter that mattered', 'gold', 'young', 3, 2),
+  'GD-Y5': C('Make your first real money', 'gold', 'young', 4, 3),
+  'GR-Y1': C('Build a fort', 'green', 'young', 2, 1), 'GR-Y2': C('Keep a diary', 'green', 'young', 2, 1),
+  'GR-Y3': C('Learn an instrument', 'green', 'young', 3, 2), 'GR-Y4': C("Join a team you're bad on", 'green', 'young', 3, 2),
+  'GR-Y5': C("Win something that doesn't matter", 'green', 'young', 4, 3), 'GR-M2': C('Learn to rest', 'green', 'middle', 3, 1),
+  'GR-M3': C('Get good at something useless', 'green', 'middle', 4, 3),
+  'OR-Y1': C('Call your mother', 'orange', 'young', 2, 1), 'OR-Y2': C('Fight with your sibling', 'orange', 'young', 2, 1),
+  'OR-Y3': C('Make a best friend', 'orange', 'young', 3, 2), 'OR-Y4': C('Leave home', 'orange', 'young', 3, 2),
+  'OR-Y5': C('Be there when it mattered', 'orange', 'young', 4, 3), 'OR-M2': C('Old friends', 'orange', 'middle', 4, 2),
+  'OR-O3': C('Leave something behind', 'orange', 'old', 6, 4, { reqDom: 'orange', reqN: 2 }),
+  'PU-Y1': C('See the sea', 'purple', 'young', 2, 1), 'PU-Y2': C('Say yes more', 'purple', 'young', 2, 1),
+  'PU-Y3': C('Stay up for a meteor shower', 'purple', 'young', 3, 2), 'PU-Y4': C('Get lost in a city', 'purple', 'young', 3, 2),
+  'PU-Y5': C('Travel alone', 'purple', 'young', 4, 3), 'PU-M2': C('Live somewhere new', 'purple', 'middle', 5, 3),
+  'PU-O1': C('Stand somewhere very old', 'purple', 'old', 4, 3, { reqDom: 'purple', reqN: 1 })
+};
+var PL = {
+  P: { name: 'Priya', role: 'you', line: '#23202A', w: 2.5, dash: 'none' },
+  A: { name: 'Arun', role: 'bot · Tempo', line: '#4F7290', w: 2, dash: '6 4' },
+  M: { name: 'Meera', role: 'friend', line: '#9A7A4A', w: 2, dash: '2 3' },
+  K: { name: 'Kavi', role: 'bot · Specialist', line: '#6E5A86', w: 2, dash: '9 3 2 3' }
+};
+var HIST0 = [
+  ['P','Q',2,'PU-Y2'],['A','Q',2,'GR-Y2'],['M','R',3,null],['K','Q',3,'GD-Y3'],['A','Q',4,'GR-Y1'],['P','Q',4,'GD-Y1'],['K','Q',6,'GD-Y4'],
+  ['M','Q',5,'PU-Y1'],['P','Q',7,'PK-Y4'],['A','Q',6,'OR-Y1'],['M','Q',7,'PK-Y1'],['A','Q',8,'GR-Y3'],['K','R',8,null],['M','R',9,null],
+  ['P','Q',11,'PK-Y5'],['K','Q',11,'OR-Y4'],['A','Q',10,'OR-Y2'],['M','Q',11,'PK-Y2'],['A','Q',12,'GR-Y4'],['M','Q',13,'GD-Y2'],['K','Q',15,'PU-Y5']
+];
+var THINK0 = ['12.4s','38ms','2.1s','44ms','52ms','8.0s','61ms','4.3s','15.2s','35ms','6.6s','47ms','29ms','3.9s','21.7s','58ms','33ms','5.2s','40ms','7.1s','41ms'];
+var RANK = { young: 0, middle: 1, old: 2 };
+var AGE_START = { young: 0, middle: 14, old: 28 };
+function ageOf(p) { return p >= 28 ? 'old' : p >= 14 ? 'middle' : 'young'; }
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function replay(hist, upto) {
+  var pos = { P: 0, A: 0, M: 0, K: 0 }, stacks = { 0: ['K', 'M', 'A', 'P'] }, towers = { P: [], A: [], M: [], K: [] };
+  var n = upto === undefined ? hist.length : upto;
+  for (var i = 0; i < n; i++) {
+    var h = hist[i], w = h[0], from = pos[w];
+    stacks[from] = stacks[from].filter(function (x) { return x !== w; }); if (!stacks[from].length) delete stacks[from];
+    pos[w] = Math.min(40, h[2]); stacks[pos[w]] = (stacks[pos[w]] || []).concat([w]);
+    if (h[3]) towers[w].push(h[3]);
+  }
+  return { pos: pos, stacks: stacks, towers: towers };
+}
+function current(pos, stacks) {
+  var min = 99; Object.keys(pos).forEach(function (id) { if (pos[id] < 40 && pos[id] < min) min = pos[id]; });
+  if (min === 99) return null; var st = stacks[min] || []; return st[st.length - 1];
+}
+function moveTo(pos, stacks, id, to) {
+  var p = clone(pos), s = clone(stacks), from = p[id];
+  s[from] = (s[from] || []).filter(function (x) { return x !== id; }); if (!s[from].length) delete s[from];
+  var t = Math.min(40, to); p[id] = t; s[t] = (s[t] || []).concat([id]); return { pos: p, stacks: s };
+}
+function queueOf(pos, stacks) {
+  return Object.keys(pos).filter(function (id) { return pos[id] < 40; }).sort(function (a, b) {
+    if (pos[a] !== pos[b]) return pos[a] - pos[b]; var st = stacks[pos[a]] || []; return st.indexOf(b) - st.indexOf(a);
+  });
+}
+function count(tw, d) { return tw.filter(function (id) { return CARDS[id].dom === d; }).length; }
+function exp(tw, d) { return Math.min(4, Math.floor(count(tw, d) / 2)); }
+function cost(tw, id) { var c = CARDS[id]; return Math.max(1, c.years - exp(tw, c.dom)); }
+function rushTo(pos, me) {
+  var best = null; Object.keys(pos).forEach(function (id) { if (id !== me && pos[id] > pos[me] && pos[id] < 40 && (best === null || pos[id] < best)) best = pos[id]; });
+  return best === null ? Math.min(40, pos[me] + 3) : best + 1;
+}
+function score(tw) {
+  var cards = 0, cnt = {}, run = 0, best = 0, prev = null;
+  tw.forEach(function (id) { var c = CARDS[id]; cards += c.pts; cnt[c.dom] = (cnt[c.dom] || 0) + 1; run = c.dom === prev ? run + 1 : 1; prev = c.dom; if (run > best) best = run; });
+  var sets = Math.min.apply(null, ORDER.map(function (d) { return cnt[d] || 0; }));
+  return cards + sets * 6 + (best >= 5 ? 10 : best === 4 ? 6 : best === 3 ? 3 : 0);
+}
+function canTake(g, who, id) { var c = CARDS[id]; return RANK[c.age] <= RANK[ageOf(g.pos[who])] && (!c.reqDom || count(g.towers[who], c.reqDom) >= c.reqN); }
+function init() {
+  return { hist: clone(HIST0), think: THINK0.slice(),
+    market: { young: ['PK-Y3', 'OR-Y5', 'PU-Y3'], middle: ['PU-M2', 'GR-M2'], old: ['PK-O2', 'OR-O3'] },
+    decks: { young: ['GR-Y5', 'OR-Y3', 'PU-Y4', 'GD-Y5'], middle: ['OR-M2', 'GR-M3'], old: ['PU-O1'] },
+    sel: null, discard: '', past: [] };
+}
+function marketIds(m) { return m.young.concat(m.middle, m.old).filter(function (x) { return x; }); }
+function takeFrom(market, decks, id) {
+  var mk = clone(market), dk = clone(decks), age = CARDS[id].age, i = mk[age].indexOf(id);
+  mk[age][i] = dk[age].length ? dk[age].shift() : null; return { market: mk, decks: dk };
+}
+
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = init(); this.timer = null; }
+  componentDidMount() { this.tick(); }
+  componentDidUpdate() { this.tick(); }
+  componentWillUnmount() { if (this.timer) clearTimeout(this.timer); }
+  tick() {
+    var self = this, g = replay(this.state.hist), cur = current(g.pos, g.stacks);
+    if (this.timer || !cur || cur === 'P') return;
+    this.timer = setTimeout(function () {
+      self.timer = null;
+      var s = self.state, gg = replay(s.hist), who = current(gg.pos, gg.stacks);
+      if (!who || who === 'P') return;
+      var best = null, bv = -1;
+      marketIds(s.market).forEach(function (id) { if (!canTake(gg, who, id)) return; var k = cost(gg.towers[who], id), v = CARDS[id].pts / k + (k <= 2 ? 0.3 : 0); if (v > bv) { bv = v; best = id; } });
+      var entry, mk = s.market, dk = s.decks;
+      if (best) { entry = [who, 'Q', gg.pos[who] + cost(gg.towers[who], best), best]; var r = takeFrom(s.market, s.decks, best); mk = r.market; dk = r.decks; }
+      else entry = [who, 'R', rushTo(gg.pos, who), null];
+      self.setState({ hist: s.hist.concat([entry]), think: s.think.concat([who === 'M' ? '6.4s' : (30 + (s.hist.length * 7) % 40) + 'ms']), market: mk, decks: dk });
+    }, 1300);
+  }
+  renderVals() {
+    var self = this, s = this.state, g = replay(s.hist), me = 'P';
+    var cur = current(g.pos, g.stacks), myTurn = cur === me, tw = g.towers.P, myPos = g.pos.P, myAge = ageOf(myPos);
+    var rT = rushTo(g.pos, me);
+    var landing = null;
+    if (myTurn && s.sel === 'rush') landing = rT; else if (myTurn && s.sel) landing = Math.min(40, myPos + cost(tw, s.sel));
+    function nameOf(id) { return id === 'P' ? 'Priya' : PL[id].name; }
+    function nextFor(to) {
+      var a = moveTo(g.pos, g.stacks, me, to), nx = current(a.pos, a.stacks);
+      var onTop = (a.stacks[to] || []).length > 1;
+      return { nx: nx, a: a, text: (nx === me ? 'you again' : nameOf(nx) + ' ' + a.pos[nx]) + (onTop ? ' · you stack on top' : '') };
+    }
+    var q = queueOf(g.pos, g.stacks);
+    var queueNow = q.map(function (id) { return nameOf(id) + ' ' + g.pos[id]; }).join(' → ');
+    var queueAfter = 'select a move to see the queue after it', afterColor = '#6B6475';
+    if (landing !== null) { var aa = moveTo(g.pos, g.stacks, me, landing); queueAfter = 'after: ' + queueOf(aa.pos, aa.stacks).map(function (id) { return nameOf(id) + ' ' + aa.pos[id]; }).join(' → '); afterColor = '#23202A'; }
+
+    var cells = [];
+    for (var i = 0; i <= 40; i++) {
+      var st = (g.stacks[i] || []).slice().reverse(), isM = i === 10 || i === 20 || i === 30;
+      cells.push({ ghost: landing === i,
+        band: i === 40 ? '#23202A' : isM ? '#F6E27A' : i >= 28 ? '#DCD3C1' : i >= 14 ? '#E5DECF' : '#EEE9DD',
+        label: i === 40 ? 'D' : (i % 5 === 0 || isM) ? i : '', numColor: i === 40 ? '#F4F0E6' : '#23202A',
+        font: (i % 10 === 0) ? "600 10.5px 'IBM Plex Mono', monospace" : "400 10px 'IBM Plex Mono', monospace",
+        pawns: st.map(function (id, k) { var isCur = id === cur; return { label: id + (k === 0 && st.length > 1 ? '↑' : ''), title: nameOf(id) + ' on ' + i + (k === 0 && st.length > 1 ? ', on top' : ''),
+          bg: isCur ? '#23202A' : '#FBF9F4', fg: isCur ? '#F4F0E6' : '#23202A', style: PL[id].role.indexOf('bot') === 0 ? 'dashed' : 'solid' }; }) });
+    }
+
+    var greedy = [], tempo = [];
+    var legalIds = marketIds(s.market).filter(function (id) { return canTake(g, me, id); });
+    greedy = legalIds.slice().sort(function (a, b) { return CARDS[b].pts / cost(tw, b) - CARDS[a].pts / cost(tw, a); });
+    tempo = legalIds.slice().sort(function (a, b) { return cost(tw, a) - cost(tw, b) || CARDS[b].pts - CARDS[a].pts; });
+    var base = score(tw);
+    var rows = marketIds(s.market).map(function (id) {
+      var c = CARDS[id], ageOk = RANK[c.age] <= RANK[myAge], reqOk = !c.reqDom || count(tw, c.reqDom) >= c.reqN, legal = ageOk && reqOk && myTurn;
+      var k = cost(tw, id), e = exp(tw, c.dom), to = Math.min(40, myPos + k), nf = legal ? nextFor(to) : null, d = score(tw.concat([id])) - base;
+      var gi = greedy.indexOf(id), ti = tempo.indexOf(id), on = s.sel === id;
+      return { id: id, name: c.name, dot: COL[c.dom],
+        age: ageOk ? 'ok' : 'from ' + AGE_START[c.age], ageColor: ageOk ? '#2F7D4F' : '#B4443A',
+        req: c.reqDom ? (reqOk ? '✓ ' : '✗ ') + c.reqN + ' ' + DOMS[c.reqDom] : '—', reqColor: c.reqDom ? (reqOk ? '#2F7D4F' : '#B4443A') : '#6B6475',
+        years: c.years, disc: e ? '−' + e : '', cost: k, pts: c.pts, ppy: (c.pts / k).toFixed(2), lands: legal ? to : '—',
+        next: legal ? nf.text : (ageOk ? 'needs ' + c.reqN + ' ' + DOMS[c.reqDom] : 'too young'),
+        delta: legal ? (d >= 0 ? '+' + d : d) : '', deltaColor: d > 0 ? '#2F7D4F' : '#23202A',
+        bots: legal ? 'G#' + (gi + 1) + ' T#' + (ti + 1) : '',
+        bg: on ? '#F6E27A' : 'transparent', fg: legal ? '#23202A' : '#6B6475', on: on, disabled: !legal, cursor: legal ? 'pointer' : 'not-allowed',
+        pick: function () { if (legal) self.setState({ sel: on ? null : id }); } };
+    });
+    var rnf = myTurn ? nextFor(rT) : null, rOn = s.sel === 'rush';
+    rows.push({ id: '', name: 'Rush', dot: '#FBF9F4', age: 'ok', ageColor: '#2F7D4F', req: '—', reqColor: '#6B6475', years: '', disc: '', cost: rT - myPos, pts: 0, ppy: '0.00',
+      lands: myTurn ? rT : '—', next: myTurn ? rnf.text : '', delta: myTurn ? '+0' : '', deltaColor: '#23202A', bots: '',
+      bg: rOn ? '#F6E27A' : 'transparent', fg: myTurn ? '#23202A' : '#6B6475', on: rOn, disabled: !myTurn, cursor: myTurn ? 'pointer' : 'not-allowed',
+      pick: function () { if (myTurn) self.setState({ sel: rOn ? null : 'rush', discard: '' }); } });
+
+    var players = ['P', 'A', 'M', 'K'].map(function (id) {
+      var t = g.towers[id], c = ORDER.map(function (d) { return count(t, d) || '·'; });
+      return { name: nameOf(id), role: PL[id].role, pos: g.pos[id], c0: c[0], c1: c[1], c2: c[2], c3: c[3], c4: c[4], score: score(t), bg: id === cur ? '#F6E27A55' : 'transparent' };
+    });
+    var discLines = ['P', 'A', 'M', 'K'].map(function (id) {
+      var t = g.towers[id], ex = ORDER.filter(function (d) { return exp(t, d) > 0; }).map(function (d) { return DOMS[d] + ' −' + exp(t, d); });
+      return { t: nameOf(id) + ': ' + (ex.length ? ex.join(', ') : 'no discounts') };
+    });
+    var live = Object.keys(g.pos).filter(function (id) { return g.pos[id] < 40; }).map(function (id) { return g.pos[id]; });
+    var spread = live.length ? Math.max.apply(null, live) - Math.min.apply(null, live) : 0;
+
+    var myQ = s.hist.filter(function (h) { return h[0] === 'P' && h[1] === 'Q'; });
+    var spent = 0, prevPos = 0; s.hist.forEach(function (h) { if (h[0] === 'P') { if (h[1] === 'Q') spent += h[2] - prevPos; prevPos = h[2]; } });
+    var pace = myQ.length ? spent / myQ.length : 3;
+    var proj = tw.length + Math.round((40 - myPos) / pace);
+    var myTower = tw.slice().reverse().map(function (id, i) { var c = CARDS[id]; return { n: tw.length - i, color: COL[c.dom], name: c.name, pts: c.pts, bg: 'transparent' }; });
+
+    var turnsNow = s.hist.length;
+    function px(t) { return 40 + (590 * t / Math.max(turnsNow, 24)); }
+    var lines = ['P', 'A', 'M', 'K'].map(function (id) {
+      var d = 'M' + px(0) + ' 180', p = 0;
+      s.hist.forEach(function (h, t) { if (h[0] === id) { d += ' H' + px(t + 1).toFixed(1) + ' V' + (180 - 8 * Math.min(h[2], 20)).toFixed(1); p = h[2]; } });
+      d += ' H' + px(turnsNow).toFixed(1);
+      return { d: d, c: PL[id].line, w: PL[id].w, dash: PL[id].dash, name: nameOf(id), last: '· ' + p };
+    });
+    var series = { P: [], A: [], M: [], K: [] }, maxS = 1;
+    for (var t = 0; t <= turnsNow; t++) { var gt = replay(s.hist, t); ['P', 'A', 'M', 'K'].forEach(function (id) { var v = score(gt.towers[id]); series[id].push(v); if (v > maxS) maxS = v; }); }
+    maxS = Math.max(12, Math.ceil(maxS / 4) * 4);
+    var scoreLines = ['P', 'A', 'M', 'K'].map(function (id) {
+      var d = '';
+      series[id].forEach(function (v, t) { d += (t ? ' L' : 'M') + px(t).toFixed(1) + ' ' + (180 - 160 * v / maxS).toFixed(1); });
+      return { d: d, c: PL[id].line, w: PL[id].w, dash: PL[id].dash, name: nameOf(id), last: '· ' + series[id][series[id].length - 1] };
+    });
+
+    var log = s.hist.slice(-8).map(function (h, i) {
+      var idx = s.hist.length - 8 + i, prior = replay(s.hist, idx), from = prior.pos[h[0]];
+      return { t: idx + 1, who: nameOf(h[0]), move: h[1] === 'R' ? 'rush' : CARDS[h[3]].name, path: from + '→' + h[2], think: s.think[idx] || '', bg: idx === s.hist.length - 1 ? '#F6E27A55' : 'transparent' };
+    }).reverse();
+
+    var preview;
+    if (!myTurn) preview = cur ? nameOf(cur) + ' is furthest back (' + g.pos[cur] + ') and is choosing.' : 'Game over.';
+    else if (!s.sel) preview = 'Your move. ' + legalIds.length + ' cards open to you, or rush to ' + rT + '.';
+    else if (s.sel === 'rush') preview = 'rush ' + myPos + '→' + rT + (s.discard ? ' · discard ' + s.discard : '') + ' · next: ' + rnf.text;
+    else { var sc = CARDS[s.sel], kk = cost(tw, s.sel), ee = exp(tw, sc.dom); preview = s.sel + ' · cost ' + kk + (ee ? ' (' + sc.years + ' − ' + DOMS[sc.dom] + ' ' + ee + ')' : '') + ' · ' + myPos + '→' + landing + ' · next: ' + nextFor(landing).text + ' · Δ now +' + (score(tw.concat([s.sel])) - base); }
+
+    return {
+      turn: turnsNow + 1, toMove: cur ? nameOf(cur) : 'nobody', queueNow: queueNow, queueAfter: queueAfter, afterColor: afterColor,
+      cells: cells, rows: rows, players: players, discLines: discLines, spread: spread,
+      rushOn: s.sel === 'rush', discardOptions: marketIds(s.market).map(function (id) { return { id: id, label: id + ' ' + CARDS[id].name, on: s.discard === id }; }),
+      preview: preview, confirmLabel: s.sel === 'rush' ? 'Rush' : s.sel ? 'Take ' + s.sel : 'Choose a move',
+      confirmDisabled: !myTurn || !s.sel, confirmOpacity: myTurn && s.sel ? 1 : 0.4, cantUndo: !s.past.length, undoOpacity: s.past.length ? 1 : 0.4,
+      myTower: myTower, pace: pace.toFixed(2) + ' yrs per quest', projected: '≈ ' + proj + ' memories at space 40',
+      doorLoss: 'tile 9–6 → lose about ' + Math.max(0, proj - 9) + '–' + Math.max(0, proj - 6),
+      reasons: [
+        { name: 'Travel alone', tag: 'chosen', total: '0.82', bg: '#F6E27A55', border: '#23202A', parts: [{ w: '34%', c: '#23202A', title: 'pts per year 0.75' }, { w: '20%', c: '#4F7290', title: 'focus: none' }, { w: '8%', c: '#9A7A4A', title: 'experience' }, { w: '20%', c: '#B9AE9A', title: 'tempo' }] },
+        { name: 'Make your first real money', tag: 'Work focus', total: '0.79', bg: 'transparent', border: '#E2DACA', parts: [{ w: '36%', c: '#23202A', title: 'pts per year 1.00' }, { w: '30%', c: '#4F7290', title: 'focus: Work' }, { w: '10%', c: '#9A7A4A', title: 'experience' }, { w: '3%', c: '#B9AE9A', title: 'tempo' }] },
+        { name: 'Be there when it mattered', tag: '', total: '0.61', bg: 'transparent', border: '#E2DACA', parts: [{ w: '28%', c: '#23202A', title: 'pts per year 0.75' }, { w: '0%', c: '#4F7290', title: 'focus' }, { w: '14%', c: '#9A7A4A', title: 'experience' }, { w: '19%', c: '#B9AE9A', title: 'tempo' }] },
+        { name: 'Rush to 14', tag: '', total: '0.22', bg: 'transparent', border: '#E2DACA', parts: [{ w: '0%', c: '#23202A', title: 'pts' }, { w: '0%', c: '#4F7290', title: 'focus' }, { w: '0%', c: '#9A7A4A', title: 'experience' }, { w: '22%', c: '#B9AE9A', title: 'tempo' }] }
+      ],
+      log: log, lines: lines, scoreLines: scoreLines, chartEnd: 't' + turnsNow, scoreMax: maxS,
+      chartAria: 'Step chart of each player position by turn. ' + lines.map(function (l) { return l.name + ' ' + l.last; }).join(', '),
+      scoreAria: 'Line chart of each player score if they walked through now. ' + scoreLines.map(function (l) { return l.name + ' ' + l.last; }).join(', '),
+      setDiscard: function (e) { self.setState({ discard: e.target.value }); },
+      undo: function () { if (!s.past.length) return; var p = s.past.slice(), prev = p.pop(); prev.past = p; if (self.timer) { clearTimeout(self.timer); self.timer = null; } self.setState(prev); },
+      reset: function () { if (self.timer) { clearTimeout(self.timer); self.timer = null; } self.setState(init()); },
+      confirm: function () {
+        if (!myTurn || !s.sel) return;
+        var snap = clone(s); snap.past = [];
+        var entry, mk = s.market, dk = s.decks;
+        if (s.sel === 'rush') { entry = ['P', 'R', rT, null]; if (s.discard) { var r1 = takeFrom(mk, dk, s.discard); mk = r1.market; dk = r1.decks; } }
+        else { entry = ['P', 'Q', myPos + cost(tw, s.sel), s.sel]; var r2 = takeFrom(mk, dk, s.sel); mk = r2.market; dk = r2.decks; }
+        self.setState({ hist: s.hist.concat([entry]), think: s.think.concat(['9.8s']), market: mk, decks: dk, sel: null, discard: '', past: s.past.concat([snap]) });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Doorway — Board mode on a phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&amp;family=Gochi+Hand&amp;family=Nunito:wght@500;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#2C3836}
+a{color:#F2E8D5}
+button{font:inherit}
+</style>
+</helmet>
+<div style="width: 390px; height: 1560px; box-sizing: border-box; position: relative; overflow: hidden; background: #2C3836; background-image: radial-gradient(rgba(242,232,213,.035) 1px, transparent 1.5px); background-size: 6px 6px; color: #F2E8D5; font-family: 'Nunito', system-ui, sans-serif; font-size: 15px; line-height: 1.4">
+
+  <header style="display: flex; align-items: center; gap: 8px; padding: 12px 16px">
+    <span style="font-family: 'Caprasimo', serif; font-size: 24px">Doorway</span>
+    <div style="flex: 1"></div>
+    <nav aria-label="View mode" style="display: inline-flex; padding: 3px; border-radius: 999px; background: #233030; border: 2px solid #46534F">
+      <a href="Board-Phone.dc.html" aria-current="page" style="display: inline-flex; align-items: center; min-height: 38px; padding: 0 12px; border-radius: 999px; background: #F2E8D5; color: #2B2530; font-weight: 900; font-size: 13px; text-decoration: none">Board</a>
+      <a href="Analyst-Table.dc.html" style="display: inline-flex; align-items: center; min-height: 38px; padding: 0 12px; border-radius: 999px; color: #F2E8D5; font-weight: 800; font-size: 13px; text-decoration: none">Analyst</a>
+    </nav>
+    <button type="button" aria-label="Rules" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #46534F; background: transparent; color: #F2E8D5; font-family: 'Caprasimo', serif; font-size: 18px">?</button>
+  </header>
+
+  <section aria-label="The board" style="margin: 4px 16px 0; padding: 12px; border-radius: 18px; background: #F1E7D2; border: 3px solid #2B2530; color: #2B2530; box-shadow: 0 8px 0 -2px #1F2826">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin: {{r.margin}}">
+        <span style="font-family: 'Caprasimo', serif; font-size: 14px">{{r.label}}</span>
+        <span style="font-family: 'Gochi Hand', cursive; font-size: 14px; color: #5B5262">{{r.range}}</span>
+      </div>
+      <div style="display: flex; gap: 0; align-items: stretch">
+        <div style="flex: 1; display: flex; flex-direction: {{r.dir}}; height: 40px; border: 2.5px solid #2B2530; border-radius: 8px; background-color: {{r.bg}}; background-image: {{r.pattern}}; background-size: {{r.size}}; overflow: visible">
+          <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="14">
+            <div style="flex: 1 1 0; min-width: 0; border-left: {{c.edge}}; background: {{c.fill}}; display: flex; align-items: flex-end; justify-content: center; position: relative">
+              <span style="position: absolute; top: 1px; left: 2px; font-size: 8px; font-weight: 900; color: #5B5262">{{c.n}}</span>
+              <sc-for list="{{c.pawns}}" as="p" hint-placeholder-count="0">
+                <span style="width: 15px; height: 15px; margin-bottom: 4px; border-radius: 50%; border: 2px solid #2B2530; background: {{p.fill}}; box-shadow: {{p.glow}}; color: {{p.eye}}; font-size: 8px; font-weight: 900; display: grid; place-items: center">{{p.i}}</span>
+              </sc-for>
+              <sc-if value="{{c.ghost}}" hint-placeholder-val="{{ false }}"><span style="width: 15px; height: 15px; margin-bottom: 4px; border-radius: 50%; border: 2px dashed #2B2530"></span></sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{r.door}}" hint-placeholder-val="{{ false }}">
+          <svg width="40" height="56" viewBox="0 0 40 56" role="img" aria-label="Doorway" style="margin: -16px 0 0 4px; overflow: visible"><path d="M3 54V20a17 17 0 0 1 34 0v34z" style="fill: #F7D47A; stroke: #2B2530; stroke-width: 2.5"></path><path d="M3 54V20l14 -5v39z" style="fill: #3A3340; stroke: #2B2530; stroke-width: 2.5; stroke-linejoin: round"></path></svg>
+        </sc-if>
+      </div>
+    </sc-for>
+    <p style="margin: 10px 0 0; font-family: 'Gochi Hand', cursive; font-size: 15px; color: #5B5262">snakes left to right, then back · tap the board to zoom</p>
+  </section>
+
+  <div style="margin: 16px 16px 0; display: flex; align-items: flex-start; gap: 10px">
+    <svg width="34" height="48" viewBox="0 0 28 40" aria-hidden="true" style="flex: none; overflow: visible"><circle cx="14" cy="15" r="7.5" style="fill: #F6EFE0; stroke: #2B2530; stroke-width: 2"></circle><circle cx="11.4" cy="14.5" r="1.2" style="fill: #2B2530"></circle><circle cx="16.6" cy="14.5" r="1.2" style="fill: #2B2530"></circle><path d="M3.5 38.5Q3.5 22.5 14 22.5Q24.5 22.5 24.5 38.5Z" style="fill: #F6EFE0; stroke: #2B2530; stroke-width: 2"></path></svg>
+    <div style="flex: 1; padding: 10px 14px; border-radius: 16px; background: #FFFDF6; border: 2.5px solid #2B2530; color: #2B2530; font-family: 'Gochi Hand', cursive; font-size: 20px; line-height: 1.15">My turn — I'm furthest back (11). Arun's next, at 12.</div>
+  </div>
+
+  <section aria-label="Quest cards" style="margin-top: 18px">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; padding: 0 16px">
+      <span style="font-family: 'Caprasimo', serif; font-size: 20px">On the table</span>
+      <span style="font-family: 'Gochi Hand', cursive; font-size: 16px; color: #C9D2CC">swipe · 3 of 7 open to you</span>
+    </div>
+    <div style="display: flex; gap: 12px; overflow-x: auto; padding: 14px 16px 12px">
+      <sc-for list="{{cards}}" as="c" hint-placeholder-count="5">
+        <div style="flex: none; width: 132px; height: 190px; border-radius: 12px; border: {{c.border}}; background: #FBF6EA; color: #2B2530; display: flex; flex-direction: column; position: relative; transform: {{c.transform}}; box-shadow: {{c.shadow}}; opacity: {{c.opacity}}">
+          <div style="display: flex; align-items: center; gap: 6px; padding: 7px 8px; border-radius: 9px 9px 0 0; background: {{c.color}}; border-bottom: 2.5px solid #2B2530">
+            <span style="width: 24px; height: 24px; border-radius: 50%; background: #FBF6EA; border: 2px solid #2B2530; display: grid; place-items: center"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #2B2530; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round"><path d="{{c.icon}}"></path></svg></span>
+            <span style="font-weight: 900; font-size: 11px; text-transform: uppercase">{{c.dom}}</span>
+          </div>
+          <div style="padding: 8px 9px 0; font-family: 'Caprasimo', serif; font-size: 15px; line-height: 1.12">{{c.name}}</div>
+          <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding: 7px 9px; border-top: 2px dashed #CDBFA6">
+            <span style="font-family: 'Caprasimo', serif; font-size: 18px">{{c.cost}} <span style="font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 11px">yrs</span></span>
+            <span style="width: 28px; height: 28px; border-radius: 50%; border: 2.5px solid #2B2530; background: #F7D47A; display: grid; place-items: center; font-family: 'Caprasimo', serif; font-size: 14px">{{c.pts}}</span>
+          </div>
+          <sc-if value="{{c.blocked}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; left: 10px; right: 10px; top: 70px; padding: 6px; background: #F6EBC0; border: 2px solid #2B2530; transform: rotate(-4deg); font-family: 'Gochi Hand', cursive; font-size: 15px; text-align: center; line-height: 1.1">{{c.why}}</span></sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section aria-label="Your life" style="margin: 8px 16px 0; padding: 14px; border-radius: 18px; background: #F2E8D5; border: 3px solid #2B2530; color: #2B2530; box-shadow: 0 5px 0 #1F2826">
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <span style="font-family: 'Caprasimo', serif; font-size: 20px">Your life</span>
+      <span style="font-weight: 800; font-size: 12.5px; color: #5B5262">4 memories · 7 pts if you left now</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 0; margin-top: 10px">
+      <sc-for list="{{tower}}" as="d" hint-placeholder-count="4">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: -2px">
+          <span style="width: 74px; height: 20px; flex: none; border-radius: 999px; border: 2.5px solid #2B2530; background: {{d.color}}; box-shadow: inset 0 -4px 0 rgba(43,37,48,.18); font-weight: 900; font-size: 10px; display: grid; place-items: center">{{d.code}}</span>
+          <span style="font-size: 13.5px; font-weight: 700">{{d.name}}</span>
+        </div>
+      </sc-for>
+      <span style="width: 84px; height: 9px; margin-top: 4px; margin-left: -5px; border-radius: 3px; background: #2B2530"></span>
+    </div>
+  </section>
+
+  <section aria-label="Others" style="margin: 14px 16px 0; display: flex; gap: 10px">
+    <sc-for list="{{others}}" as="o" hint-placeholder-count="3">
+      <div style="flex: 1; padding: 10px; border-radius: 14px; background: #E9DFCB; border: 2.5px solid #2B2530; color: #2B2530; display: flex; flex-direction: column; align-items: center; gap: 6px">
+        <span style="font-family: 'Caprasimo', serif; font-size: 15px">{{o.name}}</span>
+        <div style="display: flex; flex-direction: column-reverse; align-items: center">
+          <span style="width: 44px; height: 6px; border-radius: 3px; background: #2B2530"></span>
+          <sc-for list="{{o.chips}}" as="c" hint-placeholder-count="5"><span style="width: 36px; height: 10px; margin-bottom: -2px; border-radius: 999px; border: 1.8px solid #2B2530; background: {{c.color}}"></span></sc-for>
+        </div>
+        <span style="font-size: 11.5px; font-weight: 800; color: #5B5262">space {{o.pos}}</span>
+      </div>
+    </sc-for>
+  </section>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 16px 22px; background: #F2E8D5; color: #2B2530; border-top: 3px solid #2B2530; border-radius: 22px 22px 0 0">
+    <p role="status" style="margin: 0 0 10px; font-family: 'Gochi Hand', cursive; font-size: 19px; line-height: 1.15">Dance badly at a wedding: 3 → 2 years. You land on 13, on top of Meera — three Love in a row. Arun goes next.</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1.25fr; gap: 8px">
+      <button type="button" aria-pressed="true" style="min-height: 52px; border-radius: 14px; border: 3px solid #2B2530; background: #F7D47A; color: #2B2530; font-family: 'Caprasimo', serif; font-size: 17px; box-shadow: 0 4px 0 #2B2530">Quest</button>
+      <button type="button" aria-pressed="false" style="min-height: 52px; border-radius: 14px; border: 3px solid #2B2530; background: #FBF6EA; color: #2B2530; font-family: 'Caprasimo', serif; font-size: 17px; box-shadow: 0 4px 0 #2B2530">Rush → 13</button>
+      <button type="button" style="min-height: 52px; border-radius: 14px; border: 3px solid #2B2530; background: #2B2530; color: #F7D47A; font-family: 'Caprasimo', serif; font-size: 18px">Take it</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1560}}'>
+var ICONS = {
+  pink: 'M12 20.5s-7.5-4.6-7.5-10.4A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2.5c0 5.8-7.5 10.4-7.5 10.4z',
+  gold: 'M5 5h8.5L16 7.5 13.5 10H5zM9.5 10v10',
+  green: 'M12 2.5l6 7.5-6 8-6-8zM12 18c0 2-2.5 2-2.5 3.5',
+  orange: 'M3.5 11.5L12 4.5l8.5 7M6 10v10h12V10M10 20v-5h4v5',
+  purple: 'M12 3l2.5 5.4 5.9.6-4.4 4 1.3 5.8L12 15.9l-5.3 2.9L8 13l-4.4-4 5.9-.6z'
+};
+var COL = { pink: '#EBA6B0', gold: '#E6B84F', green: '#8DB884', orange: '#D9733F', purple: '#A097D6' };
+var CODE = { pink: 'Lv', gold: 'Wk', green: 'Pl', orange: 'Fm', purple: 'Wd' };
+var PAWNS = { 11: { i: 'P', fill: '#F6EFE0', eye: '#2B2530', glow: '0 0 0 3px #F7D47A' }, 12: { i: 'A', fill: '#7F97A8', eye: '#2B2530', glow: 'none' }, 13: { i: 'M', fill: '#C9B28E', eye: '#2B2530', glow: 'none' }, 15: { i: 'K', fill: '#5F5868', eye: '#F2E8D5', glow: 'none' } };
+function cells(a, b) {
+  var r = [];
+  for (var n = a; n <= b; n++) {
+    var isM = n === 10 || n === 20 || n === 30;
+    r.push({ n: n, edge: (n === a) ? '0' : '1.5px solid #2B2530', fill: isM ? 'rgba(247,212,122,.55)' : 'transparent', pawns: PAWNS[n] ? [PAWNS[n]] : [], ghost: n === 13 });
+  }
+  return r;
+}
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      rows: [
+        { label: 'Young', range: '0 → 13', margin: '0 0 4px', dir: 'row', bg: '#F6EEDB', pattern: 'radial-gradient(rgba(43,37,48,.14) 1px, transparent 1.4px)', size: '7px 7px', cells: cells(0, 13), door: false },
+        { label: 'Middle', range: '27 ← 14', margin: '10px 0 4px', dir: 'row-reverse', bg: '#F1E5CF', pattern: 'repeating-linear-gradient(45deg, rgba(43,37,48,.1) 0 1px, transparent 1px 7px)', size: 'auto', cells: cells(14, 27), door: false },
+        { label: 'Old', range: '28 → 40', margin: '10px 0 4px', dir: 'row', bg: '#ECDDCB', pattern: 'repeating-linear-gradient(45deg, rgba(43,37,48,.08) 0 1px, transparent 1px 8px), repeating-linear-gradient(-45deg, rgba(43,37,48,.08) 0 1px, transparent 1px 8px)', size: 'auto', cells: cells(28, 39), door: true }
+      ],
+      cards: [
+        { id: 'PK-Y3', dom: 'Love', name: 'Dance badly at a wedding', color: COL.pink, icon: ICONS.pink, cost: 2, pts: 2, border: '3.5px solid #2B2530', transform: 'translateY(-8px)', shadow: '0 0 0 5px #F7D47A, 0 8px 0 #1F2826', opacity: 1, blocked: false, why: '' },
+        { id: 'PU-Y3', dom: 'Wonder', name: 'Stay up for a meteor shower', color: COL.purple, icon: ICONS.purple, cost: 3, pts: 2, border: '2.5px solid #2B2530', transform: 'rotate(1deg)', shadow: '0 5px 0 #1F2826', opacity: 1, blocked: false, why: '' },
+        { id: 'OR-Y5', dom: 'Family', name: 'Be there when it mattered', color: COL.orange, icon: ICONS.orange, cost: 4, pts: 3, border: '2.5px solid #2B2530', transform: 'rotate(-1deg)', shadow: '0 5px 0 #1F2826', opacity: 1, blocked: false, why: '' },
+        { id: 'PU-M2', dom: 'Wonder', name: 'Live somewhere new', color: COL.purple, icon: ICONS.purple, cost: 5, pts: 3, border: '2.5px solid #2B2530', transform: 'rotate(1.5deg)', shadow: '0 5px 0 #1F2826', opacity: 0.92, blocked: true, why: 'opens at space 14' },
+        { id: 'OR-O3', dom: 'Family', name: 'Leave something behind', color: COL.orange, icon: ICONS.orange, cost: 6, pts: 4, border: '2.5px solid #2B2530', transform: 'rotate(-1.5deg)', shadow: '0 5px 0 #1F2826', opacity: 0.92, blocked: true, why: 'opens at space 28' }
+      ],
+      tower: [['pink', 'Fall in love'], ['pink', 'Have your heart broken'], ['gold', 'First job'], ['purple', 'Say yes more']].map(function (d) { return { color: COL[d[0]], code: CODE[d[0]], name: d[1] }; }),
+      others: [
+        { name: 'Arun', pos: 12, chips: ['green','green','orange','green','orange','green'].map(function (c) { return { color: COL[c] }; }) },
+        { name: 'Meera', pos: 13, chips: ['purple','pink','pink','gold'].map(function (c) { return { color: COL[c] }; }) },
+        { name: 'Kavi', pos: 15, chips: ['gold','gold','orange','purple'].map(function (c) { return { color: COL[c] }; }) }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Doorway — pieces sheet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&amp;family=Gochi+Hand&amp;family=Nunito:wght@500;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F1E7D2}
+a{color:#2B2530}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; min-height: 1180px; background: #F1E7D2; background-image: radial-gradient(rgba(43,37,48,.06) 1px, transparent 1.5px); background-size: 8px 8px; color: #2B2530; font-family: 'Nunito', system-ui, sans-serif; font-size: 15px; line-height: 1.4; padding: 36px 40px 44px">
+
+  <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 20px; margin-bottom: 26px">
+    <h1 style="margin: 0; font-family: 'Caprasimo', serif; font-weight: 400; font-size: 52px; line-height: 1">The pieces</h1>
+    <p style="margin: 0; font-family: 'Gochi Hand', cursive; font-size: 22px; color: #5B5262">Everything on the table, drawn the way the app draws it. Thick ink, flat colour, paper underneath.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px">
+
+    <section aria-label="Quest cards" style="grid-column: span 8; padding: 22px; border-radius: 22px; border: 3px solid #2B2530; background: #F6EEDB">
+      <h2 style="margin: 0 0 4px; font-family: 'Caprasimo', serif; font-weight: 400; font-size: 26px">Quest cards</h2>
+      <p style="margin: 0 0 16px; font-family: 'Gochi Hand', cursive; font-size: 18px; color: #5B5262">Colour band = the memory you gain. Hourglass = years. Coin = points.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+        <sc-for list="{{cards}}" as="c" hint-placeholder-count="5">
+          <div style="width: 150px; height: 222px; border-radius: 13px; border: 2.5px solid #2B2530; background: #FBF6EA; display: flex; flex-direction: column; transform: rotate({{c.rot}}); box-shadow: 0 5px 0 #2B2530">
+            <div style="display: flex; align-items: center; gap: 7px; padding: 8px 9px; border-radius: 10px 10px 0 0; background: {{c.color}}; border-bottom: 2.5px solid #2B2530">
+              <span style="width: 28px; height: 28px; border-radius: 50%; background: #FBF6EA; border: 2px solid #2B2530; display: grid; place-items: center"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #2B2530; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round"><path d="{{c.icon}}"></path></svg></span>
+              <span style="font-weight: 900; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em">{{c.dom}}</span>
+              <span style="margin-left: auto; font-weight: 900; font-size: 10px; padding: 1px 6px; border-radius: 999px; background: #FBF6EA; border: 1.5px solid #2B2530">{{c.age}}</span>
+            </div>
+            <div style="padding: 9px 10px 0; font-family: 'Caprasimo', serif; font-size: 17px; line-height: 1.12">{{c.name}}</div>
+            <sc-if value="{{c.hasReq}}" hint-placeholder-val="{{ false }}"><span style="margin: 7px 10px 0; align-self: flex-start; font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 999px; border: 1.5px solid #2B2530">{{c.req}}</span></sc-if>
+            <sc-if value="{{c.hasText}}" hint-placeholder-val="{{ false }}"><span style="margin: 7px 10px 0; padding: 6px 8px; border-radius: 8px; background: {{c.textBg}}; font-size: 12px; line-height: 1.25">{{c.text}}</span></sc-if>
+            <div style="margin-top: auto; display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-top: 2px dashed #CDBFA6">
+              <span style="display: inline-flex; align-items: center; gap: 4px"><svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #2B2530; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round"><path d="M6 3h12M6 21h12M7 3c0 6 10 6 10 9s-10 3-10 9M17 3c0 6-10 6-10 9s10 3 10 9"></path></svg><b style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: 21px">{{c.years}}</b></span>
+              <span style="width: 32px; height: 32px; border-radius: 50%; border: 2.5px solid #2B2530; background: #F7D47A; display: grid; place-items: center; font-family: 'Caprasimo', serif; font-size: 16px">{{c.pts}}</span>
+            </div>
+          </div>
+        </sc-for>
+        <div style="width: 150px; height: 222px; border-radius: 13px; border: 2.5px solid #2B2530; background: #3A3340; color: #F2E8D5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; transform: rotate(2deg); box-shadow: 0 5px 0 #2B2530; background-image: repeating-linear-gradient(45deg, rgba(242,232,213,.07) 0 2px, transparent 2px 12px)">
+          <svg width="56" height="68" viewBox="0 0 30 36" aria-hidden="true" style="fill: none; stroke: #F2E8D5; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M3 34V15a12 12 0 0 1 24 0v19z" style="fill: #F7D47A"></path><path d="M10 34V17l9-3v20" style="fill: #3A3340"></path></svg>
+          <span style="font-family: 'Caprasimo', serif; font-size: 20px">Middle</span>
+          <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.1em">CARD BACK</span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Colours" style="grid-column: span 4; padding: 22px; border-radius: 22px; border: 3px solid #2B2530; background: #F6EEDB">
+      <h2 style="margin: 0 0 12px; font-family: 'Caprasimo', serif; font-weight: 400; font-size: 26px">Five colours, muted</h2>
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <sc-for list="{{domains}}" as="d" hint-placeholder-count="5">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <span style="width: 46px; height: 46px; flex: none; border-radius: 50%; border: 2.5px solid #2B2530; background: {{d.color}}; box-shadow: inset 0 -6px 0 rgba(43,37,48,.16); display: grid; place-items: center"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #2B2530; stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round"><path d="{{d.icon}}"></path></svg></span>
+            <div style="flex: 1"><div style="font-family: 'Caprasimo', serif; font-size: 19px; line-height: 1.1">{{d.name}} <span style="font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 12px">{{d.code}}</span></div><div style="font-size: 12.5px; color: #5B5262">{{d.covers}}</div></div>
+            <code style="font-size: 12px; font-weight: 700">{{d.hex}}</code>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap">
+        <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800"><span style="width: 22px; height: 22px; border-radius: 6px; background: #2C3836; border: 2px solid #2B2530"></span>table #2C3836</span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800"><span style="width: 22px; height: 22px; border-radius: 6px; background: #F1E7D2; border: 2px solid #2B2530"></span>paper #F1E7D2</span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800"><span style="width: 22px; height: 22px; border-radius: 6px; background: #2B2530; border: 2px solid #2B2530"></span>ink #2B2530</span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800"><span style="width: 22px; height: 22px; border-radius: 6px; background: #F7D47A; border: 2px solid #2B2530"></span>lamplight #F7D47A</span>
+      </div>
+    </section>
+
+    <section aria-label="Memory discs" style="grid-column: span 4; padding: 22px; border-radius: 22px; border: 3px solid #2B2530; background: #F6EEDB">
+      <h2 style="margin: 0 0 4px; font-family: 'Caprasimo', serif; font-weight: 400; font-size: 26px">Memory discs</h2>
+      <p style="margin: 0 0 14px; font-family: 'Gochi Hand', cursive; font-size: 18px; color: #5B5262">Chunky chips. They stack, so the order shows.</p>
+      <div style="display: flex; align-items: flex-end; gap: 26px">
+        <div style="display: flex; flex-direction: column-reverse; align-items: center">
+          <span style="width: 98px; height: 12px; border-radius: 4px; background: #2B2530"></span>
+          <sc-for list="{{stack}}" as="d" hint-placeholder-count="6">
+            <span style="width: 86px; height: 22px; margin-bottom: -3px; border-radius: 999px; border: 2.5px solid #2B2530; background: {{d.color}}; box-shadow: inset 0 -6px 0 rgba(43,37,48,.18)"></span>
+          </sc-for>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 52px); gap: 10px">
+          <sc-for list="{{domains}}" as="d" hint-placeholder-count="5">
+            <span style="width: 52px; height: 52px; border-radius: 50%; border: 2.5px solid #2B2530; background: {{d.color}}; box-shadow: inset 0 0 0 5px rgba(251,246,234,.45); display: flex; flex-direction: column; align-items: center; justify-content: center">
+              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #2B2530; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round"><path d="{{d.icon}}"></path></svg>
+              <span style="font-weight: 900; font-size: 10px">{{d.code}}</span>
+            </span>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Pawns" style="grid-column: span 4; padding: 22px; border-radius: 22px; border: 3px solid #2B2530; background: #F6EEDB">
+      <h2 style="margin: 0 0 4px; font-family: 'Caprasimo', serif; font-weight: 400; font-size: 26px">Pawns</h2>
+      <p style="margin: 0 0 14px; font-family: 'Gochi Hand', cursive; font-size: 18px; color: #5B5262">Little people in quiet colours. Bots wear an antenna.</p>
+      <div style="display: flex; gap: 18px; align-items: flex-end">
+        <sc-for list="{{pawns}}" as="p" hint-placeholder-count="4">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+            <svg width="46" height="66" viewBox="0 0 28 40" aria-hidden="true" style="overflow: visible">
+              <path d="M14 8V2" style="stroke: {{p.antenna}}; stroke-width: 1.6; stroke-linecap: round"></path>
+              <circle cx="14" cy="2" r="2.4" style="fill: {{p.ball}}; stroke: {{p.antenna}}; stroke-width: 1.2"></circle>
+              <circle cx="14" cy="15" r="7.5" style="fill: {{p.fill}}; stroke: #2B2530; stroke-width: 1.6"></circle>
+              <circle cx="11.4" cy="14.5" r="1.1" style="fill: {{p.eye}}"></circle><circle cx="16.6" cy="14.5" r="1.1" style="fill: {{p.eye}}"></circle>
+              <path d="M11.5 18q2.5 1.6 5 0" style="fill: none; stroke: {{p.eye}}; stroke-width: 1; stroke-linecap: round"></path>
+              <path d="M3.5 38.5Q3.5 22.5 14 22.5Q24.5 22.5 24.5 38.5Z" style="fill: {{p.fill}}; stroke: #2B2530; stroke-width: 1.6; stroke-linejoin: round"></path>
+              <text x="14" y="34" text-anchor="middle" style="font: 900 8px Nunito, sans-serif; fill: {{p.eye}}">{{p.initial}}</text>
+            </svg>
+            <span style="width: 42px; height: 8px; margin-top: -6px; border-radius: 50%; background: {{p.spot}}"></span>
+            <span style="font-weight: 900; font-size: 13px">{{p.name}}</span>
+            <span style="font-size: 11.5px; color: #5B5262">{{p.role}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <p style="margin: 12px 0 0; font-size: 12.5px; color: #4A4250">Lamplight under the feet = whose turn it is.</p>
+    </section>
+
+    <section aria-label="Tokens and tiles" style="grid-column: span 4; padding: 22px; border-radius: 22px; border: 3px solid #2B2530; background: #F6EEDB">
+      <h2 style="margin: 0 0 14px; font-family: 'Caprasimo', serif; font-weight: 400; font-size: 26px">Tiles and tokens</h2>
+      <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap">
+        <sc-for list="{{tiles}}" as="t" hint-placeholder-count="4">
+          <div style="width: 54px; height: 70px; border-radius: 27px 27px 6px 6px; border: 2.5px solid #2B2530; background: {{t.bg}}; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 6px; box-sizing: border-box; transform: rotate({{t.rot}})">
+            <span style="font-family: 'Caprasimo', serif; font-size: 24px; line-height: 1">{{t.keep}}</span>
+            <span style="font-size: 10px; font-weight: 900">{{t.place}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: flex; gap: 16px; align-items: center; margin-top: 18px; flex-wrap: wrap">
+        <span style="width: 46px; height: 46px; border-radius: 50%; border: 2.5px solid #2B2530; box-shadow: 0 0 0 4px #F6EEDB, 0 0 0 6.5px #2B2530; background: #FBF6EA; display: grid; place-items: center; font-family: 'Caprasimo', serif; font-size: 17px">20</span>
+        <span style="font-size: 13px; max-width: 110px">Rosette — swap two neighbouring discs</span>
+        <span style="padding: 8px 12px; border-radius: 999px; border: 2.5px solid #2B2530; background: #A097D6; font-weight: 900; font-size: 12px">Say yes more</span>
+        <span style="padding: 8px 12px; border-radius: 999px; border: 2.5px dashed #7A7183; color: #5B5262; font-weight: 900; font-size: 12px">used</span>
+      </div>
+    </section>
+
+    <section aria-label="Track spaces" style="grid-column: span 12; padding: 22px; border-radius: 22px; border: 3px solid #2B2530; background: #F6EEDB; display: flex; flex-wrap: wrap; gap: 24px; align-items: center">
+      <div style="flex: 0 0 260px">
+        <h2 style="margin: 0 0 4px; font-family: 'Caprasimo', serif; font-weight: 400; font-size: 26px">The road</h2>
+        <p style="margin: 0; font-family: 'Gochi Hand', cursive; font-size: 18px; color: #5B5262">One row per stage of life. The pattern changes as you age: dots, then stripes, then crosshatch.</p>
+      </div>
+      <div style="display: flex; gap: 18px; flex-wrap: wrap">
+        <div style="display: flex; flex-direction: column; gap: 6px; align-items: center"><span style="width: 92px; height: 78px; border-radius: 10px; border: 3px solid #2B2530; background-color: #F6EEDB; background-image: radial-gradient(rgba(43,37,48,.16) 1.2px, transparent 1.7px); background-size: 10px 10px"></span><b style="font-family: 'Caprasimo', serif; font-weight: 400">Young</b></div>
+        <div style="display: flex; flex-direction: column; gap: 6px; align-items: center"><span style="width: 92px; height: 78px; border-radius: 10px; border: 3px solid #2B2530; background-color: #F1E5CF; background-image: repeating-linear-gradient(45deg, rgba(43,37,48,.11) 0 1.5px, transparent 1.5px 9px)"></span><b style="font-family: 'Caprasimo', serif; font-weight: 400">Middle</b></div>
+        <div style="display: flex; flex-direction: column; gap: 6px; align-items: center"><span style="width: 92px; height: 78px; border-radius: 10px; border: 3px solid #2B2530; background-color: #ECDDCB; background-image: repeating-linear-gradient(45deg, rgba(43,37,48,.1) 0 1.2px, transparent 1.2px 10px), repeating-linear-gradient(-45deg, rgba(43,37,48,.1) 0 1.2px, transparent 1.2px 10px)"></span><b style="font-family: 'Caprasimo', serif; font-weight: 400">Old</b></div>
+        <div style="display: flex; flex-direction: column; gap: 6px; align-items: center"><span style="width: 92px; height: 78px; border-radius: 10px; border: 3px solid #2B2530; background: #F5DE9F; display: grid; place-items: center"><span style="width: 34px; height: 34px; border-radius: 50%; border: 2.5px solid #2B2530; box-shadow: 0 0 0 3px #F5DE9F, 0 0 0 5px #2B2530; background: #FBF6EA; display: grid; place-items: center; font-family: 'Caprasimo', serif; font-size: 14px">10</span></span><b style="font-family: 'Caprasimo', serif; font-weight: 400">Rosette</b></div>
+      </div>
+      <div style="flex: 1 1 280px; font-size: 14px; color: #4A4250; display: flex; flex-direction: column; gap: 6px">
+        <span><b>Type:</b> Caprasimo for names and numbers, Gochi Hand for the narrator, Nunito for everything you have to read.</span>
+        <span><b>Line:</b> ink outlines 2.5–4px, rounded joins, one hard drop shadow under things that sit on the table.</span>
+        <span><b>Colour budget:</b> paper and ink carry the page; the five domains only on cards, discs and tiny doodles.</span>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+var ICONS = {
+  pink: 'M12 20.5s-7.5-4.6-7.5-10.4A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2.5c0 5.8-7.5 10.4-7.5 10.4z',
+  gold: 'M5 5h8.5L16 7.5 13.5 10H5zM9.5 10v10',
+  green: 'M12 2.5l6 7.5-6 8-6-8zM12 18c0 2-2.5 2-2.5 3.5',
+  orange: 'M3.5 11.5L12 4.5l8.5 7M6 10v10h12V10M10 20v-5h4v5',
+  purple: 'M12 3l2.5 5.4 5.9.6-4.4 4 1.3 5.8L12 15.9l-5.3 2.9L8 13l-4.4-4 5.9-.6z'
+};
+var COL = { pink: '#EBA6B0', gold: '#E6B84F', green: '#8DB884', orange: '#D9733F', purple: '#A097D6' };
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      cards: [
+        { dom: 'Love', color: COL.pink, icon: ICONS.pink, age: 'Young', name: 'Fall in love', years: 4, pts: 3, hasReq: false, req: '', hasText: false, text: '', textBg: '', rot: '-2deg' },
+        { dom: 'Work', color: COL.gold, icon: ICONS.gold, age: 'Middle', name: 'Quit the good job', years: 4, pts: 3, hasReq: false, req: '', hasText: true, text: 'Power: your next quest costs 2 years less.', textBg: '#EFE6D2', rot: '1.5deg' },
+        { dom: 'Play', color: COL.green, icon: ICONS.green, age: 'Middle', name: 'Finish the long project', years: 5, pts: 4, hasReq: true, req: 'needs 2 Play', hasText: false, text: '', textBg: '', rot: '-1deg' },
+        { dom: 'Family', color: COL.orange, icon: ICONS.orange, age: 'Old', name: 'Leave something behind', years: 6, pts: 4, hasReq: true, req: 'needs 2 Family', hasText: true, text: 'Reflection: +1 per Family disc you keep.', textBg: '#F6E4D8', rot: '2deg' },
+        { dom: 'Wonder', color: COL.purple, icon: ICONS.purple, age: 'Young', name: 'See the sea', years: 2, pts: 1, hasReq: false, req: '', hasText: false, text: '', textBg: '', rot: '-1.5deg' }
+      ],
+      domains: [
+        { name: 'Love', code: 'Lv', covers: 'partners, crushes, heartbreak', color: COL.pink, icon: ICONS.pink, hex: '#EBA6B0' },
+        { name: 'Work', code: 'Wk', covers: 'career, craft, mastery', color: COL.gold, icon: ICONS.gold, hex: '#E6B84F' },
+        { name: 'Play', code: 'Pl', covers: 'hobbies, games, art', color: COL.green, icon: ICONS.green, hex: '#8DB884' },
+        { name: 'Family', code: 'Fm', covers: 'parents, friends, children', color: COL.orange, icon: ICONS.orange, hex: '#D9733F' },
+        { name: 'Wonder', code: 'Wd', covers: 'travel, awe, big ideas', color: COL.purple, icon: ICONS.purple, hex: '#A097D6' }
+      ],
+      stack: ['purple', 'pink', 'gold', 'gold', 'orange', 'green'].map(function (d) { return { color: COL[d] }; }),
+      pawns: [
+        { name: 'Priya', role: 'you', initial: 'P', fill: '#F6EFE0', eye: '#2B2530', antenna: 'none', ball: 'none', spot: '#F7D47A' },
+        { name: 'Meera', role: 'friend', initial: 'M', fill: '#C9B28E', eye: '#2B2530', antenna: 'none', ball: 'none', spot: 'rgba(43,37,48,.18)' },
+        { name: 'Arun', role: 'bot · Tempo', initial: 'A', fill: '#7F97A8', eye: '#2B2530', antenna: '#2B2530', ball: '#F7D47A', spot: 'rgba(43,37,48,.18)' },
+        { name: 'Kavi', role: 'bot · Specialist', initial: 'K', fill: '#5F5868', eye: '#F2E8D5', antenna: '#2B2530', ball: '#F7D47A', spot: 'rgba(43,37,48,.18)' }
+      ],
+      tiles: [
+        { place: '1st', keep: 9, bg: '#F7D47A', rot: '-3deg' }, { place: '2nd', keep: 8, bg: '#FBF6EA', rot: '2deg' },
+        { place: '3rd', keep: 7, bg: '#FBF6EA', rot: '-1deg' }, { place: '4th', keep: 6, bg: '#FBF6EA', rot: '3deg' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

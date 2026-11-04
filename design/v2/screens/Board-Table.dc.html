@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Doorway — Board mode table</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&amp;family=Gochi+Hand&amp;family=Nunito:wght@500;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#2C3836}
+a{color:#F2E8D5}a:hover{color:#FFFFFF}
+@keyframes dw-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes dw-think{0%,80%,100%{opacity:.25}40%{opacity:1}}
+@keyframes dw-drop{0%{transform:translateY(-30px);opacity:0}70%{transform:translateY(2px);opacity:1}100%{transform:none}}
+.dw-bob{animation:dw-bob 1.4s ease-in-out infinite}
+.dw-t1{animation:dw-think 1.2s infinite}.dw-t2{animation:dw-think 1.2s .2s infinite}.dw-t3{animation:dw-think 1.2s .4s infinite}
+.dw-drop{animation:dw-drop .45s cubic-bezier(.2,.9,.3,1)}
+@media (prefers-reduced-motion: reduce){.dw-bob,.dw-t1,.dw-t2,.dw-t3,.dw-drop{animation:none}}
+button,select,input{font:inherit}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #F7D47A;outline-offset:3px}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; min-height: 1200px; background: #2C3836; background-image: radial-gradient(rgba(242,232,213,.035) 1px, transparent 1.5px); background-size: 6px 6px; color: #F2E8D5; font-family: 'Nunito', system-ui, sans-serif; font-size: 15px; line-height: 1.4; padding: 0 28px 32px">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; padding: 16px 0 14px">
+  <div style="display: flex; align-items: center; gap: 10px">
+    <svg width="30" height="36" viewBox="0 0 30 36" aria-hidden="true" style="fill: none; stroke: #F2E8D5; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round"><path d="M3 34V15a12 12 0 0 1 24 0v19z" style="fill: #F7D47A"></path><path d="M3 34h24"></path><path d="M10 34V17l9-3v20" style="fill: #2B2530"></path></svg>
+    <span style="font-family: 'Caprasimo', serif; font-size: 30px; letter-spacing: 0.01em; line-height: 1">Doorway</span>
+  </div>
+  <span style="font-family: 'Gochi Hand', cursive; font-size: 19px; color: #C9D2CC">turn 22 · Priya, Arun, Meera &amp; Kavi</span>
+  <div style="flex: 1"></div>
+  <nav aria-label="View mode" style="display: inline-flex; padding: 4px; border-radius: 999px; background: #233030; border: 2px solid #46534F">
+    <a href="Board-Table.dc.html" aria-current="page" style="display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 999px; background: #F2E8D5; color: #2B2530; font-weight: 900; text-decoration: none">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #2B2530; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round"><path d="M3 7h12a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h12"></path></svg>Board</a>
+    <a href="Analyst-Table.dc.html" style="display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 999px; color: #F2E8D5; font-weight: 800; text-decoration: none">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #F2E8D5; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>Analyst</a>
+  </nav>
+  <button type="button" onClick="{{toggleRules}}" aria-expanded="{{rulesOpen}}" style="min-height: 44px; padding: 0 18px; border-radius: 999px; border: 2px solid #46534F; background: transparent; color: #F2E8D5; font-weight: 800; cursor: pointer">Rules</button>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<main style="flex: 999 1 760px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+
+  <sc-if value="{{rulesOpen}}" hint-placeholder-val="{{ false }}">
+    <div style="padding: 16px 20px; border-radius: 16px; background: #F2E8D5; color: #2B2530; border: 3px solid #2B2530; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 22px; font-size: 14px">
+      <div><b>Quest</b> — take a card your age or younger, pay its years, move, stack its disc.</div>
+      <div><b>Rush</b> — hop just past the nearest pawn ahead (or 3 spaces).</div>
+      <div><b>Furthest back goes next</b> — cheap quests can buy you more turns.</div>
+      <div><b>Experience</b> — every 2 discs of a colour make it 1 year cheaper.</div>
+      <div><b>Rosettes 10 · 20 · 30</b> — swap two neighbouring discs.</div>
+      <div><b>The Doorway</b> — keep one unbroken stretch: 9 · 8 · 7 · 6.</div>
+    </div>
+  </sc-if>
+
+  <section aria-label="The board" style="overflow-x: auto; padding: 4px 0 8px">
+  <div style="position: relative; width: 980px; height: 600px; margin: 0 auto; border-radius: 26px; background: #F1E7D2; border: 4px solid #2B2530; box-shadow: 0 14px 0 -4px #1F2826, 0 22px 40px rgba(0,0,0,.35); color: #2B2530">
+
+    <svg width="980" height="600" viewBox="0 0 980 600" aria-hidden="true" style="position: absolute; left: -4px; top: -4px; pointer-events: none">
+      <g style="fill: none; stroke-linecap: butt">
+        <path d="M 922 131 C 976 131, 976 317, 922 317" style="stroke: #2B2530; stroke-width: 48"></path>
+        <path d="M 922 131 C 976 131, 976 317, 922 317" style="stroke: #EFE3CB; stroke-width: 41"></path>
+        <path d="M 58 317 C 4 317, 4 503, 58 503" style="stroke: #2B2530; stroke-width: 48"></path>
+        <path d="M 58 317 C 4 317, 4 503, 58 503" style="stroke: #EDE0CC; stroke-width: 41"></path>
+      </g>
+      <g style="fill: none; stroke: #2B2530; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round">
+        <path d="M 955 218 L 963 228 L 971 218"></path>
+        <path d="M 9 404 L 17 414 L 25 404"></path>
+        <g transform="translate(905 44)"><circle r="19" style="fill: #F7D47A"></circle><path d="M0 -27v-6M0 27v6M-27 0h-6M27 0h6M-19 -19l-4 -4M19 19l4 4M-19 19l-4 4M19 -19l4 -4"></path><circle cx="-6" cy="-3" r="1.4" style="fill: #2B2530"></circle><circle cx="6" cy="-3" r="1.4" style="fill: #2B2530"></circle><path d="M-6 5q6 5 12 0"></path></g>
+        <g transform="translate(560 30)"><path d="M0 26h70a14 14 0 0 0 -6 -27a18 18 0 0 0 -32 -6a14 14 0 0 0 -26 9a12 12 0 0 0 -6 24z" style="fill: #FBF6EA"></path><circle cx="28" cy="13" r="1.6" style="fill: #2B2530"></circle><circle cx="40" cy="13" r="1.6" style="fill: #2B2530"></circle><circle cx="22" cy="19" r="3" style="fill: #EBA6B0; stroke: none"></circle><circle cx="46" cy="19" r="3" style="fill: #EBA6B0; stroke: none"></circle></g>
+        <g transform="translate(330 22)"><path d="M0 18l8 -8 3 3 -8 8zM11 13c10 -10 22 -6 26 4"></path><path d="M30 14l7 3 -3 -7" ></path></g>
+        <g transform="translate(150 196)"><path d="M0 0l16 -20 16 20 -16 22z" style="fill: #EBA6B0"></path><path d="M0 0h32M16 -20v42"></path><path d="M16 22c-4 8 6 10 2 18c-3 6 4 8 2 14"></path></g>
+        <g transform="translate(420 200)"><path d="M0 20l40 -18 -14 32 -8 -12z" style="fill: #FBF6EA"></path><path d="M18 22l22 -20"></path><path d="M-30 30c10 -4 18 -2 24 -8" style="stroke-dasharray: 3 6"></path></g>
+        <g transform="translate(640 192)"><path d="M0 24l24 -20 24 20" style="fill: #D9733F"></path><path d="M5 22v30h38v-30" style="fill: #FBF6EA"></path><path d="M19 52v-14h10v14"></path><path d="M36 10v-10h6v15"></path></g>
+        <g transform="translate(760 212)"><path d="M12 22s-11 -7 -11 -14a6 6 0 0 1 11 -3a6 6 0 0 1 11 3c0 7 -11 14 -11 14z" style="fill: #EBA6B0"></path></g>
+        <g transform="translate(250 384)"><path d="M0 8h26v14a10 10 0 0 1 -10 10h-6a10 10 0 0 1 -10 -10z" style="fill: #FBF6EA"></path><path d="M26 12h4a5 5 0 0 1 0 10h-4"></path><path d="M8 0c0 4 4 4 4 8M16 0c0 4 4 4 4 8"></path></g>
+        <g transform="translate(470 374)"><circle cx="18" cy="18" r="18" style="fill: #8DB884"></circle><path d="M18 36v20M10 56h16"></path><path d="M10 20c4 2 6 -2 10 0"></path></g>
+        <g transform="translate(110 380)"><path d="M0 20h40M4 20v12M36 20v12M2 12h36v8H2z" style="fill: #E6B84F"></path></g>
+        <g transform="translate(690 404)"><path d="M14 0a16 16 0 1 0 14 24a13 13 0 1 1 -14 -24z" style="fill: #FBF6EA"></path></g>
+        <path d="M640 380l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z" style="fill: #F7D47A"></path>
+        <path d="M770 360l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z" style="fill: #F7D47A"></path>
+        <path d="M250 50l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z" style="fill: #F7D47A"></path>
+        <path d="M840 210l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z" style="fill: #F7D47A"></path>
+      </g>
+    </svg>
+
+    <div style="position: absolute; left: 54px; top: 40px; display: flex; align-items: baseline; gap: 10px">
+      <span style="font-family: 'Caprasimo', serif; font-size: 30px; line-height: 1">Young</span>
+      <span style="font-family: 'Gochi Hand', cursive; font-size: 19px; color: #5B5262">spaces 0–13</span>
+    </div>
+    <div style="position: absolute; right: 54px; top: 226px; display: flex; align-items: baseline; gap: 10px">
+      <span style="font-family: 'Gochi Hand', cursive; font-size: 19px; color: #5B5262">spaces 14–27, right to left</span>
+      <span style="font-family: 'Caprasimo', serif; font-size: 30px; line-height: 1">Middle</span>
+    </div>
+    <div style="position: absolute; left: 54px; top: 412px; display: flex; align-items: baseline; gap: 10px">
+      <span style="font-family: 'Caprasimo', serif; font-size: 30px; line-height: 1">Old</span>
+      <span style="font-family: 'Gochi Hand', cursive; font-size: 19px; color: #5B5262">spaces 28–39</span>
+    </div>
+
+    <sc-for list="{{rows}}" as="row" hint-placeholder-count="3">
+      <div style="position: absolute; left: 54px; top: {{row.top}}; width: {{row.width}}; height: 78px; box-sizing: border-box; display: flex; flex-direction: {{row.dir}}; border: 3px solid #2B2530; border-radius: 12px; background-color: {{row.bg}}; background-image: {{row.pattern}}; background-size: {{row.patternSize}}">
+        <sc-for list="{{row.cells}}" as="cell" hint-placeholder-count="14">
+          <div style="position: relative; flex: 1 1 0; min-width: 0; border-left: {{cell.edge}}; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 3px; background: {{cell.fill}}">
+            <span style="position: absolute; left: 4px; top: 2px; font-weight: 900; font-size: 11px; color: #5B5262">{{cell.n}}</span>
+            <sc-if value="{{cell.start}}" hint-placeholder-val="{{ false }}">
+              <span style="position: absolute; top: 14px; font-family: 'Caprasimo', serif; font-size: 13px">Start</span>
+            </sc-if>
+            <sc-if value="{{cell.milestone}}" hint-placeholder-val="{{ false }}">
+              <span title="Rosette: swap two neighbouring discs" style="position: absolute; top: 8px; width: 30px; height: 30px; border-radius: 50%; border: 2.5px solid #2B2530; box-shadow: 0 0 0 3px #F1E7D2, 0 0 0 5px #2B2530; background: #FBF6EA; display: grid; place-items: center; font-family: 'Caprasimo', serif; font-size: 13px">{{cell.n}}</span>
+            </sc-if>
+            <sc-if value="{{cell.hasBubble}}" hint-placeholder-val="{{ false }}">
+              <div role="status" style="position: absolute; bottom: 84px; left: -46px; z-index: 5; width: 196px; padding: 8px 12px; border-radius: 16px; background: #FFFDF6; border: 2.5px solid #2B2530; font-family: 'Gochi Hand', cursive; font-size: 19px; line-height: 1.15; color: #2B2530">
+                {{cell.bubble}}
+                <sc-if value="{{cell.bubbleThinking}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; gap: 3px; margin-left: 4px"><span class="dw-t1" style="width: 6px; height: 6px; border-radius: 50%; background: #2B2530"></span><span class="dw-t2" style="width: 6px; height: 6px; border-radius: 50%; background: #2B2530"></span><span class="dw-t3" style="width: 6px; height: 6px; border-radius: 50%; background: #2B2530"></span></span></sc-if>
+                <span style="position: absolute; left: 64px; bottom: -9px; width: 14px; height: 14px; background: #FFFDF6; border-right: 2.5px solid #2B2530; border-bottom: 2.5px solid #2B2530; transform: rotate(45deg)"></span>
+              </div>
+            </sc-if>
+            <div style="display: flex; align-items: flex-end; justify-content: center">
+              <sc-if value="{{cell.ghost}}" hint-placeholder-val="{{ false }}">
+                <svg width="26" height="38" viewBox="0 0 28 40" role="img" aria-label="You would land here" style="fill: none; stroke: #2B2530; stroke-width: 2; stroke-dasharray: 3 3"><circle cx="14" cy="15" r="7"></circle><path d="M4 38Q4 23 14 23Q24 23 24 38Z"></path></svg>
+              </sc-if>
+              <sc-for list="{{cell.pawns}}" as="p" hint-placeholder-count="0">
+                <span class="{{p.cls}}" title="{{p.title}}" style="display: flex; flex-direction: column; align-items: center; margin-left: {{p.overlap}}">
+                  <svg width="26" height="38" viewBox="0 0 28 40" aria-hidden="true" style="overflow: visible">
+                    <path d="M14 8V2" style="stroke: {{p.antenna}}; stroke-width: 2; stroke-linecap: round"></path>
+                    <circle cx="14" cy="2" r="2.6" style="fill: {{p.antennaBall}}; stroke: {{p.antenna}}; stroke-width: 1.5"></circle>
+                    <circle cx="14" cy="15" r="7.5" style="fill: {{p.fill}}; stroke: #2B2530; stroke-width: 2.2"></circle>
+                    <circle cx="11.4" cy="14.5" r="1.3" style="fill: {{p.eye}}"></circle>
+                    <circle cx="16.6" cy="14.5" r="1.3" style="fill: {{p.eye}}"></circle>
+                    <path d="M3.5 38.5Q3.5 22.5 14 22.5Q24.5 22.5 24.5 38.5Z" style="fill: {{p.fill}}; stroke: #2B2530; stroke-width: 2.2; stroke-linejoin: round"></path>
+                    <text x="14" y="34" text-anchor="middle" style="font: 900 9px Nunito, sans-serif; fill: {{p.eye}}">{{p.initial}}</text>
+                  </svg>
+                  <span style="width: 26px; height: 6px; margin-top: -3px; border-radius: 50%; background: {{p.spot}}"></span>
+                </span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+
+    <div style="position: absolute; left: 798px; top: 372px; width: 128px; height: 170px">
+      <svg width="128" height="170" viewBox="0 0 128 170" role="img" aria-label="The Doorway, space 40" style="overflow: visible">
+        <path d="M10 166V62a54 54 0 0 1 108 0v104z" style="fill: #EADBC0; stroke: #2B2530; stroke-width: 3.5; stroke-linejoin: round"></path>
+        <path d="M24 166V64a40 40 0 0 1 80 0v102z" style="fill: #F7D47A; stroke: #2B2530; stroke-width: 3"></path>
+        <path d="M24 166V64l34 -12v122z" style="fill: #3A3340; stroke: #2B2530; stroke-width: 3; stroke-linejoin: round"></path>
+        <circle cx="50" cy="112" r="3" style="fill: #F7D47A"></circle>
+        <path d="M64 70l18 -6M66 92l26 -4M66 116l28 2M66 140l24 6" style="stroke: #E9B94A; stroke-width: 2.5; stroke-linecap: round"></path>
+        <path d="M0 168h128" style="stroke: #2B2530; stroke-width: 3.5; stroke-linecap: round"></path>
+      </svg>
+      <span style="position: absolute; left: 0; right: 0; top: -26px; text-align: center; font-family: 'Caprasimo', serif; font-size: 18px">40 · Doorway</span>
+    </div>
+
+    <div style="position: absolute; right: 52px; bottom: 12px; display: flex; align-items: center; gap: 8px">
+      <span style="font-family: 'Gochi Hand', cursive; font-size: 18px; color: #5B5262; margin-right: 4px">keep this many discs</span>
+      <sc-for list="{{tiles}}" as="t" hint-placeholder-count="4">
+        <span style="display: inline-flex; align-items: baseline; gap: 4px; padding: 3px 10px; border-radius: 8px; border: 2.5px solid #2B2530; background: {{t.bg}}; color: {{t.fg}}; transform: rotate({{t.rot}})"><span style="font-size: 11px; font-weight: 800">{{t.place}}</span><b style="font-family: 'Caprasimo', serif; font-size: 17px; font-weight: 400">{{t.keep}}</b></span>
+      </sc-for>
+    </div>
+    <div style="position: absolute; left: 54px; bottom: 14px; font-family: 'Gochi Hand', cursive; font-size: 18px; color: #5B5262">rosettes 10 · 20 · 30 let you swap two neighbouring discs</div>
+  </div>
+  </section>
+
+  <section aria-label="Quest cards" style="display: flex; flex-wrap: wrap; gap: 14px 24px; justify-content: center">
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="display: flex; align-items: baseline; gap: 8px; padding-left: 4px">
+          <span style="font-family: 'Caprasimo', serif; font-size: 20px">{{g.label}}</span>
+          <span style="font-family: 'Gochi Hand', cursive; font-size: 17px; color: #C9D2CC">{{g.note}}</span>
+        </div>
+        <div style="display: flex; gap: 10px">
+          <sc-for list="{{g.cards}}" as="c" hint-placeholder-count="3">
+            <button type="button" onClick="{{c.pick}}" aria-pressed="{{c.pressed}}" aria-label="{{c.aria}}" disabled="{{c.disabled}}" style="position: relative; width: 128px; height: 196px; padding: 0; text-align: left; border-radius: 12px; border: {{c.border}}; background: #FBF6EA; color: #2B2530; cursor: {{c.cursor}}; transform: {{c.transform}}; box-shadow: {{c.shadow}}; overflow: visible; display: flex; flex-direction: column">
+              <span style="display: flex; align-items: center; gap: 6px; padding: 7px 8px; border-radius: 9px 9px 0 0; background: {{c.color}}; border-bottom: 2.5px solid #2B2530">
+                <span style="width: 26px; height: 26px; border-radius: 50%; background: #FBF6EA; border: 2px solid #2B2530; display: grid; place-items: center; flex: none">
+                  <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #2B2530; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round"><path d="{{c.icon}}"></path></svg>
+                </span>
+                <span style="font-weight: 900; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em">{{c.dom}}</span>
+              </span>
+              <span style="padding: 8px 9px 0; font-family: 'Caprasimo', serif; font-size: 15px; line-height: 1.12">{{c.name}}</span>
+              <sc-if value="{{c.hasReq}}" hint-placeholder-val="{{ false }}">
+                <span style="margin: 6px 9px 0; align-self: flex-start; font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 999px; border: 1.5px solid #2B2530">{{c.req}}</span>
+              </sc-if>
+              <sc-if value="{{c.hasText}}" hint-placeholder-val="{{ false }}">
+                <span style="margin: 6px 9px 0; font-size: 11.5px; line-height: 1.25; color: #4A4250">{{c.text}}</span>
+              </sc-if>
+              <span style="margin-top: auto; display: flex; align-items: center; justify-content: space-between; padding: 8px 9px; border-top: 2px dashed #CDBFA6">
+                <span style="display: inline-flex; align-items: center; gap: 4px" title="years">
+                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #2B2530; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round"><path d="M6 3h12M6 21h12M7 3c0 6 10 6 10 9s-10 3-10 9M17 3c0 6-10 6-10 9s10 3 10 9"></path></svg>
+                  <sc-if value="{{c.discounted}}" hint-placeholder-val="{{ false }}"><s style="font-weight: 800; font-size: 12px; color: #7A7183">{{c.years}}</s></sc-if>
+                  <b style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: 19px">{{c.cost}}</b>
+                </span>
+                <span title="points" style="width: 30px; height: 30px; border-radius: 50%; border: 2.5px solid #2B2530; background: #F7D47A; display: grid; place-items: center; font-family: 'Caprasimo', serif; font-size: 15px">{{c.pts}}</span>
+              </span>
+              <sc-if value="{{c.blocked}}" hint-placeholder-val="{{ false }}">
+                <span style="position: absolute; left: 10px; right: 10px; top: 74px; padding: 8px; background: #F6EBC0; border: 2px solid #2B2530; transform: rotate(-4deg); font-family: 'Gochi Hand', cursive; font-size: 17px; line-height: 1.1; text-align: center">{{c.blockText}}</span>
+              </sc-if>
+              <sc-if value="{{c.discarding}}" hint-placeholder-val="{{ false }}">
+                <span style="position: absolute; left: 8px; right: 8px; top: 80px; padding: 6px; border: 3px solid #B2453A; color: #B2453A; background: #FBF6EA; transform: rotate(-8deg); font-family: 'Caprasimo', serif; font-size: 16px; text-align: center; text-transform: uppercase">Discard</span>
+              </sc-if>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </section>
+
+  <section aria-label="Your move" style="padding: 14px 16px; border-radius: 20px; background: #F2E8D5; border: 3px solid #2B2530; color: #2B2530; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px">
+    <div role="group" aria-label="Quest or rush" style="display: flex; gap: 10px">
+      <button type="button" onClick="{{chooseQuest}}" aria-pressed="{{questMode}}" disabled="{{notMyTurn}}" style="min-height: 52px; padding: 0 20px; border-radius: 14px; border: 3px solid #2B2530; background: {{questBg}}; color: #2B2530; font-family: 'Caprasimo', serif; font-size: 19px; cursor: pointer; transform: rotate(-1.5deg); box-shadow: 0 4px 0 #2B2530">Quest</button>
+      <button type="button" onClick="{{chooseRush}}" aria-pressed="{{rushMode}}" disabled="{{notMyTurn}}" style="min-height: 52px; padding: 0 20px; border-radius: 14px; border: 3px solid #2B2530; background: {{rushBg}}; color: #2B2530; font-family: 'Caprasimo', serif; font-size: 19px; cursor: pointer; transform: rotate(1deg); box-shadow: 0 4px 0 #2B2530">Rush → {{rushTarget}}</button>
+    </div>
+    <label style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 800; font-size: 14px">
+      <input type="checkbox" checked="{{useYes}}" onChange="{{toggleYes}}" disabled="{{yesDisabled}}" style="width: 20px; height: 20px; accent-color: #2B2530">
+      <span>Say yes more <span style="font-weight: 600; color: #5B5262">(once)</span></span>
+    </label>
+    <p role="status" style="flex: 1 1 300px; margin: 0; font-family: 'Gochi Hand', cursive; font-size: 21px; line-height: 1.15">{{preview}}</p>
+    <button type="button" onClick="{{undo}}" disabled="{{cantUndo}}" style="min-height: 48px; padding: 0 16px; border-radius: 12px; border: 2.5px solid #2B2530; background: transparent; color: #2B2530; font-weight: 800; cursor: pointer; opacity: {{undoOpacity}}">Undo</button>
+    <button type="button" onClick="{{confirm}}" disabled="{{confirmDisabled}}" style="min-height: 54px; padding: 0 24px; border-radius: 14px; border: 3px solid #2B2530; background: #2B2530; color: #F7D47A; font-family: 'Caprasimo', serif; font-size: 20px; cursor: pointer; opacity: {{confirmOpacity}}">{{confirmLabel}}</button>
+  </section>
+</main>
+
+<aside aria-label="Players" style="flex: 1 1 320px; max-width: 380px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+  <section style="padding: 14px 16px 12px; border-radius: 18px; border: 2px dashed #5E6B67">
+    <h2 style="margin: 0 0 8px; font-family: 'Caprasimo', serif; font-weight: 400; font-size: 21px">Furthest back goes next</h2>
+    <div style="display: flex; align-items: flex-end; gap: 4px">
+      <sc-for list="{{queue}}" as="q" hint-placeholder-count="4">
+        <div style="display: flex; align-items: flex-end; gap: 4px">
+          <div style="display: flex; flex-direction: column; align-items: center; width: 62px">
+            <svg width="30" height="44" viewBox="0 0 28 40" aria-hidden="true" style="overflow: visible">
+              <path d="M14 8V2" style="stroke: {{q.antenna}}; stroke-width: 2; stroke-linecap: round"></path>
+              <circle cx="14" cy="2" r="2.6" style="fill: {{q.antennaBall}}; stroke: {{q.antenna}}; stroke-width: 1.5"></circle>
+              <circle cx="14" cy="15" r="7.5" style="fill: {{q.fill}}; stroke: #F2E8D5; stroke-width: 2"></circle>
+              <circle cx="11.4" cy="14.5" r="1.3" style="fill: {{q.eye}}"></circle><circle cx="16.6" cy="14.5" r="1.3" style="fill: {{q.eye}}"></circle>
+              <path d="M3.5 38.5Q3.5 22.5 14 22.5Q24.5 22.5 24.5 38.5Z" style="fill: {{q.fill}}; stroke: #F2E8D5; stroke-width: 2"></path>
+            </svg>
+            <span style="margin-top: 4px; font-weight: 900; font-size: 13px; color: {{q.nameColor}}">{{q.name}}</span>
+            <span style="font-size: 12px; color: #C9D2CC">space {{q.pos}}</span>
+          </div>
+          <span style="font-family: 'Gochi Hand', cursive; font-size: 22px; color: #8A9792; margin-bottom: 26px">{{q.arrow}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <sc-for list="{{mats}}" as="m" hint-placeholder-count="3">
+    <section aria-label="{{m.aria}}" style="display: flex; gap: 12px; align-items: flex-end; padding: 12px 14px; border-radius: 16px; background: #E9DFCB; border: 3px solid #2B2530; color: #2B2530; box-shadow: 0 5px 0 #1F2826">
+      <div style="flex: 1; min-width: 0">
+        <div style="display: flex; align-items: baseline; gap: 8px"><span style="font-family: 'Caprasimo', serif; font-size: 19px">{{m.name}}</span><span style="font-size: 12px; font-weight: 800; color: #5B5262">{{m.badge}}</span></div>
+        <div style="font-size: 13px; color: #4A4250">space {{m.pos}} · {{m.age}} · {{m.count}} memories</div>
+        <div style="font-size: 12.5px; color: #4A4250; margin-top: 4px">{{m.exp}}</div>
+        <sc-if value="{{m.thinking}}" hint-placeholder-val="{{ false }}"><div style="margin-top: 6px; font-family: 'Gochi Hand', cursive; font-size: 18px">thinking it over…</div></sc-if>
+      </div>
+      <div style="display: flex; flex-direction: column-reverse; align-items: center" aria-label="{{m.towerAria}}">
+        <span style="width: 54px; height: 8px; border-radius: 4px; background: #2B2530"></span>
+        <sc-for list="{{m.chips}}" as="d" hint-placeholder-count="5">
+          <span title="{{d.title}}" style="width: 46px; height: 12px; margin-bottom: -2px; border-radius: 999px; border: 2px solid #2B2530; background: {{d.color}}; box-shadow: inset 0 -3px 0 rgba(43,37,48,.18)"></span>
+        </sc-for>
+      </div>
+    </section>
+  </sc-for>
+
+  <section aria-label="Your life" style="padding: 16px; border-radius: 18px; background: #F2E8D5; border: 3px solid #2B2530; color: #2B2530; box-shadow: 0 6px 0 #1F2826">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px">
+      <h2 style="margin: 0; font-family: 'Caprasimo', serif; font-weight: 400; font-size: 24px">Your life, Priya</h2>
+      <span style="font-weight: 800; font-size: 13px; color: #5B5262">space {{myPos}} · {{myAge}}</span>
+    </div>
+    <p style="margin: 2px 0 12px; font-family: 'Gochi Hand', cursive; font-size: 18px; color: #5B5262">{{toDoor}} years to the Doorway · newest on top</p>
+    <div style="display: flex; flex-direction: column; gap: 0">
+      <sc-for list="{{myTower}}" as="d" hint-placeholder-count="4">
+        <div class="{{d.cls}}" style="display: flex; align-items: center; gap: 10px; margin-bottom: -2px">
+          <span style="width: 92px; height: 22px; flex: none; border-radius: 999px; border: 2.5px solid #2B2530; background: {{d.color}}; box-shadow: inset 0 -4px 0 rgba(43,37,48,.18); display: flex; align-items: center; justify-content: center; gap: 5px">
+            <svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #2B2530; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round"><path d="{{d.icon}}"></path></svg>
+            <span style="font-weight: 900; font-size: 11px">{{d.code}}</span>
+          </span>
+          <span style="flex: 1; min-width: 0; font-size: 13.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{d.name}}</span>
+          <span style="font-family: 'Caprasimo', serif; font-size: 14px">{{d.pts}}</span>
+        </div>
+      </sc-for>
+      <span style="width: 104px; height: 10px; margin-top: 4px; margin-left: -6px; border-radius: 4px; background: #2B2530"></span>
+    </div>
+    <div style="margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; font-size: 13px">
+      <div><b>Experience</b><br>{{myExp}}</div>
+      <div><b>Tokens</b><br>Say yes more — {{yesState}}</div>
+    </div>
+    <div style="margin-top: 14px; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; border: 2.5px dashed #2B2530">
+      <span style="font-family: 'Gochi Hand', cursive; font-size: 18px; flex: 1">if you walked through the Doorway now</span>
+      <span style="font-family: 'Caprasimo', serif; font-size: 30px">{{total}}</span>
+    </div>
+  </section>
+  <button type="button" onClick="{{reset}}" style="align-self: flex-start; background: none; border: none; color: #C9D2CC; text-decoration: underline; cursor: pointer; min-height: 32px; font-weight: 700">Reset demo</button>
+</aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+var ICONS = {
+  pink: 'M12 20.5s-7.5-4.6-7.5-10.4A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2.5c0 5.8-7.5 10.4-7.5 10.4z',
+  gold: 'M5 5h8.5L16 7.5 13.5 10H5zM9.5 10v10',
+  green: 'M12 2.5l6 7.5-6 8-6-8zM12 18c0 2-2.5 2-2.5 3.5',
+  orange: 'M3.5 11.5L12 4.5l8.5 7M6 10v10h12V10M10 20v-5h4v5',
+  purple: 'M12 3l2.5 5.4 5.9.6-4.4 4 1.3 5.8L12 15.9l-5.3 2.9L8 13l-4.4-4 5.9-.6z'
+};
+var COL = { pink: '#EBA6B0', gold: '#E6B84F', green: '#8DB884', orange: '#D9733F', purple: '#A097D6' };
+var DOMS = { pink: ['Love', 'Lv'], gold: ['Work', 'Wk'], green: ['Play', 'Pl'], orange: ['Family', 'Fm'], purple: ['Wonder', 'Wd'] };
+var ORDER = ['pink', 'gold', 'green', 'orange', 'purple'];
+function C(name, dom, age, years, pts, extra) { var c = { name: name, dom: dom, age: age, years: years, pts: pts }; if (extra) { for (var k in extra) c[k] = extra[k]; } return c; }
+var CARDS = {
+  'PK-Y1': C('First crush', 'pink', 'young', 2, 1), 'PK-Y2': C('Write a terrible love letter', 'pink', 'young', 2, 1),
+  'PK-Y3': C('Dance badly at a wedding', 'pink', 'young', 3, 2), 'PK-Y4': C('Have your heart broken', 'pink', 'young', 3, 2),
+  'PK-Y5': C('Fall in love', 'pink', 'young', 4, 3),
+  'PK-O2': C('Grow old with someone', 'pink', 'old', 5, 4, { reqDom: 'pink', reqN: 2 }),
+  'GD-Y1': C('First job', 'gold', 'young', 2, 1), 'GD-Y2': C('Get fired from a cafe', 'gold', 'young', 2, 1),
+  'GD-Y3': C('Learn a trade', 'gold', 'young', 3, 2), 'GD-Y4': C('Pull an all-nighter that mattered', 'gold', 'young', 3, 2),
+  'GD-Y5': C('Make your first real money', 'gold', 'young', 4, 3),
+  'GD-M1': C('Make enough to slow down', 'gold', 'middle', 3, 2, { text: 'Love quests cost 1 year less.' }),
+  'GD-M2': C('Get very good at something', 'gold', 'middle', 5, 3, { reqDom: 'gold', reqN: 1 }),
+  'GR-Y1': C('Build a fort', 'green', 'young', 2, 1), 'GR-Y2': C('Keep a diary', 'green', 'young', 2, 1, { text: 'Swap two neighbouring discs now.' }),
+  'GR-Y3': C('Learn an instrument', 'green', 'young', 3, 2), 'GR-Y4': C("Join a team you're bad on", 'green', 'young', 3, 2),
+  'GR-Y5': C("Win something that doesn't matter", 'green', 'young', 4, 3),
+  'GR-M2': C('Learn to rest', 'green', 'middle', 3, 1, { text: 'Every Rush moves 1 extra space.' }),
+  'GR-M3': C('Get good at something useless', 'green', 'middle', 4, 3),
+  'GR-O1': C('Take up something new at sixty', 'green', 'old', 5, 3),
+  'OR-Y1': C('Call your mother', 'orange', 'young', 2, 1), 'OR-Y2': C('Fight with your sibling', 'orange', 'young', 2, 1),
+  'OR-Y3': C('Make a best friend', 'orange', 'young', 3, 2), 'OR-Y4': C('Leave home', 'orange', 'young', 3, 2),
+  'OR-Y5': C('Be there when it mattered', 'orange', 'young', 4, 3),
+  'OR-M2': C('Old friends', 'orange', 'middle', 4, 2, { text: 'Once: take a card one age older.' }),
+  'OR-O3': C('Leave something behind', 'orange', 'old', 6, 4, { reqDom: 'orange', reqN: 2, text: 'Reflection: +1 per kept Family disc.' }),
+  'PU-Y1': C('See the sea', 'purple', 'young', 2, 1), 'PU-Y2': C('Say yes more', 'purple', 'young', 2, 1, { text: 'Once: ignore a requirement.' }),
+  'PU-Y3': C('Stay up for a meteor shower', 'purple', 'young', 3, 2), 'PU-Y4': C('Get lost in a city', 'purple', 'young', 3, 2),
+  'PU-Y5': C('Travel alone', 'purple', 'young', 4, 3), 'PU-M2': C('Live somewhere new', 'purple', 'middle', 5, 3),
+  'PU-M3': C('Change your mind about something big', 'purple', 'middle', 4, 3),
+  'PU-O1': C('Stand somewhere very old', 'purple', 'old', 4, 3, { reqDom: 'purple', reqN: 1 })
+};
+var PLAYERS = {
+  P: { name: 'Priya', kind: 'you', badge: 'you', fill: '#F6EFE0', eye: '#2B2530' },
+  A: { name: 'Arun', kind: 'bot', badge: 'bot · Tempo', fill: '#7F97A8', eye: '#2B2530' },
+  M: { name: 'Meera', kind: 'friend', badge: 'friend', fill: '#C9B28E', eye: '#2B2530' },
+  K: { name: 'Kavi', kind: 'bot', badge: 'bot · Specialist', fill: '#5F5868', eye: '#F2E8D5' }
+};
+var AGE_NAME = { young: 'Young', middle: 'Middle', old: 'Old' };
+var AGE_START = { young: 0, middle: 14, old: 28 };
+var RANK = { young: 0, middle: 1, old: 2 };
+var ROT = ['-1.6deg', '1.2deg', '-0.6deg', '1.8deg', '-1.1deg', '0.7deg', '-1.8deg'];
+
+function ageOf(p) { return p >= 28 ? 'old' : p >= 14 ? 'middle' : 'young'; }
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function init() {
+  return {
+    pos: { P: 11, A: 12, M: 13, K: 15 },
+    stacks: { 11: ['P'], 12: ['A'], 13: ['M'], 15: ['K'] },
+    towers: { P: ['PU-Y2', 'GD-Y1', 'PK-Y4', 'PK-Y5'], A: ['GR-Y2', 'GR-Y1', 'OR-Y1', 'GR-Y3', 'OR-Y2', 'GR-Y4'], M: ['PU-Y1', 'PK-Y1', 'PK-Y2', 'GD-Y2'], K: ['GD-Y3', 'GD-Y4', 'OR-Y4', 'PU-Y5'] },
+    market: { young: ['PK-Y3', 'OR-Y5', 'PU-Y3'], middle: ['PU-M2', 'GR-M2'], old: ['PK-O2', 'OR-O3'] },
+    decks: { young: ['GR-Y5', 'OR-Y3', 'PU-Y4', 'GD-Y5'], middle: ['OR-M2', 'GR-M3'], old: ['PU-O1', 'GR-O1'] },
+    hidden: { young: 0, middle: 16, old: 11 },
+    sel: null, discard: null, useYes: false, yesUsed: false, rulesOpen: false, again: false, lastNew: null, history: []
+  };
+}
+function current(pos, stacks) {
+  var min = 99; Object.keys(pos).forEach(function (id) { if (pos[id] < 40 && pos[id] < min) min = pos[id]; });
+  if (min === 99) return null; var st = stacks[min] || []; return st[st.length - 1];
+}
+function moveTo(pos, stacks, id, to) {
+  var p = clone(pos), s = clone(stacks), from = p[id];
+  s[from] = (s[from] || []).filter(function (x) { return x !== id; }); if (!s[from].length) delete s[from];
+  var t = Math.min(40, to); p[id] = t; s[t] = (s[t] || []).concat([id]); return { pos: p, stacks: s };
+}
+function count(tw, d) { return tw.filter(function (id) { return CARDS[id].dom === d; }).length; }
+function exp(tw, d) { return Math.min(4, Math.floor(count(tw, d) / 2)); }
+function cost(tw, id) { var c = CARDS[id]; return Math.max(1, c.years - exp(tw, c.dom)); }
+function rushTo(pos, me) {
+  var best = null; Object.keys(pos).forEach(function (id) { if (id !== me && pos[id] > pos[me] && pos[id] < 40 && (best === null || pos[id] < best)) best = pos[id]; });
+  return best === null ? Math.min(40, pos[me] + 3) : best + 1;
+}
+function score(tw) {
+  var cards = 0, cnt = {}, run = 0, best = 0, prev = null;
+  tw.forEach(function (id) { var c = CARDS[id]; cards += c.pts; cnt[c.dom] = (cnt[c.dom] || 0) + 1; run = c.dom === prev ? run + 1 : 1; prev = c.dom; if (run > best) best = run; });
+  var sets = Math.min.apply(null, ORDER.map(function (d) { return cnt[d] || 0; }));
+  var pas = best >= 5 ? 10 : best === 4 ? 6 : best === 3 ? 3 : 0;
+  return cards + sets * 6 + pas;
+}
+function queueOf(pos, stacks) {
+  return Object.keys(pos).filter(function (id) { return pos[id] < 40; }).sort(function (a, b) {
+    if (pos[a] !== pos[b]) return pos[a] - pos[b]; var st = stacks[pos[a]] || []; return st.indexOf(b) - st.indexOf(a);
+  });
+}
+function canTake(s, who, id) {
+  var c = CARDS[id], tw = s.towers[who];
+  return RANK[c.age] <= RANK[ageOf(s.pos[who])] && (!c.reqDom || count(tw, c.reqDom) >= c.reqN);
+}
+function applyMove(s, who, kind, cardId, discard, yesUsed) {
+  var market = clone(s.market), decks = clone(s.decks), towers = clone(s.towers), m;
+  function refill(id) { var age = CARDS[id].age, i = market[age].indexOf(id); market[age][i] = decks[age].length ? decks[age].shift() : null; }
+  var name = who === 'P' ? 'You' : PLAYERS[who].name;
+  if (kind === 'rush') { if (discard) refill(discard); m = moveTo(s.pos, s.stacks, who, rushTo(s.pos, who)); }
+  else { var k = cost(towers[who], cardId); towers[who].push(cardId); refill(cardId); m = moveTo(s.pos, s.stacks, who, s.pos[who] + k); }
+  return { pos: m.pos, stacks: m.stacks, market: market, decks: decks, towers: towers };
+}
+function botChoice(s, who) {
+  var best = null, bestV = -1;
+  ['young', 'middle', 'old'].forEach(function (age) { s.market[age].forEach(function (id) {
+    if (!id || !canTake(s, who, id)) return; var v = CARDS[id].pts / cost(s.towers[who], id) + (cost(s.towers[who], id) <= 2 ? 0.3 : 0);
+    if (v > bestV) { bestV = v; best = id; }
+  }); });
+  return best;
+}
+
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = init(); this.timer = null; }
+  componentDidMount() { this.schedule(); }
+  componentDidUpdate() { this.schedule(); }
+  componentWillUnmount() { if (this.timer) clearTimeout(this.timer); }
+  schedule() {
+    var self = this, s = this.state, cur = current(s.pos, s.stacks);
+    if (this.timer || !cur || cur === 'P') return;
+    this.timer = setTimeout(function () {
+      self.timer = null;
+      var st = self.state, who = current(st.pos, st.stacks);
+      if (!who || who === 'P') return;
+      var pick = botChoice(st, who);
+      var next = applyMove(st, who, pick ? 'quest' : 'rush', pick, null);
+      next.again = false; next.lastNew = null;
+      self.setState(next);
+    }, 1700);
+  }
+  renderVals() {
+    var self = this, s = this.state, me = 'P';
+    var cur = current(s.pos, s.stacks), myTurn = cur === me;
+    var myPos = s.pos.P, myAge = ageOf(myPos), tw = s.towers.P, rT = rushTo(s.pos, me);
+    var landing = null;
+    if (myTurn && s.sel === 'rush') landing = rT; else if (myTurn && s.sel) landing = Math.min(40, myPos + cost(tw, s.sel));
+    var after = landing === null ? null : moveTo(s.pos, s.stacks, me, landing);
+    var nextAfter = after ? current(after.pos, after.stacks) : null;
+
+    var bubbleText = '', bubbleThinking = false;
+    if (cur) {
+      if (cur === 'P') bubbleText = s.again ? "Me again — still furthest back!" : "My turn — I'm furthest back!";
+      else if (PLAYERS[cur].kind === 'bot') { bubbleText = 'Hmm, let me think'; bubbleThinking = true; }
+      else bubbleText = 'Choosing…';
+    }
+    function cellVals(n) {
+      var st = s.stacks[n] || [], isM = n === 10 || n === 20 || n === 30;
+      return {
+        n: n, milestone: isM, start: n === 0, ghost: landing === n,
+        edge: (n === 0 || n === 14 || n === 28) ? '0' : '2px solid #2B2530',
+        fill: isM ? 'rgba(247,212,122,.35)' : 'transparent',
+        hasBubble: !!cur && s.pos[cur] === n, bubble: bubbleText, bubbleThinking: bubbleThinking,
+        pawns: st.map(function (id, i) {
+          var pl = PLAYERS[id], isCur = id === cur;
+          return { initial: pl.name.charAt(0), fill: pl.fill, eye: pl.eye, title: pl.name + ' — space ' + n,
+            antenna: pl.kind === 'bot' ? '#2B2530' : 'none', antennaBall: pl.kind === 'bot' ? '#F7D47A' : 'none',
+            spot: isCur ? '#F7D47A' : 'rgba(43,37,48,.18)', cls: isCur ? 'dw-bob' : '', overlap: i === 0 ? '0' : '-12px' };
+        })
+      };
+    }
+    function range(a, b) { var r = []; for (var i = a; i <= b; i++) r.push(cellVals(i)); return r; }
+    var rows = [
+      { top: '92px', width: '868px', dir: 'row', bg: '#F6EEDB', pattern: 'radial-gradient(rgba(43,37,48,.13) 1.2px, transparent 1.7px)', patternSize: '10px 10px', cells: range(0, 13) },
+      { top: '278px', width: '868px', dir: 'row-reverse', bg: '#F1E5CF', pattern: 'repeating-linear-gradient(45deg, rgba(43,37,48,.09) 0 1.5px, transparent 1.5px 9px)', patternSize: 'auto', cells: range(14, 27) },
+      { top: '464px', width: '744px', dir: 'row', bg: '#ECDDCB', pattern: 'repeating-linear-gradient(45deg, rgba(43,37,48,.08) 0 1.2px, transparent 1.2px 10px), repeating-linear-gradient(-45deg, rgba(43,37,48,.08) 0 1.2px, transparent 1.2px 10px)', patternSize: 'auto', cells: range(28, 39) }
+    ];
+    var arrived = Object.keys(s.pos).filter(function (id) { return s.pos[id] >= 40; }).length;
+    var tiles = [['1st', 9], ['2nd', 8], ['3rd', 7], ['4th', 6]].map(function (t, i) {
+      return { place: t[0], keep: t[1], rot: ROT[i], bg: i < arrived ? 'transparent' : '#FBF6EA', fg: i < arrived ? '#9A8F80' : '#2B2530' };
+    });
+
+    var rushMode = s.sel === 'rush', cardIdx = 0;
+    function cardVals(id) {
+      var c = CARDS[id], k = cost(tw, id), e = exp(tw, c.dom);
+      var ageOk = RANK[c.age] <= RANK[myAge];
+      var reqMet = !c.reqDom || count(tw, c.reqDom) >= c.reqN;
+      var reqOk = reqMet || (s.useYes && !s.yesUsed);
+      var legal = myTurn && ageOk && reqOk;
+      var selected = s.sel === id, discarding = s.discard === id;
+      var clickable = myTurn && (rushMode || legal);
+      var blockText = !ageOk ? 'too young — opens at space ' + AGE_START[c.age] : !reqOk ? 'needs ' + c.reqN + ' ' + DOMS[c.reqDom][0] + ' first' : '';
+      var rot = ROT[cardIdx++ % ROT.length];
+      return {
+        id: id, name: c.name, dom: DOMS[c.dom][0], color: COL[c.dom], icon: ICONS[c.dom],
+        years: c.years, cost: k, discounted: e > 0, pts: c.pts,
+        hasReq: !!c.reqDom, req: c.reqDom ? 'needs ' + c.reqN + ' ' + DOMS[c.reqDom][0] : '',
+        hasText: !!c.text, text: c.text || '',
+        blocked: !!blockText && !rushMode, blockText: blockText, discarding: discarding,
+        pressed: selected || discarding, disabled: !clickable,
+        border: selected ? '3.5px solid #2B2530' : '2.5px solid #2B2530',
+        transform: selected ? 'translateY(-14px) rotate(0deg)' : 'rotate(' + rot + ')',
+        shadow: selected ? '0 0 0 5px #F7D47A, 0 12px 0 #1F2826' : '0 5px 0 #1F2826',
+        cursor: clickable ? 'pointer' : 'default',
+        aria: c.name + ', ' + DOMS[c.dom][0] + ', ' + k + ' years, ' + c.pts + ' points' + (blockText ? ', ' + blockText : ''),
+        pick: function () { if (!clickable) return; if (rushMode) self.setState({ discard: s.discard === id ? null : id }); else self.setState({ sel: s.sel === id ? null : id }); }
+      };
+    }
+    var groups = ['young', 'middle', 'old'].map(function (age) {
+      var cards = s.market[age].filter(function (x) { return x; }).map(cardVals);
+      var ok = RANK[age] <= RANK[myAge];
+      return { label: AGE_NAME[age], note: (ok ? 'open to you' : 'opens at ' + AGE_START[age]) + ' · ' + (s.decks[age].length + s.hidden[age]) + ' in the deck', cards: cards };
+    });
+
+    var q = queueOf(s.pos, s.stacks);
+    var queue = q.map(function (id, i) {
+      var pl = PLAYERS[id];
+      return { name: id === 'P' ? 'You' : pl.name, pos: s.pos[id], fill: pl.fill, eye: pl.eye,
+        antenna: pl.kind === 'bot' ? '#F2E8D5' : 'none', antennaBall: pl.kind === 'bot' ? '#F7D47A' : 'none',
+        nameColor: id === cur ? '#F7D47A' : '#F2E8D5', arrow: i < q.length - 1 ? '→' : '' };
+    });
+    var mats = ['A', 'M', 'K'].map(function (id) {
+      var pl = PLAYERS[id], t = s.towers[id];
+      var ex = ORDER.filter(function (d) { return exp(t, d) > 0; }).map(function (d) { return DOMS[d][0] + ' −' + exp(t, d); });
+      return { name: pl.name, badge: pl.badge, pos: s.pos[id], age: AGE_NAME[ageOf(s.pos[id])], count: t.length,
+        exp: ex.length ? 'cheaper: ' + ex.join(', ') : 'no discounts yet', thinking: id === cur && pl.kind === 'bot',
+        aria: pl.name + ', ' + pl.badge, towerAria: pl.name + ' tower, bottom to top: ' + t.map(function (x) { return DOMS[CARDS[x].dom][0]; }).join(', '),
+        chips: t.map(function (x) { var c = CARDS[x]; return { color: COL[c.dom], title: DOMS[c.dom][0] + ': ' + c.name }; }) };
+    });
+    var myTower = tw.slice().reverse().map(function (id) { var c = CARDS[id]; return { color: COL[c.dom], icon: ICONS[c.dom], code: DOMS[c.dom][1], name: c.name, pts: c.pts + ' pt', cls: id === s.lastNew ? 'dw-drop' : '' }; });
+    var myExp = ORDER.filter(function (d) { return exp(tw, d) > 0; }).map(function (d) { return DOMS[d][0] + ' quests −' + exp(tw, d); });
+
+    var preview;
+    if (!myTurn) preview = cur ? (PLAYERS[cur].name + ' is furthest back, so it is their move.') : 'Everyone is through.';
+    else if (!s.sel) preview = 'Pick a card from the table — or rush to ' + rT + '.';
+    else {
+      var tail;
+      if (landing >= 40) tail = 'you reach the Doorway.';
+      else if (nextAfter === me) tail = (after.stacks[landing] || []).length > 1 ? 'you land on top of ' + PLAYERS[after.stacks[landing][after.stacks[landing].length - 2]].name + ', so you go again.' : 'still furthest back, so you go again.';
+      else { var under = after.stacks[landing] || []; tail = (under.length > 1 ? 'on top of ' + PLAYERS[under[under.length - 2]].name + '; ' : '') + PLAYERS[nextAfter].name + ' goes next.'; }
+      if (s.sel === 'rush') preview = 'Rush ' + myPos + ' → ' + rT + (s.discard ? ', binning ' + CARDS[s.discard].name : '') + ' — ' + tail;
+      else { var cc = CARDS[s.sel], kk = cost(tw, s.sel); preview = cc.name + ': ' + (kk < cc.years ? cc.years + ' → ' + kk : kk) + ' years, land on ' + landing + ' — ' + tail; }
+    }
+
+    return {
+      rows: rows, tiles: tiles, groups: groups, queue: queue, mats: mats, myTower: myTower,
+      myPos: myPos, myAge: AGE_NAME[myAge], toDoor: 40 - myPos, total: score(tw),
+      myExp: myExp.length ? myExp.join(', ') : 'none yet', yesState: s.yesUsed ? 'used' : s.useYes ? 'in play' : 'ready',
+      rulesOpen: s.rulesOpen, preview: preview, rushTarget: rT,
+      notMyTurn: !myTurn, questMode: myTurn && !rushMode, rushMode: rushMode,
+      questBg: myTurn && s.sel && !rushMode ? '#F7D47A' : '#FBF6EA', rushBg: rushMode ? '#F7D47A' : '#FBF6EA',
+      useYes: s.useYes, yesDisabled: !myTurn || s.yesUsed,
+      confirmLabel: rushMode ? 'Rush!' : s.sel ? 'Take it' : 'Choose a move',
+      confirmDisabled: !myTurn || !s.sel, confirmOpacity: myTurn && s.sel ? 1 : 0.4,
+      cantUndo: !s.history.length, undoOpacity: s.history.length ? 1 : 0.4,
+      toggleRules: function () { self.setState({ rulesOpen: !s.rulesOpen }); },
+      toggleYes: function () { if (!s.yesUsed) self.setState({ useYes: !s.useYes }); },
+      chooseQuest: function () { self.setState({ sel: null, discard: null }); },
+      chooseRush: function () { self.setState({ sel: rushMode ? null : 'rush', discard: null }); },
+      undo: function () { if (!s.history.length) return; var h = s.history.slice(); var prev = h.pop(); prev.history = h; if (self.timer) { clearTimeout(self.timer); self.timer = null; } self.setState(prev); },
+      reset: function () { if (self.timer) { clearTimeout(self.timer); self.timer = null; } self.setState(init()); },
+      confirm: function () {
+        if (!myTurn || !s.sel) return;
+        var snap = clone(s); snap.history = [];
+        var yesUsed = s.yesUsed;
+        if (s.sel !== 'rush') { var c = CARDS[s.sel]; if (c.reqDom && count(tw, c.reqDom) < c.reqN) yesUsed = true; }
+        var next = applyMove(s, me, s.sel === 'rush' ? 'rush' : 'quest', s.sel === 'rush' ? null : s.sel, s.discard);
+        var nx = current(next.pos, next.stacks);
+        next.sel = null; next.discard = null; next.useYes = false; next.yesUsed = yesUsed;
+        next.again = nx === me; next.lastNew = s.sel === 'rush' ? null : s.sel; next.history = s.history.concat([snap]);
+        self.setState(next);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

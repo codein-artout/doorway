@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Doorway — Analyst game report</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F0E6}
+a{color:#23202A}
+button{font:inherit}
+button:focus-visible,a:focus-visible{outline:2px solid #23202A;outline-offset:2px}
+table{border-collapse:collapse}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; min-height: 1360px; background: #F4F0E6; background-image: linear-gradient(#E9E3D5 1px, transparent 1px), linear-gradient(90deg, #E9E3D5 1px, transparent 1px); background-size: 24px 24px; color: #23202A; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 14px; line-height: 1.45; padding: 0 28px 32px">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 14px 0 12px; border-bottom: 2px solid #23202A">
+  <span style="font-family: 'Caprasimo', serif; font-size: 26px; line-height: 1">Doorway</span>
+  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: #6B6475">game report · sample game · seed 7f3a-92 · v0.2-default · 4 players · 58 turns · 58 min</span>
+  <div style="flex: 1"></div>
+  <nav aria-label="View mode" style="display: inline-flex; border: 1.5px solid #23202A; border-radius: 8px; overflow: hidden">
+    <a href="Board-Results.dc.html" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; font-weight: 600; text-decoration: none; color: #23202A">Board</a>
+    <a href="Analyst-Results.dc.html" aria-current="page" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; font-weight: 600; text-decoration: none; background: #23202A; color: #F4F0E6">Analyst</a>
+  </nav>
+  <button type="button" style="min-height: 36px; padding: 0 12px; border-radius: 8px; border: 1.5px solid #23202A; background: #FBF9F4; font-weight: 600; cursor: pointer">Replay JSON</button>
+  <button type="button" style="min-height: 36px; padding: 0 12px; border-radius: 8px; border: 1.5px solid #23202A; background: #FBF9F4; font-weight: 600; cursor: pointer">CSV</button>
+</header>
+
+<section aria-label="Summary" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-top: 16px">
+  <sc-for list="{{kpis}}" as="k" hint-placeholder-count="5">
+    <div style="padding: 12px 14px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px">
+      <div style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #6B6475">{{k.label}}</div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; font-weight: 600; margin-top: 2px">{{k.value}}</div>
+      <div style="font-size: 12.5px; color: #4A4452">{{k.note}}</div>
+    </div>
+  </sc-for>
+</section>
+
+<section aria-label="Final scores" style="margin-top: 16px; padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px">
+  <h2 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Final scores</h2>
+  <div style="overflow-x: auto">
+  <table style="width: 100%; min-width: 1100px; font-size: 13px">
+    <thead>
+      <tr style="font-size: 11.5px; color: #6B6475; border-bottom: 1.5px solid #23202A; text-align: right">
+        <th style="text-align: left; padding: 6px 4px; font-weight: 600">#</th><th style="text-align: left; padding: 6px 4px; font-weight: 600">Player</th>
+        <th style="padding: 6px 4px; font-weight: 600">Arrived</th><th style="padding: 6px 4px; font-weight: 600">Tower</th><th style="padding: 6px 4px; font-weight: 600">Allowed</th><th style="padding: 6px 4px; font-weight: 600">Kept</th><th style="padding: 6px 4px; font-weight: 600">Lost</th>
+        <th style="padding: 6px 4px; font-weight: 600">Cards</th><th style="padding: 6px 4px; font-weight: 600">Life</th><th style="padding: 6px 4px; font-weight: 600">Passion</th><th style="padding: 6px 4px; font-weight: 600">Refl.</th><th style="padding: 6px 4px; font-weight: 600">Total</th>
+        <th style="text-align: left; padding: 6px 8px; font-weight: 600; width: 280px">Split</th><th style="padding: 6px 4px; font-weight: 600">Window vs best</th>
+      </tr>
+    </thead>
+    <tbody>
+      <sc-for list="{{players}}" as="p" hint-placeholder-count="4">
+        <tr style="border-bottom: 1px solid #E2DACA; text-align: right; font-family: 'IBM Plex Mono', monospace; background: {{p.bg}}">
+          <td style="text-align: left; padding: 8px 4px; font-weight: 600">{{p.rank}}</td>
+          <td style="text-align: left; padding: 8px 4px; font-family: 'IBM Plex Sans', sans-serif"><b style="font-weight: 600">{{p.name}}</b> <span style="font-size: 12px; color: #6B6475">{{p.role}}</span></td>
+          <td style="padding: 8px 4px">{{p.arrived}}</td><td style="padding: 8px 4px">{{p.tower}}</td><td style="padding: 8px 4px">{{p.allowed}}</td><td style="padding: 8px 4px">{{p.kept}}</td><td style="padding: 8px 4px; color: {{p.lostColor}}">{{p.lost}}</td>
+          <td style="padding: 8px 4px">{{p.cards}}</td><td style="padding: 8px 4px">{{p.sets}}</td><td style="padding: 8px 4px">{{p.passion}}</td><td style="padding: 8px 4px">{{p.refl}}</td>
+          <td style="padding: 8px 4px; font-weight: 600; font-size: 15px">{{p.total}}</td>
+          <td style="padding: 8px 8px"><div role="img" aria-label="{{p.splitAria}}" style="display: flex; height: 14px; border: 1px solid #23202A; background: #FBF9F4"><span style="width: {{p.w1}}; background: #23202A"></span><span style="width: {{p.w2}}; background: #4F7290"></span><span style="width: {{p.w3}}; background: #B9AE9A"></span><span style="width: {{p.w4}}; background: repeating-linear-gradient(45deg, #23202A 0 2px, #FBF9F4 2px 5px)"></span></div></td>
+          <td style="padding: 8px 4px; color: {{p.winColor}}">{{p.win}}</td>
+        </tr>
+      </sc-for>
+    </tbody>
+  </table>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 8px; font-size: 12px; color: #4A4452">
+    <span><span style="display: inline-block; width: 10px; height: 10px; background: #23202A"></span> cards</span>
+    <span><span style="display: inline-block; width: 10px; height: 10px; background: #4F7290"></span> full life</span>
+    <span><span style="display: inline-block; width: 10px; height: 10px; background: #B9AE9A"></span> passion</span>
+    <span><span style="display: inline-block; width: 10px; height: 10px; background: repeating-linear-gradient(45deg, #23202A 0 2px, #FBF9F4 2px 5px)"></span> reflection</span>
+    <span style="margin-left: auto">tiebreak: most discs kept, then earlier arrival</span>
+  </div>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; margin-top: 16px">
+  <section aria-label="Turn economy" style="grid-column: span 7; padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px; min-width: 0">
+    <h2 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Turn economy</h2>
+    <table style="width: 100%; font-size: 13px; font-family: 'IBM Plex Mono', monospace">
+      <thead><tr style="font-size: 11.5px; color: #6B6475; border-bottom: 1.5px solid #23202A; text-align: right; font-family: 'IBM Plex Sans', sans-serif">
+        <th style="text-align: left; padding: 5px 4px; font-weight: 600">Player</th><th style="padding: 5px 4px; font-weight: 600">Turns</th><th style="padding: 5px 4px; font-weight: 600">Back-to-back</th><th style="padding: 5px 4px; font-weight: 600">Rushes</th><th style="padding: 5px 4px; font-weight: 600">Yrs / quest</th><th style="padding: 5px 4px; font-weight: 600">Yrs saved</th><th style="padding: 5px 4px; font-weight: 600">Swaps used</th><th style="padding: 5px 4px; font-weight: 600">Think (median)</th>
+      </tr></thead>
+      <tbody>
+        <sc-for list="{{economy}}" as="e" hint-placeholder-count="4">
+          <tr style="border-bottom: 1px solid #E2DACA; text-align: right"><td style="text-align: left; padding: 6px 4px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 600">{{e.name}}</td><td style="padding: 6px 4px">{{e.turns}}</td><td style="padding: 6px 4px">{{e.b2b}}</td><td style="padding: 6px 4px">{{e.rush}}</td><td style="padding: 6px 4px">{{e.ypq}}</td><td style="padding: 6px 4px">{{e.saved}}</td><td style="padding: 6px 4px">{{e.swaps}}</td><td style="padding: 6px 4px">{{e.think}}</td></tr>
+        </sc-for>
+      </tbody>
+    </table>
+    <p style="margin: 10px 0 0; font-size: 12.5px; color: #4A4452">Arun took the most turns (17) on the cheapest quests and lived the longest life, then lost seven memories at the door. Kavi took the fewest turns, arrived first and lost none.</p>
+  </section>
+
+  <section aria-label="Played most like" style="grid-column: span 5; padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px; min-width: 0">
+    <h2 style="margin: 0 0 4px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Played most like</h2>
+    <p style="margin: 0 0 10px; font-size: 12.5px; color: #6B6475">How closely each player's picks match each bot strategy (0–1). Humans are classified the same way the study classifies bots.</p>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <sc-for list="{{styles}}" as="s" hint-placeholder-count="4">
+        <div>
+          <div style="font-size: 13px; font-weight: 600">{{s.name}} <span style="font-weight: 400; color: #6B6475">— {{s.top}}</span></div>
+          <div style="display: flex; flex-direction: column; gap: 3px; margin-top: 4px">
+            <sc-for list="{{s.bars}}" as="b" hint-placeholder-count="3">
+              <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr) 36px; gap: 8px; align-items: center; font-size: 12px">
+                <span>{{b.label}}</span><span style="height: 8px; background: #EFE9DC"><span style="display: block; height: 100%; width: {{b.w}}; background: {{b.c}}"></span></span><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">{{b.v}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section aria-label="Turning points" style="grid-column: span 7; padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px; min-width: 0">
+    <h2 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Turning points</h2>
+    <table style="width: 100%; font-size: 13px">
+      <tbody>
+        <sc-for list="{{moments}}" as="m" hint-placeholder-count="5">
+          <tr style="border-bottom: 1px solid #E2DACA">
+            <td style="padding: 6px 4px; font-family: 'IBM Plex Mono', monospace; color: #6B6475; width: 46px; vertical-align: top">{{m.t}}</td>
+            <td style="padding: 6px 4px">{{m.text}}</td>
+            <td style="padding: 6px 4px; text-align: right; font-family: 'IBM Plex Mono', monospace; font-weight: 600; color: {{m.c}}; white-space: nowrap; vertical-align: top">{{m.effect}}</td>
+            <td style="padding: 6px 4px; text-align: right; width: 70px; vertical-align: top"><a href="Analyst-Table.dc.html" style="font-size: 12px">replay</a></td>
+          </tr>
+        </sc-for>
+      </tbody>
+    </table>
+  </section>
+
+  <section aria-label="Against the bot study" style="grid-column: span 5; padding: 14px 16px; background: #FBF9F4; border: 1.5px dashed #23202A; border-radius: 10px; min-width: 0">
+    <h2 style="margin: 0 0 4px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">This game vs the bot study</h2>
+    <p style="margin: 0 0 10px; font-size: 12.5px; color: #6B6475">4-player averages from the committed study. Values in brackets fill in from <code style="font-family: 'IBM Plex Mono', monospace">reports/data/summary.json</code>.</p>
+    <table style="width: 100%; font-size: 13px; font-family: 'IBM Plex Mono', monospace">
+      <thead><tr style="font-size: 11.5px; color: #6B6475; border-bottom: 1.5px solid #23202A; text-align: right; font-family: 'IBM Plex Sans', sans-serif"><th style="text-align: left; padding: 5px 4px; font-weight: 600">Measure</th><th style="padding: 5px 4px; font-weight: 600">This game</th><th style="padding: 5px 4px; font-weight: 600">Study</th></tr></thead>
+      <tbody>
+        <sc-for list="{{vsStudy}}" as="v" hint-placeholder-count="5">
+          <tr style="border-bottom: 1px solid #E2DACA; text-align: right"><td style="text-align: left; padding: 6px 4px; font-family: 'IBM Plex Sans', sans-serif">{{v.m}}</td><td style="padding: 6px 4px; font-weight: 600">{{v.g}}</td><td style="padding: 6px 4px; color: #6B6475">{{v.s}}</td></tr>
+        </sc-for>
+      </tbody>
+    </table>
+  </section>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1360}}'>
+var DATA = [
+  { name: 'Kavi', role: 'bot · Specialist', arrived: '1st', tower: 9, allowed: 9, kept: 9, cards: 25, sets: 0, passion: 10, refl: 6, win: 'best (all kept)', winOk: true },
+  { name: 'Priya', role: 'you', arrived: '2nd', tower: 13, allowed: 9, kept: 9, cards: 26, sets: 6, passion: 3, refl: 4, win: 'best (3–11)', winOk: true },
+  { name: 'Meera', role: 'friend', arrived: '4th', tower: 10, allowed: 6, kept: 6, cards: 17, sets: 6, passion: 3, refl: 0, win: '5–10 · −2 vs 4–9', winOk: false },
+  { name: 'Arun', role: 'bot · Tempo', arrived: '3rd', tower: 14, allowed: 7, kept: 7, cards: 18, sets: 6, passion: 0, refl: 0, win: 'best (8–14)', winOk: true }
+];
+function pct(v) { return (v / 45 * 100).toFixed(1) + '%'; }
+function bars(list) { return list.map(function (b, i) { return { label: b[0], v: b[1].toFixed(2), w: Math.round(b[1] * 100) + '%', c: i === 0 ? '#23202A' : '#B9AE9A' }; }); }
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      kpis: [
+        { label: 'Winner', value: 'Kavi · 41', note: 'by 2 over Priya' },
+        { label: 'Length', value: '58 turns', note: '58 min · 1.0 min per turn' },
+        { label: 'Discs lost', value: '15', note: 'non-first arrivals: 5.0 each' },
+        { label: 'Back-to-back turns', value: '13', note: '22% of all turns' },
+        { label: 'Rushes', value: '12', note: '21% of all moves' }
+      ],
+      players: DATA.map(function (p, i) {
+        var total = p.cards + p.sets + p.passion + p.refl, lost = p.tower - p.kept;
+        return { rank: i + 1, name: p.name, role: p.role, arrived: p.arrived, tower: p.tower, allowed: p.allowed, kept: p.kept, lost: lost, lostColor: lost >= 5 ? '#B4443A' : '#23202A',
+          cards: p.cards, sets: p.sets, passion: p.passion, refl: p.refl, total: total, bg: i === 1 ? '#F6E27A55' : 'transparent',
+          w1: pct(p.cards), w2: pct(p.sets), w3: pct(p.passion), w4: pct(p.refl),
+          splitAria: 'cards ' + p.cards + ', full life ' + p.sets + ', passion ' + p.passion + ', reflection ' + p.refl,
+          win: p.win, winColor: p.winOk ? '#2F7D4F' : '#B4443A' };
+      }),
+      economy: [
+        { name: 'Kavi', turns: 12, b2b: 1, rush: 3, ypq: '3.6', saved: 9, swaps: '3 / 3', think: '44 ms' },
+        { name: 'Priya', turns: 15, b2b: 4, rush: 2, ypq: '2.6', saved: 6, swaps: '2 / 3', think: '9.8 s' },
+        { name: 'Meera', turns: 14, b2b: 2, rush: 4, ypq: '3.1', saved: 4, swaps: '1 / 3', think: '6.1 s' },
+        { name: 'Arun', turns: 17, b2b: 6, rush: 3, ypq: '2.4', saved: 8, swaps: '3 / 3', think: '39 ms' }
+      ],
+      styles: [
+        { name: 'Priya', top: 'Generalist', bars: bars([['Generalist', 0.71], ['Set collector', 0.58], ['Tempo', 0.33]]) },
+        { name: 'Meera', top: 'Early leaver', bars: bars([['Early leaver', 0.52], ['Rusher', 0.49], ['Greedy', 0.31]]) }
+      ],
+      moments: [
+        { t: 'T22', text: 'Priya took Dance badly at a wedding for 2 years and landed on top of Meera. Three Love in a row, the start of her Passion run.', effect: '+5 now', c: '#2F7D4F' },
+        { t: 'T31', text: 'Kavi crossed the Milestone at 20 and swapped Work discs together: a run of 5.', effect: '+10 passion', c: '#2F7D4F' },
+        { t: 'T38', text: 'Meera rushed past Arun and discarded Leave something behind before Arun could take it.', effect: 'denied 4+', c: '#23202A' },
+        { t: 'T47', text: 'Kavi arrived first with 9 discs. The 9-tile fit all of them.', effect: '0 lost', c: '#23202A' },
+        { t: 'T58', text: 'Meera arrived last; her 6-tile cut four memories, including both Wonder discs from her twenties.', effect: '−4 discs', c: '#B4443A' }
+      ],
+      vsStudy: [
+        { m: 'Turns per game', g: '58', s: '[x]' },
+        { m: 'Discs lost, 1st arrival', g: '0', s: '[x]' },
+        { m: 'Discs lost, later arrivals', g: '5.0', s: '[x]' },
+        { m: 'Winning score', g: '41', s: '[x]' },
+        { m: 'Share of moves that are Rush', g: '21%', s: '[x]' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

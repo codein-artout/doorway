@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Doorway — Board mode, choose your stretch</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&amp;family=Gochi+Hand&amp;family=Nunito:wght@500;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#2C3836}
+a{color:#F2E8D5}a:hover{color:#FFFFFF}
+@keyframes dw-glow{0%,100%{opacity:.75}50%{opacity:1}}
+.dw-glow{animation:dw-glow 3s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.dw-glow{animation:none}}
+button{font:inherit}
+button:focus-visible,a:focus-visible{outline:3px solid #F7D47A;outline-offset:3px}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; min-height: 960px; background: #2C3836; background-image: radial-gradient(rgba(242,232,213,.035) 1px, transparent 1.5px); background-size: 6px 6px; color: #F2E8D5; font-family: 'Nunito', system-ui, sans-serif; font-size: 15px; line-height: 1.4; padding: 0 28px 32px">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; padding: 16px 0 14px">
+  <div style="display: flex; align-items: center; gap: 10px">
+    <svg width="30" height="36" viewBox="0 0 30 36" aria-hidden="true" style="fill: none; stroke: #F2E8D5; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round"><path d="M3 34V15a12 12 0 0 1 24 0v19z" style="fill: #F7D47A"></path><path d="M3 34h24"></path><path d="M10 34V17l9-3v20" style="fill: #2B2530"></path></svg>
+    <span style="font-family: 'Caprasimo', serif; font-size: 30px; line-height: 1">Doorway</span>
+  </div>
+  <div style="flex: 1"></div>
+  <nav aria-label="View mode" style="display: inline-flex; padding: 4px; border-radius: 999px; background: #233030; border: 2px solid #46534F">
+    <a href="Board-Doorway.dc.html" aria-current="page" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 999px; background: #F2E8D5; color: #2B2530; font-weight: 900; text-decoration: none">Board</a>
+    <a href="Analyst-Doorway.dc.html" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 999px; color: #F2E8D5; font-weight: 800; text-decoration: none">Analyst</a>
+  </nav>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 24px; margin: 6px 0 18px">
+  <h1 style="margin: 0; font-family: 'Caprasimo', serif; font-weight: 400; font-size: 46px; line-height: 1.02">You've reached the Doorway.</h1>
+  <p style="margin: 0 0 6px; font-family: 'Gochi Hand', cursive; font-size: 23px; color: #DCE3DE">You arrived 2nd. Only one unbroken stretch fits through.</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+  <section aria-label="Your tower" style="flex: 1 1 520px; min-width: 0; padding: 22px 24px; border-radius: 24px; background: #F1E7D2; border: 4px solid #2B2530; color: #2B2530; box-shadow: 0 12px 0 -4px #1F2826; display: flex; gap: 24px; flex-wrap: wrap">
+    <div style="flex: 1 1 340px; min-width: 0">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <h2 style="margin: 0; font-family: 'Caprasimo', serif; font-weight: 400; font-size: 24px">Your life, stacked</h2>
+        <span style="font-family: 'Gochi Hand', cursive; font-size: 18px; color: #5B5262">newest on top</span>
+      </div>
+      <div style="display: flex; flex-direction: column; margin-top: 12px" role="listbox" aria-label="Tap a memory to start the stretch there">
+        <sc-for list="{{discs}}" as="d" hint-placeholder-count="13">
+          <div style="display: flex; align-items: stretch; gap: 10px; height: 34px">
+            <span style="width: 12px; flex: none; background: {{d.rail}}; border-left: {{d.railEdge}}; border-right: {{d.railEdge}}; border-top: {{d.capTop}}; border-bottom: {{d.capBottom}}; border-radius: {{d.railRadius}}"></span>
+            <button type="button" onClick="{{d.jump}}" aria-label="{{d.aria}}" style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; padding: 0; border: none; background: none; text-align: left; cursor: pointer; opacity: {{d.opacity}}; transform: {{d.transform}}; transition: transform .35s ease, opacity .35s ease">
+              <span style="width: 128px; height: 28px; flex: none; border-radius: 999px; border: 2.5px solid #2B2530; background: {{d.color}}; box-shadow: inset 0 -5px 0 rgba(43,37,48,.18); display: flex; align-items: center; justify-content: center; gap: 6px; color: #2B2530">
+                <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #2B2530; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round"><path d="{{d.icon}}"></path></svg>
+                <span style="font-weight: 900; font-size: 12px">{{d.code}}</span>
+              </span>
+              <span style="flex: 1; min-width: 0; font-weight: 800; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #2B2530">{{d.name}}</span>
+              <span style="font-family: 'Gochi Hand', cursive; font-size: 17px; color: {{d.noteColor}}; white-space: nowrap">{{d.note}}</span>
+              <span style="font-family: 'Caprasimo', serif; font-size: 15px; width: 34px; text-align: right; color: #2B2530">{{d.pts}}</span>
+            </button>
+          </div>
+        </sc-for>
+        <span style="width: 156px; height: 12px; margin: 4px 0 0 22px; border-radius: 4px; background: #2B2530"></span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px">
+        <button type="button" onClick="{{up}}" disabled="{{atTop}}" style="min-height: 46px; padding: 0 16px; border-radius: 12px; border: 2.5px solid #2B2530; background: #FBF6EA; color: #2B2530; font-weight: 900; cursor: pointer; box-shadow: 0 3px 0 #2B2530">Slide up ↑</button>
+        <button type="button" onClick="{{down}}" disabled="{{atBottom}}" style="min-height: 46px; padding: 0 16px; border-radius: 12px; border: 2.5px solid #2B2530; background: #FBF6EA; color: #2B2530; font-weight: 900; cursor: pointer; box-shadow: 0 3px 0 #2B2530">Slide down ↓</button>
+        <button type="button" onClick="{{hint}}" aria-pressed="{{showHint}}" style="min-height: 46px; padding: 0 16px; border-radius: 12px; border: 2.5px dashed #2B2530; background: transparent; color: #2B2530; font-weight: 800; cursor: pointer">{{hintLabel}}</button>
+      </div>
+    </div>
+
+    <div style="flex: 0 1 300px; min-width: 260px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px">
+      <svg width="270" height="380" viewBox="0 0 270 380" role="img" aria-label="An open doorway, with warm light spilling out" style="overflow: visible">
+        <g class="dw-glow"><path d="M60 372L-10 372M210 372L280 372M80 150L20 110M190 150L250 110M70 250L5 250M200 250L265 250" style="stroke: #E9B94A; stroke-width: 4; stroke-linecap: round"></path></g>
+        <path d="M30 372V150a105 105 0 0 1 210 0v222z" style="fill: #E3D3B5; stroke: #2B2530; stroke-width: 5; stroke-linejoin: round"></path>
+        <path d="M58 372V152a77 77 0 0 1 154 0v220z" style="fill: #F7D47A; stroke: #2B2530; stroke-width: 4"></path>
+        <path d="M58 372V152l64 -26v272z" style="fill: #3A3340; stroke: #2B2530; stroke-width: 4; stroke-linejoin: round"></path>
+        <circle cx="106" cy="266" r="5" style="fill: #F7D47A; stroke: #2B2530; stroke-width: 2"></circle>
+        <path d="M135 120c8 -14 22 -14 30 0" style="fill: none; stroke: #2B2530; stroke-width: 3; stroke-linecap: round"></path>
+        <path d="M14 376h242" style="stroke: #2B2530; stroke-width: 5; stroke-linecap: round"></path>
+        <text x="135" y="60" text-anchor="middle" style="font: 400 26px Caprasimo, serif; fill: #2B2530">{{keep}}</text>
+        <text x="135" y="82" text-anchor="middle" style="font: 700 13px Nunito, sans-serif; fill: #2B2530">fit through</text>
+      </svg>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: center">
+        <span style="padding: 4px 10px; border-radius: 8px; border: 2.5px solid #2B2530; background: #FBF6EA; font-weight: 900; font-size: 13px; transform: rotate(-2deg)">2nd tile · 8</span>
+        <span style="padding: 4px 10px; border-radius: 8px; border: 2.5px solid #2B2530; background: #FBF6EA; font-weight: 900; font-size: 13px; transform: rotate(1.5deg)">+1 Make peace with it</span>
+      </div>
+    </div>
+  </section>
+
+  <aside aria-label="What you carry through" style="flex: 1 1 380px; max-width: 470px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{parts}}" as="p" hint-placeholder-count="4">
+        <div style="padding: 12px 14px; border-radius: 10px; background: #FBF6EA; color: #2B2530; border: 2.5px solid #2B2530; transform: rotate({{p.rot}}); box-shadow: 0 4px 0 #1F2826; border-left-style: dashed">
+          <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-weight: 900; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em">{{p.label}}</span><span style="font-family: 'Caprasimo', serif; font-size: 30px; line-height: 1">{{p.value}}</span></div>
+          <div style="font-family: 'Gochi Hand', cursive; font-size: 17px; color: #4A4250; line-height: 1.1">{{p.why}}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 18px; padding: 16px 18px; border-radius: 18px; border: 2px dashed #5E6B67">
+      <div style="width: 112px; height: 112px; flex: none; border-radius: 50%; border: 4px solid #F7D47A; display: grid; place-items: center; transform: rotate(-8deg); text-align: center">
+        <div><div style="font-family: 'Caprasimo', serif; font-size: 44px; line-height: 1; color: #F7D47A">{{total}}</div><div style="font-weight: 900; font-size: 11px; letter-spacing: 0.1em; color: #F7D47A">POINTS</div></div>
+      </div>
+      <div>
+        <div style="font-family: 'Caprasimo', serif; font-size: 22px">Keeping memories {{from}}–{{to}}</div>
+        <div style="font-family: 'Gochi Hand', cursive; font-size: 19px; color: #DCE3DE">{{dropped}} stay behind on this side of the door.</div>
+      </div>
+    </div>
+
+    <div style="padding: 14px 16px; border-radius: 18px; background: #233030; border: 2px solid #46534F">
+      <div style="font-family: 'Caprasimo', serif; font-size: 18px">Every stretch you could take</div>
+      <div style="display: flex; align-items: flex-end; gap: 10px; height: 96px; margin-top: 10px">
+        <sc-for list="{{windows}}" as="w" hint-placeholder-count="5">
+          <button type="button" onClick="{{w.pick}}" aria-pressed="{{w.on}}" aria-label="{{w.aria}}" style="flex: 1; height: 96px; padding: 0; border: none; background: none; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; cursor: pointer; color: #F2E8D5">
+            <span style="font-family: 'Caprasimo', serif; font-size: 15px">{{w.total}}</span>
+            <span style="width: 100%; height: {{w.h}}; border-radius: 8px 8px 3px 3px; border: 2.5px solid {{w.border}}; background: {{w.bg}}"></span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="display: flex; gap: 10px; margin-top: 4px">
+        <sc-for list="{{windows}}" as="w" hint-placeholder-count="5"><span style="flex: 1; text-align: center; font-size: 12px; color: #C9D2CC">{{w.label}}</span></sc-for>
+      </div>
+    </div>
+
+    <sc-if value="{{notLocked}}" hint-placeholder-val="{{ true }}">
+      <button type="button" onClick="{{lock}}" style="min-height: 64px; border-radius: 18px; border: 3px solid #2B2530; background: #F7D47A; color: #2B2530; font-family: 'Caprasimo', serif; font-size: 24px; cursor: pointer; box-shadow: 0 6px 0 #1F2826">Walk through with {{from}}–{{to}}</button>
+      <p style="margin: 0; font-family: 'Gochi Hand', cursive; font-size: 18px; color: #C9D2CC; text-align: center">No rush — nobody else is waiting on this choice.</p>
+    </sc-if>
+    <sc-if value="{{locked}}" hint-placeholder-val="{{ false }}">
+      <div role="status" style="padding: 16px 18px; border-radius: 18px; background: #F2E8D5; color: #2B2530; border: 3px solid #2B2530; font-family: 'Gochi Hand', cursive; font-size: 21px">Through the door with {{total}} points. Kavi and Meera are still on the road.
+        <button type="button" onClick="{{unlock}}" style="display: block; margin-top: 6px; background: none; border: none; padding: 0; color: #2B2530; text-decoration: underline; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 13px; cursor: pointer; min-height: 32px">Change my mind (demo)</button>
+      </div>
+    </sc-if>
+  </aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+var ICONS = {
+  pink: 'M12 20.5s-7.5-4.6-7.5-10.4A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2.5c0 5.8-7.5 10.4-7.5 10.4z',
+  gold: 'M5 5h8.5L16 7.5 13.5 10H5zM9.5 10v10',
+  green: 'M12 2.5l6 7.5-6 8-6-8zM12 18c0 2-2.5 2-2.5 3.5',
+  orange: 'M3.5 11.5L12 4.5l8.5 7M6 10v10h12V10M10 20v-5h4v5',
+  purple: 'M12 3l2.5 5.4 5.9.6-4.4 4 1.3 5.8L12 15.9l-5.3 2.9L8 13l-4.4-4 5.9-.6z'
+};
+var COL = { pink: '#EBA6B0', gold: '#E6B84F', green: '#8DB884', orange: '#D9733F', purple: '#A097D6' };
+var DOMS = { pink: ['Love', 'Lv'], gold: ['Work', 'Wk'], green: ['Play', 'Pl'], orange: ['Family', 'Fm'], purple: ['Wonder', 'Wd'] };
+var ORDER = ['pink', 'gold', 'green', 'orange', 'purple'];
+var TOWER = [
+  { name: 'See the sea', dom: 'purple', pts: 1 },
+  { name: 'Keep a diary', dom: 'green', pts: 1 },
+  { name: 'First job', dom: 'gold', pts: 1 },
+  { name: 'Learn a trade', dom: 'gold', pts: 2 },
+  { name: 'Get very good at something', dom: 'gold', pts: 3 },
+  { name: 'Fall in love', dom: 'pink', pts: 3 },
+  { name: 'Raise someone', dom: 'orange', pts: 4 },
+  { name: 'Live somewhere new', dom: 'purple', pts: 3 },
+  { name: 'Get good at something useless', dom: 'green', pts: 3 },
+  { name: 'Teach what you know', dom: 'gold', pts: 4, refl: 'gold', note: '+1 per Work' },
+  { name: 'Make peace with it', dom: 'orange', pts: 3, note: 'gave +1 space' },
+  { name: 'Still holding hands', dom: 'pink', pts: 3 },
+  { name: 'Stand somewhere very old', dom: 'purple', pts: 3 }
+];
+var KEEP = 9, MAXS = TOWER.length - KEEP;
+var ROTS = ['-1.5deg', '1.2deg', '0.8deg', '-1deg'];
+function passion(r) { return r >= 5 ? 10 : r === 4 ? 6 : r === 3 ? 3 : 0; }
+function sc(start) {
+  var kept = TOWER.slice(start, start + KEEP), cards = 0, cnt = {}, run = 0, best = 0, bd = null, prev = null;
+  kept.forEach(function (d) { cards += d.pts; cnt[d.dom] = (cnt[d.dom] || 0) + 1; run = d.dom === prev ? run + 1 : 1; prev = d.dom; if (run > best) { best = run; bd = d.dom; } });
+  var sets = Math.min.apply(null, ORDER.map(function (k) { return cnt[k] || 0; }));
+  var refl = 0, rw = 'no Reflection card in it';
+  kept.forEach(function (d) { if (d.refl) { refl += cnt[d.refl]; rw = 'Teach what you know × ' + cnt[d.refl] + ' Work'; } });
+  var missing = ORDER.filter(function (k) { return !cnt[k]; }).map(function (k) { return DOMS[k][0]; });
+  return { cards: cards, sets: sets * 6, passion: passion(best), refl: refl, total: cards + sets * 6 + passion(best) + refl,
+    setsWhy: sets ? 'all five colours, once' : 'missing ' + missing.join(' & '),
+    pasWhy: best >= 3 ? best + ' ' + DOMS[bd][0] + ' in a row' : 'longest run is ' + best, reflWhy: rw, cardsWhy: kept.length + ' cards kept' };
+}
+var BEST = 0; (function () { var b = -1; for (var i = 0; i <= MAXS; i++) { var t = sc(i).total; if (t > b) { b = t; BEST = i; } } })();
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { start: 0, showHint: false, locked: false }; }
+  renderVals() {
+    var self = this, s = this.state, start = s.start, end = start + KEEP - 1, r = sc(start);
+    var discs = TOWER.map(function (d, i) {
+      var kept = i >= start && i <= end, best = s.showHint && i >= BEST && i < BEST + KEEP;
+      return {
+        color: COL[d.dom], icon: ICONS[d.dom], code: DOMS[d.dom][1], name: d.name, pts: d.pts + ' pt',
+        rail: kept ? '#F7D47A' : best ? 'repeating-linear-gradient(0deg, #2B2530 0 4px, transparent 4px 8px)' : 'transparent',
+        railEdge: kept ? '2.5px solid #2B2530' : '0', capTop: kept && i === end ? '2.5px solid #2B2530' : '0', capBottom: kept && i === start ? '2.5px solid #2B2530' : '0',
+        railRadius: kept && i === end && i === start ? '6px' : kept && i === end ? '6px 6px 0 0' : kept && i === start ? '0 0 6px 6px' : '0',
+        opacity: kept ? 1 : 0.38, transform: kept ? 'none' : (s.locked ? 'translateX(28px) rotate(4deg)' : 'translateX(10px)'),
+        note: kept ? (d.note || '') : 'stays behind', noteColor: kept ? '#4A4250' : '#7A7183',
+        aria: 'Memory ' + (i + 1) + ', ' + DOMS[d.dom][0] + ', ' + d.name + (kept ? ', kept' : ', stays behind'),
+        jump: function () { if (s.locked) return; var st = i > end ? i - KEEP + 1 : i; self.setState({ start: Math.max(0, Math.min(MAXS, st)) }); }
+      };
+    }).reverse();
+    var max = 0, windows = [];
+    for (var w = 0; w <= MAXS; w++) max = Math.max(max, sc(w).total);
+    for (var w2 = 0; w2 <= MAXS; w2++) {
+      (function (ws) {
+        var t = sc(ws).total, on = ws === start, best = s.showHint && ws === BEST;
+        windows.push({ label: (ws + 1) + '–' + (ws + KEEP), total: t, on: on, h: Math.round(20 + 52 * t / max) + 'px',
+          bg: on ? '#F7D47A' : '#46534F', border: on ? '#F2E8D5' : best ? '#F7D47A' : '#5E6B67', aria: 'Memories ' + (ws + 1) + ' to ' + (ws + KEEP) + ', ' + t + ' points',
+          pick: function () { if (!s.locked) self.setState({ start: ws }); } });
+      })(w2);
+    }
+    return {
+      discs: discs, windows: windows, total: r.total, from: start + 1, to: end + 1, keep: KEEP, dropped: TOWER.length - KEEP,
+      parts: [
+        { label: 'Cards', value: r.cards, why: r.cardsWhy, rot: ROTS[0] },
+        { label: 'Full life', value: r.sets, why: r.setsWhy, rot: ROTS[1] },
+        { label: 'Passion', value: r.passion, why: r.pasWhy, rot: ROTS[2] },
+        { label: 'Reflection', value: r.refl, why: r.reflWhy, rot: ROTS[3] }
+      ],
+      atTop: start >= MAXS || s.locked, atBottom: start <= 0 || s.locked,
+      showHint: s.showHint, hintLabel: s.showHint ? 'Hide the best stretch' : 'Show me the best stretch',
+      locked: s.locked, notLocked: !s.locked,
+      up: function () { self.setState({ start: Math.min(MAXS, s.start + 1) }); },
+      down: function () { self.setState({ start: Math.max(0, s.start - 1) }); },
+      hint: function () { self.setState({ showHint: !s.showHint }); },
+      lock: function () { self.setState({ locked: true }); },
+      unlock: function () { self.setState({ locked: false }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

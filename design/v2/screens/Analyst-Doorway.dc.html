@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Doorway — Analyst window scorer</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F0E6}
+a{color:#23202A}
+button{font:inherit}
+button:focus-visible,a:focus-visible{outline:2px solid #23202A;outline-offset:2px}
+table{border-collapse:collapse}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; min-height: 1000px; background: #F4F0E6; background-image: linear-gradient(#E9E3D5 1px, transparent 1px), linear-gradient(90deg, #E9E3D5 1px, transparent 1px); background-size: 24px 24px; color: #23202A; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 14px; line-height: 1.45; padding: 0 28px 32px">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 14px 0 12px; border-bottom: 2px solid #23202A">
+  <span style="font-family: 'Caprasimo', serif; font-size: 26px; line-height: 1">Doorway</span>
+  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: #6B6475">Priya arrived 2nd · tile 8 + 1 (Make peace with it) = keep 9 of 13</span>
+  <div style="flex: 1"></div>
+  <nav aria-label="View mode" style="display: inline-flex; border: 1.5px solid #23202A; border-radius: 8px; overflow: hidden">
+    <a href="Board-Doorway.dc.html" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; font-weight: 600; text-decoration: none; color: #23202A">Board</a>
+    <a href="Analyst-Doorway.dc.html" aria-current="page" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; font-weight: 600; text-decoration: none; background: #23202A; color: #F4F0E6">Analyst</a>
+  </nav>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin: 18px 0 14px">
+  <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">Window scorer</h1>
+  <span style="font-size: 13px; color: #6B6475">Every unbroken stretch of 9 you could keep, scored. Only maximal windows are shown; a shorter one never scores more.</span>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px">
+
+<section aria-label="Tower by window" style="grid-column: span 7; padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px; min-width: 0">
+  <h2 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Tower × windows</h2>
+  <div style="overflow-x: auto">
+  <table style="width: 100%; min-width: 640px; font-size: 13px">
+    <thead>
+      <tr style="font-size: 11.5px; color: #6B6475; border-bottom: 1.5px solid #23202A">
+        <th style="text-align: left; padding: 5px 4px; font-weight: 600">#</th>
+        <th style="text-align: left; padding: 5px 4px; font-weight: 600">Memory</th>
+        <th style="text-align: right; padding: 5px 4px; font-weight: 600">Pts</th>
+        <th style="text-align: left; padding: 5px 4px; font-weight: 600">Note</th>
+        <sc-for list="{{windows}}" as="w" hint-placeholder-count="5">
+          <th style="padding: 5px 2px; font-weight: 600; text-align: center; background: {{w.colBg}}"><button type="button" onClick="{{w.pick}}" aria-pressed="{{w.on}}" style="min-height: 30px; padding: 0 6px; border: none; background: none; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; cursor: pointer">{{w.label}}</button></th>
+        </sc-for>
+      </tr>
+    </thead>
+    <tbody>
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="13">
+        <tr style="border-bottom: 1px solid #E2DACA; color: {{r.fg}}">
+          <td style="padding: 5px 4px; font-family: 'IBM Plex Mono', monospace; color: #6B6475">{{r.n}}</td>
+          <td style="padding: 5px 4px"><span style="display: inline-flex; align-items: center; gap: 8px"><span style="width: 36px; height: 12px; flex: none; border-radius: 999px; background: {{r.color}}; border: 1.5px solid #23202A"></span>{{r.name}}</span></td>
+          <td style="padding: 5px 4px; text-align: right; font-family: 'IBM Plex Mono', monospace">{{r.pts}}</td>
+          <td style="padding: 5px 4px; font-size: 12px; color: #6B6475">{{r.note}}</td>
+          <sc-for list="{{r.marks}}" as="m" hint-placeholder-count="5">
+            <td style="padding: 3px 2px; background: {{m.colBg}}"><span style="display: block; height: 16px; margin: 0 4px; border-radius: 3px; background: {{m.fill}}; border: {{m.border}}"></span></td>
+          </sc-for>
+        </tr>
+      </sc-for>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<div style="grid-column: span 5; display: flex; flex-direction: column; gap: 16px; min-width: 0">
+  <section aria-label="Window totals" style="padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px">
+    <h2 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Scores</h2>
+    <table style="width: 100%; font-size: 13px">
+      <thead><tr style="font-size: 11.5px; color: #6B6475; border-bottom: 1.5px solid #23202A; text-align: right"><th style="text-align: left; padding: 5px 4px; font-weight: 600">Window</th><th style="padding: 5px 4px; font-weight: 600">Cards</th><th style="padding: 5px 4px; font-weight: 600">Life</th><th style="padding: 5px 4px; font-weight: 600">Passion</th><th style="padding: 5px 4px; font-weight: 600">Refl.</th><th style="padding: 5px 4px; font-weight: 600">Total</th><th style="padding: 5px 4px; font-weight: 600">vs best</th></tr></thead>
+      <tbody>
+        <sc-for list="{{windows}}" as="w" hint-placeholder-count="5">
+          <tr style="border-bottom: 1px solid #E2DACA; background: {{w.rowBg}}; text-align: right; font-family: 'IBM Plex Mono', monospace">
+            <td style="text-align: left; padding: 3px 2px"><button type="button" onClick="{{w.pick}}" aria-pressed="{{w.on}}" style="min-height: 30px; padding: 0 4px; border: none; background: none; font-family: 'IBM Plex Mono', monospace; font-weight: 600; cursor: pointer">{{w.label}}</button></td>
+            <td style="padding: 3px 4px">{{w.cards}}</td><td style="padding: 3px 4px">{{w.sets}}</td><td style="padding: 3px 4px">{{w.passion}}</td><td style="padding: 3px 4px">{{w.refl}}</td>
+            <td style="padding: 3px 4px; font-weight: 600">{{w.total}}</td><td style="padding: 3px 4px; color: {{w.deltaColor}}">{{w.delta}}</td>
+          </tr>
+        </sc-for>
+      </tbody>
+    </table>
+  </section>
+
+  <section aria-label="Selected window detail" style="padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #23202A; border-radius: 10px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline"><h2 style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Discs {{sel}}</h2><span style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 600">{{selTotal}}</span></div>
+    <dl style="margin: 10px 0 0; display: grid; grid-template-columns: 96px 1fr; gap: 6px 12px; font-size: 13px">
+      <dt style="color: #6B6475">Domains</dt><dd style="margin: 0; font-family: 'IBM Plex Mono', monospace">{{domCounts}}</dd>
+      <dt style="color: #6B6475">Full life</dt><dd style="margin: 0">{{setsWhy}}</dd>
+      <dt style="color: #6B6475">Passion</dt><dd style="margin: 0">{{pasWhy}}</dd>
+      <dt style="color: #6B6475">Reflection</dt><dd style="margin: 0">{{reflWhy}}</dd>
+      <dt style="color: #6B6475">Left behind</dt><dd style="margin: 0">{{lost}}</dd>
+    </dl>
+    <button type="button" onClick="{{lock}}" style="margin-top: 14px; width: 100%; min-height: 40px; border-radius: 8px; border: 1.5px solid #23202A; background: #23202A; color: #F4F0E6; font-weight: 600; cursor: pointer">{{lockLabel}}</button>
+  </section>
+
+  <section aria-label="Allowance sensitivity" style="padding: 14px 16px; background: #FBF9F4; border: 1.5px solid #CFC6B3; border-radius: 10px">
+    <h2 style="margin: 0 0 4px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">If you had arrived at another time</h2>
+    <p style="margin: 0 0 8px; font-size: 12.5px; color: #6B6475">Best score for each allowance with this same tower. This is what arriving earlier or later was worth.</p>
+    <table style="width: 100%; font-size: 13px; font-family: 'IBM Plex Mono', monospace">
+      <thead><tr style="font-size: 11.5px; color: #6B6475; border-bottom: 1.5px solid #23202A; text-align: right; font-family: 'IBM Plex Sans', sans-serif"><th style="text-align: left; padding: 5px 4px; font-weight: 600">Keep</th><th style="padding: 5px 4px; font-weight: 600">Means</th><th style="padding: 5px 4px; font-weight: 600">Best window</th><th style="padding: 5px 4px; font-weight: 600">Score</th><th style="padding: 5px 4px; font-weight: 600; width: 120px"></th></tr></thead>
+      <tbody>
+        <sc-for list="{{sens}}" as="x" hint-placeholder-count="5">
+          <tr style="border-bottom: 1px solid #E2DACA; text-align: right; background: {{x.bg}}">
+            <td style="text-align: left; padding: 5px 4px; font-weight: 600">{{x.keep}}</td>
+            <td style="padding: 5px 4px; font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; color: #6B6475">{{x.means}}</td>
+            <td style="padding: 5px 4px">{{x.win}}</td>
+            <td style="padding: 5px 4px; font-weight: 600">{{x.score}}</td>
+            <td style="padding: 5px 4px"><span style="display: block; height: 10px; background: #23202A; width: {{x.w}}; margin-left: auto"></span></td>
+          </tr>
+        </sc-for>
+      </tbody>
+    </table>
+  </section>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+var COL = { pink: '#EBA6B0', gold: '#E6B84F', green: '#8DB884', orange: '#D9733F', purple: '#A097D6' };
+var DOMS = { pink: 'Love', gold: 'Work', green: 'Play', orange: 'Family', purple: 'Wonder' };
+var CODE = { pink: 'Lv', gold: 'Wk', green: 'Pl', orange: 'Fm', purple: 'Wd' };
+var ORDER = ['pink', 'gold', 'green', 'orange', 'purple'];
+var TOWER = [
+  { name: 'See the sea', dom: 'purple', pts: 1 }, { name: 'Keep a diary', dom: 'green', pts: 1 }, { name: 'First job', dom: 'gold', pts: 1 },
+  { name: 'Learn a trade', dom: 'gold', pts: 2 }, { name: 'Get very good at something', dom: 'gold', pts: 3 }, { name: 'Fall in love', dom: 'pink', pts: 3 },
+  { name: 'Raise someone', dom: 'orange', pts: 4 }, { name: 'Live somewhere new', dom: 'purple', pts: 3 }, { name: 'Get good at something useless', dom: 'green', pts: 3 },
+  { name: 'Teach what you know', dom: 'gold', pts: 4, refl: 'gold', note: 'Reflection: Work' }, { name: 'Make peace with it', dom: 'orange', pts: 3, note: '+1 allowance (kept or not)' },
+  { name: 'Still holding hands', dom: 'pink', pts: 3 }, { name: 'Stand somewhere very old', dom: 'purple', pts: 3 }
+];
+var KEEP = 9;
+function passion(r) { return r >= 5 ? 10 : r === 4 ? 6 : r === 3 ? 3 : 0; }
+function sc(start, keep) {
+  var kept = TOWER.slice(start, start + keep), cards = 0, cnt = {}, run = 0, best = 0, bd = null, prev = null;
+  kept.forEach(function (d) { cards += d.pts; cnt[d.dom] = (cnt[d.dom] || 0) + 1; run = d.dom === prev ? run + 1 : 1; prev = d.dom; if (run > best) { best = run; bd = d.dom; } });
+  var sets = Math.min.apply(null, ORDER.map(function (k) { return cnt[k] || 0; }));
+  var refl = 0, rw = 'none kept';
+  kept.forEach(function (d) { if (d.refl) { refl += cnt[d.refl]; rw = 'Teach what you know × ' + cnt[d.refl] + ' Work = +' + cnt[d.refl]; } });
+  var missing = ORDER.filter(function (k) { return !cnt[k]; }).map(function (k) { return DOMS[k]; });
+  return { cards: cards, sets: sets * 6, passion: passion(best), refl: refl, total: cards + sets * 6 + passion(best) + refl, cnt: cnt,
+    setsWhy: sets ? sets + ' complete set × 6 = +' + sets * 6 : 'no set — missing ' + missing.join(', '),
+    pasWhy: (best >= 3 ? 'run of ' + best + ' ' + DOMS[bd] + ' = +' + passion(best) : 'longest run ' + best + ' = +0'), reflWhy: rw };
+}
+function bestFor(keep) { var b = -1, at = 0, n = Math.max(0, TOWER.length - keep); for (var i = 0; i <= n; i++) { var t = sc(i, keep).total; if (t > b) { b = t; at = i; } } return { score: b, at: at }; }
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { start: bestFor(KEEP).at, locked: false }; }
+  renderVals() {
+    var self = this, s = this.state, maxS = TOWER.length - KEEP, best = bestFor(KEEP).score;
+    var windows = [];
+    for (var w = 0; w <= maxS; w++) {
+      (function (ws) {
+        var r = sc(ws, KEEP), on = ws === s.start, d = r.total - best;
+        windows.push({ label: (ws + 1) + '–' + (ws + KEEP), on: on, cards: r.cards, sets: r.sets, passion: r.passion, refl: r.refl, total: r.total,
+          delta: d === 0 ? 'best' : String(d), deltaColor: d === 0 ? '#2F7D4F' : '#B4443A',
+          rowBg: on ? '#F6E27A' : 'transparent', colBg: on ? '#F6E27A66' : 'transparent',
+          pick: function () { if (!s.locked) self.setState({ start: ws }); } });
+      })(w);
+    }
+    var rows = TOWER.map(function (d, i) {
+      var kept = i >= s.start && i < s.start + KEEP;
+      return { n: i + 1, name: d.name, color: COL[d.dom], pts: d.pts, note: d.note || '', fg: kept ? '#23202A' : '#6B6475',
+        marks: windows.map(function (wv, wi) { var inW = i >= wi && i < wi + KEEP; return { colBg: wv.colBg, fill: inW ? (wv.on ? '#23202A' : '#B9AE9A') : 'transparent', border: inW ? '0' : '1px dashed #CFC6B3' }; }) };
+    }).reverse();
+    var r = sc(s.start, KEEP);
+    var lost = TOWER.filter(function (d, i) { return i < s.start || i >= s.start + KEEP; }).map(function (d) { return d.name; });
+    var sens = [10, 9, 8, 7, 6].map(function (k) {
+      var b = bestFor(k);
+      return { keep: k, means: k === 10 ? '1st arrival + 1' : k === 9 ? 'you (2nd + 1)' : k === 8 ? '3rd + 1' : k === 7 ? '4th + 1' : '4th, no bonus',
+        win: (b.at + 1) + '–' + (b.at + k), score: b.score, w: Math.round(b.score / 45 * 120) + 'px', bg: k === KEEP ? '#F6E27A' : 'transparent' };
+    });
+    return {
+      windows: windows, rows: rows, sel: (s.start + 1) + '–' + (s.start + KEEP), selTotal: r.total,
+      domCounts: ORDER.map(function (d) { return CODE[d] + ' ' + (r.cnt[d] || 0); }).join(' · '),
+      setsWhy: r.setsWhy, pasWhy: r.pasWhy, reflWhy: r.reflWhy, lost: lost.length + ': ' + lost.join(', '),
+      sens: sens, lockLabel: s.locked ? 'Locked — undo (demo)' : 'Lock in discs ' + (s.start + 1) + '–' + (s.start + KEEP),
+      lock: function () { self.setState({ locked: !s.locked }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Doorway — end of the road</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&amp;family=Gochi+Hand&amp;family=Nunito:wght@500;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#2C3836}
+a{color:#F2E8D5}a:hover{color:#FFFFFF}
+button{font:inherit}
+button:focus-visible,a:focus-visible{outline:3px solid #F7D47A;outline-offset:3px}
+</style>
+</helmet>
+<div style="width: 100%; max-width: 1440px; margin: 0 auto; box-sizing: border-box; min-height: 1040px; background: #2C3836; background-image: radial-gradient(rgba(242,232,213,.035) 1px, transparent 1.5px); background-size: 6px 6px; color: #F2E8D5; font-family: 'Nunito', system-ui, sans-serif; font-size: 15px; line-height: 1.4; padding: 0 28px 36px">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; padding: 16px 0 14px">
+  <div style="display: flex; align-items: center; gap: 10px">
+    <svg width="30" height="36" viewBox="0 0 30 36" aria-hidden="true" style="fill: none; stroke: #F2E8D5; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round"><path d="M3 34V15a12 12 0 0 1 24 0v19z" style="fill: #F7D47A"></path><path d="M3 34h24"></path><path d="M10 34V17l9-3v20" style="fill: #2B2530"></path></svg>
+    <span style="font-family: 'Caprasimo', serif; font-size: 30px; line-height: 1">Doorway</span>
+  </div>
+  <div style="flex: 1"></div>
+  <nav aria-label="View mode" style="display: inline-flex; padding: 4px; border-radius: 999px; background: #233030; border: 2px solid #46534F">
+    <a href="Board-Results.dc.html" aria-current="page" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 999px; background: #F2E8D5; color: #2B2530; font-weight: 900; text-decoration: none">Board</a>
+    <a href="Analyst-Results.dc.html" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 999px; color: #F2E8D5; font-weight: 800; text-decoration: none">Analyst</a>
+  </nav>
+</header>
+
+<div style="text-align: center; margin: 10px 0 26px">
+  <p style="margin: 0; font-family: 'Gochi Hand', cursive; font-size: 24px; color: #DCE3DE">Everyone is through the Doorway · 58 minutes</p>
+  <h1 style="margin: 4px 0 0; font-family: 'Caprasimo', serif; font-weight: 400; font-size: 54px; line-height: 1.02">Kavi brought the most through.</h1>
+</div>
+
+<section aria-label="Final scores" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; align-items: end">
+  <sc-for list="{{players}}" as="p" hint-placeholder-count="4">
+    <article style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 22px 16px 18px; border-radius: 22px; background: {{p.paper}}; border: 3.5px solid #2B2530; color: #2B2530; box-shadow: 0 8px 0 #1F2826; transform: rotate({{p.rot}})">
+      <div style="display: flex; align-items: center; gap: 10px; align-self: stretch">
+        <span style="width: 48px; height: 48px; flex: none; border-radius: 50%; border: 3px solid #2B2530; background: {{p.rankBg}}; box-shadow: 0 0 0 4px {{p.paper}}, 0 0 0 6.5px #2B2530; display: grid; place-items: center; font-family: 'Caprasimo', serif; font-size: 20px">{{p.rank}}</span>
+        <div style="flex: 1; min-width: 0; margin-left: 6px">
+          <div style="font-family: 'Caprasimo', serif; font-size: 24px; line-height: 1.05">{{p.name}}</div>
+          <div style="font-size: 12.5px; font-weight: 800; color: #5B5262">{{p.badge}} · arrived {{p.arrived}}</div>
+        </div>
+        <svg width="34" height="48" viewBox="0 0 28 40" aria-hidden="true" style="overflow: visible">
+          <path d="M14 8V2" style="stroke: {{p.antenna}}; stroke-width: 2; stroke-linecap: round"></path>
+          <circle cx="14" cy="2" r="2.6" style="fill: {{p.ball}}; stroke: {{p.antenna}}; stroke-width: 1.5"></circle>
+          <circle cx="14" cy="15" r="7.5" style="fill: {{p.fill}}; stroke: #2B2530; stroke-width: 2"></circle>
+          <circle cx="11.4" cy="14.5" r="1.2" style="fill: {{p.eye}}"></circle><circle cx="16.6" cy="14.5" r="1.2" style="fill: {{p.eye}}"></circle>
+          <path d="{{p.mouth}}" style="fill: none; stroke: {{p.eye}}; stroke-width: 1.2; stroke-linecap: round"></path>
+          <path d="M3.5 38.5Q3.5 22.5 14 22.5Q24.5 22.5 24.5 38.5Z" style="fill: {{p.fill}}; stroke: #2B2530; stroke-width: 2"></path>
+        </svg>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0; margin-top: 4px" aria-label="{{p.aria}}">
+        <sc-for list="{{p.above}}" as="d" hint-placeholder-count="2">
+          <span title="{{d.title}}" style="width: 92px; height: 18px; margin-bottom: -3px; border-radius: 999px; border: 2px dashed #8E8590; background: {{d.color}}; opacity: 0.3; transform: translateX(10px) rotate(4deg)"></span>
+        </sc-for>
+        <div style="margin: 8px 0; padding: 30px 18px 10px; border-radius: 70px 70px 8px 8px; border: 3px solid #2B2530; background: #F8E5AE; display: flex; flex-direction: column; align-items: center">
+          <sc-for list="{{p.kept}}" as="d" hint-placeholder-count="8">
+            <span title="{{d.title}}" style="width: 104px; height: 20px; margin-bottom: -3px; border-radius: 999px; border: 2.5px solid #2B2530; background: {{d.color}}; box-shadow: inset 0 -5px 0 rgba(43,37,48,.18)"></span>
+          </sc-for>
+        </div>
+        <sc-for list="{{p.below}}" as="d" hint-placeholder-count="2">
+          <span title="{{d.title}}" style="width: 92px; height: 18px; margin-bottom: -3px; border-radius: 999px; border: 2px dashed #8E8590; background: {{d.color}}; opacity: 0.3; transform: translateX(-10px) rotate(-4deg)"></span>
+        </sc-for>
+      </div>
+      <div style="font-family: 'Gochi Hand', cursive; font-size: 18px; color: #4A4250">kept {{p.keptN}} of {{p.lived}} memories</div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; align-self: stretch; text-align: center; padding-top: 10px; border-top: 2px dashed #B9AB92">
+        <div><div style="font-family: 'Caprasimo', serif; font-size: 20px">{{p.cards}}</div><div style="font-size: 11px; font-weight: 800; color: #5B5262">cards</div></div>
+        <div><div style="font-family: 'Caprasimo', serif; font-size: 20px">{{p.sets}}</div><div style="font-size: 11px; font-weight: 800; color: #5B5262">full life</div></div>
+        <div><div style="font-family: 'Caprasimo', serif; font-size: 20px">{{p.passion}}</div><div style="font-size: 11px; font-weight: 800; color: #5B5262">passion</div></div>
+        <div><div style="font-family: 'Caprasimo', serif; font-size: 20px">{{p.refl}}</div><div style="font-size: 11px; font-weight: 800; color: #5B5262">reflection</div></div>
+      </div>
+      <div style="font-family: 'Caprasimo', serif; font-size: 48px; line-height: 1">{{p.total}}</div>
+      <div style="font-family: 'Gochi Hand', cursive; font-size: 18px; color: #4A4250; text-align: center; line-height: 1.15">{{p.story}}</div>
+    </article>
+  </sc-for>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 34px">
+  <button type="button" style="min-height: 58px; padding: 0 28px; border-radius: 16px; border: 3px solid #2B2530; background: #F7D47A; color: #2B2530; font-family: 'Caprasimo', serif; font-size: 22px; cursor: pointer; box-shadow: 0 6px 0 #1F2826">Play again</button>
+  <button type="button" style="min-height: 58px; padding: 0 22px; border-radius: 16px; border: 3px solid #2B2530; background: #F2E8D5; color: #2B2530; font-family: 'Caprasimo', serif; font-size: 20px; cursor: pointer; box-shadow: 0 6px 0 #1F2826">Replay this life</button>
+  <a href="Analyst-Results.dc.html" style="display: inline-flex; align-items: center; min-height: 58px; padding: 0 22px; border-radius: 16px; border: 2px dashed #8A9792; color: #F2E8D5; font-weight: 800; text-decoration: none">Open the scoresheet →</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+var COL = { pink: '#EBA6B0', gold: '#E6B84F', green: '#8DB884', orange: '#D9733F', purple: '#A097D6' };
+var NAMES = { pink: 'Love', gold: 'Work', green: 'Play', orange: 'Family', purple: 'Wonder' };
+var DATA = [
+  { name: 'Kavi', badge: 'bot · Specialist', arrived: '1st', keep: [1, 9], fill: '#5F5868', eye: '#F2E8D5', bot: true, doms: ['gold','gold','gold','gold','gold','orange','pink','gold','green'], cards: 25, sets: 0, passion: 10, refl: 6, story: 'five Work in a row, and kept every one' },
+  { name: 'Priya', badge: 'you', arrived: '2nd', keep: [3, 11], fill: '#F6EFE0', eye: '#2B2530', doms: ['purple','green','gold','gold','gold','pink','orange','purple','green','gold','orange','pink','purple'], cards: 26, sets: 6, passion: 3, refl: 4, story: 'a full life in the middle years' },
+  { name: 'Meera', badge: 'friend', arrived: '4th', keep: [5, 10], fill: '#C9B28E', eye: '#2B2530', doms: ['purple','purple','gold','purple','pink','orange','green','purple','gold','purple'], cards: 17, sets: 6, passion: 3, refl: 0, story: 'arrived last; only six fit' },
+  { name: 'Arun', badge: 'bot · Tempo', arrived: '3rd', keep: [8, 14], fill: '#7F97A8', eye: '#2B2530', bot: true, doms: ['green','green','orange','green','orange','pink','purple','gold','green','orange','pink','purple','gold','green'], cards: 18, sets: 6, passion: 0, refl: 0, story: 'lived the most, lost seven at the door' }
+];
+var RANKBG = ['#F7D47A', '#E3D9C6', '#E3C2A3', '#E3D9C6'];
+var ROT = ['-1deg', '0.8deg', '-0.6deg', '1.2deg'];
+class Component extends DCLogic {
+  renderVals() {
+    return { players: DATA.map(function (p, i) {
+      function chip(d) { return { color: COL[d], title: NAMES[d] }; }
+      var a = p.keep[0] - 1, b = p.keep[1] - 1;
+      var above = p.doms.slice(b + 1).reverse().map(chip), kept = p.doms.slice(a, b + 1).reverse().map(chip), below = p.doms.slice(0, a).reverse().map(chip);
+      return { rank: i + 1, name: p.name, badge: p.badge, arrived: p.arrived, fill: p.fill, eye: p.eye,
+        antenna: p.bot ? '#2B2530' : 'none', ball: p.bot ? '#F7D47A' : 'none', mouth: i === 0 ? 'M10.5 18q3.5 3 7 0' : 'M11.5 18.5q2.5 1.2 5 0',
+        paper: i === 0 ? '#FBF3DF' : '#EDE3CE', rankBg: RANKBG[i], rot: ROT[i],
+        above: above, kept: kept, below: below, keptN: kept.length, lived: p.doms.length,
+        aria: p.name + ' kept memories ' + p.keep[0] + ' to ' + p.keep[1] + ' of ' + p.doms.length,
+        cards: p.cards, sets: p.sets, passion: p.passion, refl: p.refl, total: p.cards + p.sets + p.passion + p.refl, story: p.story };
+    }) };
+  }
+}
+</script>
+</body>
+</html>
