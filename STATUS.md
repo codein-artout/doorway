@@ -66,15 +66,19 @@ pnpm verify
 
 ## v2 — Board & Analyst modes
 
-**Current milestone:** N2 — themes and the view switch
+**Current milestone:** N6 — Analyst table
 
 ### Finished milestones
 | # | What | Commit |
 |---|---|---|
-| N1 | Orientation, `pnpm verify` green, regression baseline + check script in `pnpm verify` | (this commit) |
+| N1 | Orientation, `pnpm verify` green, regression baseline + check script in `pnpm verify` | eaea865 |
+| N2 | Board + Analyst token sets, fonts, Board/Analyst switch (header, `?view=`, localStorage, V key) | 0444788 |
+| N3 | Engine hooks (previewMove, windowScores, scoreIfWalkedNow, gameHistory), bot `explain()`, demo fixture; regression identical | 74df5af |
+| N4 | Board table (shared `useTable` controller, illustrated board, cards, tray, mats, log drawer) | dbf065f |
+| N5 | Board Doorway, Board results, Board phone layout (360 px) | 010c504 |
 
 ### Next
-- N2 themes + view switch → N3 engine/bot hooks → N4–N5 Board → N6–N7 Analyst → N8 designer → N9 quality → N10 wrap-up.
+- N6–N7 Analyst → N8 designer → N9 quality → N10 wrap-up.
 
 ### Blockers
 - none.
@@ -93,3 +97,5 @@ pnpm verify
 ### Time log (UTC, 2026-11-04)
 - 12:59 — v2 start; fast-forwarded the branch to `master` (v2 design kit).
 - 13:10 — N1: verify green, baseline recorded.
+- N2–N4 committed (see hashes above).
+- 13:29 — N5 pushed (Board Doorway/results/phone; all 12 v1 e2e + 212 unit tests pass).
