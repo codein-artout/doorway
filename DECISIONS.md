@@ -135,3 +135,16 @@ Every judgement call made while building, with date, decision, why and alternati
 
 ### V2-3 — Regression baseline lives in `scripts/regression/` (2026-11-04)
 - `reports/runs/` is gitignored (and `reports/` must not change), so a fresh clone has no `v2-before`. The N1 output is fingerprinted (SHA-256 of the uncompressed `games.csv`, `players.csv`, `picks.csv`) in `scripts/regression/v2-baseline.json`; `pnpm regress` compares a new run against the fingerprint and, when present, byte-for-byte against `reports/runs/v2-before`.
+
+### V2-4 — Token naming (2026-11-04)
+- DESIGN-v2 uses `--ink` for the outline/text colour, but v1 used `--ink` for the page ground. v1's ground token is renamed `--ground` (and `bg-ink`/`text-ink` → `bg-ground`/`text-ground`); v1's other semantic tokens (`--surface`, `--text`, `--muted`, `--door`, …) are re-mapped per view, so every v1 page renders in both token sets without a rewrite.
+
+### V2-5 — `--door` keeps its v1 meaning (2026-11-04)
+- v1's `--door` is the primary/selection/focus colour; in Board it maps to lamplight, in Analyst to ink. DESIGN-v2's Board `--door` (`#3A3340`, the door leaf and card back) is exposed as `--door-leaf` to avoid the clash.
+
+### V2-6 — Hook signatures (2026-11-04)
+- `windowScores` takes the content it scores with as a first argument — `windowScores({ ruleset, cards }, tower, allowance)` — because the engine has no global content (D-ENG-1); a `GameState` works as that argument. `previewMove(state, move, playerId?)` skips any swaps the move grants (swaps never move pawns) and also returns `arrives`, `again` and `swaps`. `gameHistory(state)` replays the state's own seed and moves and returns one point per quest/rush turn, taken after that turn's swaps.
+- `explain(view, chosen?)`: weighted bots return every candidate with weight × feature contributions (same arithmetic as `choose`); greedy returns points/year; `random` returns `null`; `lookahead` returns the mean rollout value per candidate, computed on a private RNG seeded by the position (`explain|seed|player|moveIndex`), so the bot's own stream is untouched. The noisy wrapper forwards to its base. Tests run whole games with and without `explain` and require identical moves and RNG states.
+
+### V2-7 — Demo fixture (2026-11-04)
+- `apps/web/src/lib/demo.ts` plays `HIST0` (Analyst-Table mockup) through the real engine from a scenario whose decks hold the cards in the order they are taken. Milestone swaps on the way are skipped. The result is the shared turn-22 position (Priya 11, Arun 12, Meera 13, Kavi 15, Priya to move), verified by a test.

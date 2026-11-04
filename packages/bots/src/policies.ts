@@ -10,7 +10,7 @@ import {
   type Feature,
   type FeatureVec,
 } from './features';
-import type { BotPolicy, BotView } from './types';
+import type { BotPolicy, BotView, ExplainedCandidate, Explanation } from './types';
 import { bestWindowMove } from './view';
 import { makeLookahead } from './lookahead';
 
@@ -28,6 +28,23 @@ export const STRATEGIES = Object.fromEntries(
 
 /** The 11 strategy ids, in config order. */
 export const STRATEGY_IDS = Object.keys(STRATEGIES);
+
+const sameMove = (a: Move | undefined, b: Move) => !!a && JSON.stringify(a) === JSON.stringify(b);
+
+/** Sort best first, mark `chosen` (the played move if given, else the top eligible one). */
+export function finishExplanation(
+  e: Omit<Explanation, 'candidates'>,
+  cands: ExplainedCandidate[],
+  chosen?: Move,
+  limit = 8,
+): Explanation {
+  cands.sort((a, b) => Number(b.eligible) - Number(a.eligible) || b.total - a.total);
+  const pick = chosen ? cands.findIndex((c) => sameMove(chosen, c.move)) : cands.findIndex((c) => c.eligible);
+  if (pick >= 0) cands[pick].chosen = true;
+  const top = cands.slice(0, limit);
+  if (pick >= limit) top.push(cands[pick]);
+  return { ...e, candidates: top };
+}
 
 /** Common handling: windows are always optimal, pending swaps use the projected-window chooser. */
 function common(view: BotView, avgYears = 3.2): Move | null {
@@ -48,6 +65,10 @@ export function randomPolicy(): BotPolicy {
       const p = view.state.players.find((x) => x.id === view.me)!;
       if (p.arrivalOrder !== null) return bestWindowMove(view.state, view.me); // spec §6: windows chosen optimally
       return rng.pick(view.legal);
+    },
+    /** a uniform random choice has no reasons */
+    explain() {
+      return null;
     },
   };
 }
@@ -77,8 +98,42 @@ export function greedyPolicy(): BotPolicy {
       }
       return best ?? { type: 'rush' };
     },
+    explain(view, chosen) {
+      if (pendingOrArrived(view)) return null;
+      const s = view.state;
+      const cands: ExplainedCandidate[] = [];
+      for (const m of view.legal) {
+        if (m.type !== 'quest') continue;
+        const card = s.cards[m.cardId];
+        const v = card.points / Math.max(1, costBreakdown(s, view.me, m.cardId).cost);
+        cands.push({
+          move: m,
+          total: v,
+          parts: [{ feature: 'ppy', value: v, weight: 1, contribution: v }],
+          eligible: true,
+          chosen: false,
+        });
+      }
+      if (!cands.length)
+        cands.push({ move: { type: 'rush' }, total: 0, parts: [], eligible: true, chosen: false });
+      return finishExplanation(
+        {
+          strategy: 'greedy',
+          label: STRATEGIES.greedy?.label ?? 'Greedy',
+          options: view.legal.length,
+          kind: 'ppy',
+        },
+        cands,
+        chosen,
+      );
+    },
   };
 }
+
+const pendingOrArrived = (view: BotView) => {
+  const p = view.state.players.find((x) => x.id === view.me)!;
+  return p.arrivalOrder !== null || view.state.phase === 'pending_choice';
+};
 
 export function weightedPolicy(id: string, cfg: StrategyConfig): BotPolicy {
   const w = cfg.weights ?? {};
@@ -138,6 +193,58 @@ export function weightedPolicy(id: string, cfg: StrategyConfig): BotPolicy {
       }
       return best ?? { type: 'rush' };
     },
+    explain(view, chosen) {
+      if (pendingOrArrived(view)) return null;
+      const s = view.state;
+      const me = s.players.find((x) => x.id === view.me)!;
+      const ctx = makeContext(
+        s,
+        view.me,
+        targetDomains(s, me, params.targetDomains),
+        params.avgYears,
+        powerValues,
+      );
+      const parts = (f: FeatureVec) =>
+        Object.keys(f).map((k) => {
+          const weight = w[k as Feature] ?? 0;
+          const value = f[k as Feature] ?? 0;
+          return { feature: k, value, weight, contribution: weight * value };
+        });
+      const cands: ExplainedCandidate[] = [];
+      let bestPpy = 0;
+      const quests = view.legal.filter((m): m is Extract<Move, { type: 'quest' }> => m.type === 'quest');
+      for (const m of quests) {
+        const f = questFeatures(ctx, m);
+        bestPpy = Math.max(bestPpy, f.ppy ?? 0);
+        cands.push({ move: m, total: dot(f), parts: parts(f), eligible: true, chosen: false });
+      }
+      const forcedRush = quests.length === 0;
+      const wantRush = params.rushIfBestPpyBelow > 0 && bestPpy < params.rushIfBestPpyBelow;
+      if (wantRush) for (const c of cands) c.eligible = false;
+      for (const m of view.legal) {
+        if (m.type !== 'rush') continue;
+        const f = rushFeatures(ctx, m);
+        const allowed =
+          (forcedRush || !params.neverRush) && !(m.discardCardId && (f.rushDeny ?? 0) < params.discardMin);
+        cands.push({ move: m, total: dot(f), parts: parts(f), eligible: allowed, chosen: false });
+      }
+      const note = wantRush
+        ? `best quest is under ${params.rushIfBestPpyBelow} pts/yr, so it rushes`
+        : params.neverRush && !forcedRush
+          ? 'never rushes unless forced'
+          : undefined;
+      return finishExplanation(
+        {
+          strategy: id,
+          label: cfg.label,
+          options: view.legal.length,
+          kind: 'features',
+          ...(note ? { note } : {}),
+        },
+        cands,
+        chosen,
+      );
+    },
   };
 }
 
@@ -152,6 +259,18 @@ export function noisy(base: BotPolicy, eps: number): BotPolicy {
       if (p.arrivalOrder !== null) return bestWindowMove(view.state, view.me);
       if (rng.next() < eps) return rng.pick(view.legal);
       return base.choose(view, rng);
+    },
+    explain(view, chosen) {
+      const e = base.explain?.(view, chosen) ?? null;
+      return e
+        ? {
+            ...e,
+            strategy: `${base.id}@eps${eps}`,
+            note: [e.note, `plays a random move ${Math.round(eps * 100)}% of the time`]
+              .filter(Boolean)
+              .join('; '),
+          }
+        : null;
     },
   };
 }
