@@ -121,7 +121,12 @@ export function AnalystResults({
       </section>
 
       <Panel label="Final scores" title="Final scores" className="mt-4">
-        <div className="overflow-x-auto">
+        <div
+          className="overflow-x-auto"
+          tabIndex={0}
+          role="region"
+          aria-label="Final scores (scrolls sideways)"
+        >
           <table className="w-full min-w-[980px] text-[13px]" data-testid="final-table">
             <thead>
               <tr className="border-b-[1.5px] border-ink text-right text-[11.5px] text-muted">
@@ -157,7 +162,10 @@ export function AnalystResults({
                   <td className="px-1.5 py-2">{r.tower}</td>
                   <td className="px-1.5 py-2">{r.allowed}</td>
                   <td className="px-1.5 py-2">{r.kept}</td>
-                  <td className="px-1.5 py-2" style={{ color: r.lost >= 5 ? 'var(--bad)' : 'var(--ink)' }}>
+                  <td
+                    className="px-1.5 py-2"
+                    style={{ color: r.lost >= 5 && r.id !== viewer ? 'var(--bad)' : 'var(--ink)' }}
+                  >
                     {r.lost ? `−${r.lost}` : 0}
                   </td>
                   <td className="px-1.5 py-2">{r.cards}</td>
@@ -183,7 +191,9 @@ export function AnalystResults({
                   </td>
                   <td
                     className="px-1.5 py-2 text-left text-[12px]"
-                    style={{ color: r.winBest ? 'var(--good)' : 'var(--bad)' }}
+                    style={{
+                      color: r.id === viewer ? 'var(--ink)' : r.winBest ? 'var(--good)' : 'var(--bad)',
+                    }}
                   >
                     {r.winBest ? '✓ ' : '✗ '}
                     {r.win}
@@ -205,7 +215,12 @@ export function AnalystResults({
 
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-12">
         <Panel label="Turn economy" title="Turn economy" className="lg:col-span-7">
-          <div className="overflow-x-auto">
+          <div
+            className="overflow-x-auto"
+            tabIndex={0}
+            role="region"
+            aria-label="Turn economy (scrolls sideways)"
+          >
             <table className="w-full min-w-[600px] text-[13px]" data-testid="economy">
               <thead>
                 <tr className="border-b-[1.5px] border-ink text-right text-[11.5px] text-muted">

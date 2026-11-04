@@ -370,7 +370,11 @@ export default function ReplayPage() {
         <>
           <section className="mx-4 mt-4 rounded-2xl border border-line bg-surface p-4 md:mx-7">
             <h2 className="m-0 mb-2 font-display text-base">Log to this move</h2>
-            <ol className="m-0 flex max-h-[260px] list-none flex-col gap-1 overflow-y-auto p-0 text-[13px] text-muted">
+            <ol
+              tabIndex={0}
+              aria-label="Log to this move"
+              className="m-0 flex max-h-[260px] list-none flex-col gap-1 overflow-y-auto p-0 text-[13px] text-muted"
+            >
               {fullLog(s)
                 .slice()
                 .reverse()

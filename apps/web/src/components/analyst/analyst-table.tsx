@@ -103,7 +103,13 @@ export function TrackRuler({
         </>
       }
     >
-      <div className="overflow-x-auto" ref={scroller}>
+      <div
+        className="overflow-x-auto"
+        tabIndex={0}
+        role="region"
+        aria-label="Track ruler (scrolls sideways)"
+        ref={scroller}
+      >
         <div className="min-w-[1000px]">
           <div
             className="grid h-[62px] items-end gap-px"
@@ -233,7 +239,12 @@ export function DecisionTable({ t, rows }: { t: TableController; rows: DecisionR
       <h1 className="sr-only" data-testid="turn-banner">
         {t.banner.title}
       </h1>
-      <div className="overflow-x-auto">
+      <div
+        className="overflow-x-auto"
+        tabIndex={0}
+        role="region"
+        aria-label="Decision table (scrolls sideways)"
+      >
         <table className="w-full text-[13px] md:min-w-[860px]" data-testid="decision-table">
           <thead>
             <tr className="border-b-[1.5px] border-ink text-left text-[11.5px] text-muted">
@@ -257,7 +268,7 @@ export function DecisionTable({ t, rows }: { t: TableController; rows: DecisionR
               return (
                 <tr
                   key={r.key}
-                  className={`border-b border-rule transition-colors duration-[120ms] ${r.legal ? 'text-ink' : 'text-muted'}`}
+                  className={`border-b border-rule transition-colors duration-[120ms] ${r.legal ? 'text-ink' : 'text-muted'} ${on ? '[&_td]:!text-ink [&_td_span]:!text-ink' : ''}`}
                   style={{ background: on ? 'var(--highlight)' : 'transparent' }}
                   data-testid={`row-${r.key}`}
                 >
@@ -750,7 +761,7 @@ export function AnalystSwap({ t }: { t: TableController }) {
       }
       testId="swap-prompt"
     >
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Swaps (scrolls sideways)">
         <table className="w-full min-w-[560px] text-[12.5px]">
           <thead>
             <tr className="border-b-[1.5px] border-ink text-left text-[11px] text-muted">

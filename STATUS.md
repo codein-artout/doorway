@@ -66,7 +66,7 @@ pnpm verify
 
 ## v2 — Board & Analyst modes
 
-**Current milestone:** N9 — quality: e2e in both views, axe, contrast
+**Current milestone:** N10 — docs, screenshots, fresh-clone verify, PR
 
 ### Finished milestones
 | # | What | Commit |
@@ -78,7 +78,8 @@ pnpm verify
 | N5 | Board Doorway, Board results, Board phone layout (360 px) | 010c504 |
 | N6 | Analyst table (ruler, decision table, preview, ledger, tower/projection, Why from explain(), log, charts) | ef00a32 |
 | N7 | Analyst window scorer, game report, replay viewer in both views | f3a35a6 |
-| N8 | /designer in Analyst style (chart colours mapped, contrast-safe head-to-head) | (this commit) |
+| N8 | /designer in Analyst style (chart colours mapped, contrast-safe head-to-head) | 477e74d |
+| N9 | v2 e2e in both views, axe in both views, token contrast test, design-check pieces | (this commit) |
 
 ### Next
 - N8 designer → N9 quality → N10 wrap-up → N8 designer → N9 quality → N10 wrap-up.
@@ -105,3 +106,4 @@ pnpm verify
 - 13:38 — N6 pushed (Analyst table; 224 unit tests).
 - N7 — window scorer, game report, view-aware replay; 232 unit tests, 12/12 v1 e2e.
 - 13:54 — N8 pushed (/designer Analyst style; v1 e2e 12/12).
+- 14:06 — N9: 277 unit tests, 31 e2e (12 v1 unchanged + 19 v2) green.

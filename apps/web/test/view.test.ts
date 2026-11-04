@@ -14,4 +14,26 @@ describe('Board / Analyst view switch (DESIGN-v2 §1)', () => {
     expect(VIEW_BOOT_SCRIPT).toContain("indexOf('/designer')===0");
     expect(VIEW_BOOT_SCRIPT).toContain('doorway.view.v2');
   });
+  it('the boot script remembers a ?view= link outside /designer', () => {
+    const store: Record<string, string> = {};
+    const html = {
+      attrs: {} as Record<string, string>,
+      setAttribute(k: string, v: string) {
+        this.attrs[k] = v;
+      },
+    };
+    const run = (pathname: string, search: string) =>
+      new Function('location', 'localStorage', 'document', VIEW_BOOT_SCRIPT)(
+        { pathname, search },
+        { getItem: (k: string) => store[k] ?? null, setItem: (k: string, v: string) => (store[k] = v) },
+        { documentElement: html },
+      );
+    run('/', '?view=analyst');
+    expect(store['doorway.view.v2']).toBe('analyst');
+    run('/play', '');
+    expect(html.attrs['data-view']).toBe('analyst');
+    run('/designer', '?view=board');
+    expect(html.attrs['data-view']).toBe('analyst');
+    expect(store['doorway.view.v2']).toBe('analyst');
+  });
 });

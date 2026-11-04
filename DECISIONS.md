@@ -170,3 +170,9 @@ Every judgement call made while building, with date, decision, why and alternati
 - The study charts come from `@doorway/sim`'s HTML helpers, which bake in v1's dark palette. Rather than change the sim package (its output is what `reports/` was built with), the designer maps those colours to Analyst ones (`lib/designer-colors.ts`), and the head-to-head grid uses a light diverging scale that nudges mid-tones until the number clears 4.5:1 (unit-tested).
 - Verdict and flag chips pair colour with a symbol or word (✓ PASS, ✗ FAIL, STRONG, WEAK) and use light text on good/bad fills.
 - No placeholder banners were left in /designer; the one "PLACEHOLDER" demo chip on /design-check is renamed.
+
+### V2-11 — Quality pass (2026-11-04)
+- **`?view=` is remembered.** A `?view=` link now also stores the choice (boot script), so a link like `/?view=analyst` keeps Analyst through New game → table. /designer never stores a view.
+- **Scrollable regions are focusable.** Panels that scroll sideways (ruler, decision table, window matrix, final table, economy, swaps) and the replay log are `tabIndex=0` regions with labels (axe `scrollable-region-focusable`).
+- **Coloured text on highlighted rows turns ink.** Green/red numbers fall under 4.5:1 on the highlight yellow, so selected and "you" rows show them in ink; the sign or ✓/✗ still carries the meaning.
+- **Tests added, v1 tests untouched.** `e2e/v2.spec.ts` (+ `helpers-v2.ts`): a full 2p game at Instant in each view (Doorway, results, replay, axe on each), switching views mid-game with a selected move (and the V key, and a reload), the Doorway window surviving a switch, 360 px in both views, axe on every page in both views, /designer forced Analyst. `test/contrast-v2.test.ts` checks 42 text/background pairs from both token sets in `globals.css`. /design-check now also renders the Board pieces and Analyst panels.

@@ -75,7 +75,12 @@ export function AnalystDoorway({
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
         <Panel label="Tower by window" title="Tower × windows" className="lg:col-span-7">
-          <div className="overflow-x-auto">
+          <div
+            className="overflow-x-auto"
+            tabIndex={0}
+            role="region"
+            aria-label="Tower by window (scrolls sideways)"
+          >
             <table className="w-full min-w-[560px] text-[13px]" data-testid="window-matrix">
               <thead>
                 <tr className="border-b-[1.5px] border-ink text-[11.5px] text-muted">
@@ -198,7 +203,7 @@ export function AnalystDoorway({
                       {hintAllowed && (
                         <td
                           className="px-1 py-[3px]"
-                          style={{ color: w.best ? 'var(--good)' : 'var(--bad)' }}
+                          style={{ color: on ? 'var(--ink)' : w.best ? 'var(--good)' : 'var(--bad)' }}
                         >
                           {w.best ? '✓ best' : w.vsBest}
                         </td>

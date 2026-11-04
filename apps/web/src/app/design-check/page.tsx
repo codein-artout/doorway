@@ -10,6 +10,53 @@ import { QueueCard, TurnBanner } from '@/components/turn';
 import { WindowBracketDemo } from '@/components/doorway';
 import { cardView, queue } from '@/lib/table-model';
 import { DOMAIN_ORDER } from '@/lib/domains';
+import { currentPlayer, previewMove } from '@doorway/engine';
+import { BoardSheet } from '@/components/board/board-sheet';
+import { BoardCard, Chip as BoardChip, ChipLabel, PawnFigure, TrayButton } from '@/components/board/pieces';
+import { BoardDoorway } from '@/components/board/board-doorway';
+import { AnalystDoorway } from '@/components/analyst/analyst-doorway';
+import { LineChart, PlayersLedger, TrackRuler, WhyPanel } from '@/components/analyst/analyst-table';
+import { AnalystButton } from '@/components/analyst/panel';
+import { lastBotWhy, positionChart, queueText, scoreChart, turnPoints } from '@/lib/analyst-model';
+import { demoState, demoTimeline } from '@/lib/demo';
+
+const DEMO = demoState();
+const DEMO_TL = demoTimeline();
+const DEMO_POINTS = turnPoints(DEMO_TL);
+/** A finished-looking tower at the Doorway for the two Doorway screens. */
+const AT_DOOR = scenario(
+  DEFAULT_RULESET,
+  CARDS,
+  [
+    { id: 'p1', name: 'Priya' },
+    { id: 'p2', name: 'Arun', isBot: true, botPolicy: 'tempo' },
+  ],
+  {
+    players: {
+      p1: {
+        position: 40,
+        arrivalOrder: 1,
+        doorwayAllowance: 9,
+        tower: [
+          'PU-Y1',
+          'GR-Y2',
+          'GD-Y1',
+          'GD-Y3',
+          'GD-M2',
+          'PK-Y5',
+          'OR-M3',
+          'PU-M2',
+          'GR-M3',
+          'GD-O3',
+          'OR-O2',
+          'PK-O1',
+        ],
+      },
+      p2: { position: 33, tower: ['GR-Y1', 'OR-Y1'] },
+    },
+    stacks: { 40: ['p1'], 33: ['p2'] },
+  },
+);
 
 const S = scenario(
   DEFAULT_RULESET,
@@ -219,6 +266,102 @@ function DesignCheckBody() {
   );
 }
 
+/** v2 Board pieces (design/v2/screens/Board-*.dc.html). */
+function BoardPieces() {
+  const ghost = previewMove(DEMO, { type: 'quest', cardId: 'PK-Y3' }, 'p1').landing;
+  return (
+    <main className="flex flex-col gap-5 px-4 py-6 text-on-felt md:px-7" aria-label="Board pieces">
+      <h2 className="m-0 font-display text-2xl font-normal">Board pieces (v2)</h2>
+      <BoardSheet
+        state={DEMO}
+        current={currentPlayer(DEMO)}
+        ghost={{ space: ghost, initial: 'P' }}
+        bubble={{ text: 'Your turn, Priya. You are furthest back.', thinking: false }}
+      />
+      <div className="flex flex-wrap items-end gap-4">
+        {DEMO.players.map((p) => (
+          <PawnFigure
+            key={p.id}
+            initial={p.name[0]}
+            seat={p.seat}
+            isBot={p.isBot}
+            current={p.id === 'p1'}
+            w={34}
+            h={48}
+          />
+        ))}
+        <PawnFigure initial="P" seat={1} isBot={false} ghost w={34} h={48} />
+        {DOMAIN_ORDER.map((d) => (
+          <BoardChip key={d} domain={d} w={96} h={24} label={<ChipLabel domain={d} />} />
+        ))}
+      </div>
+      <div className="flex flex-wrap gap-3 pt-4">
+        {['PK-Y3', 'OR-Y5', 'PU-M2', 'OR-O3'].map((id, i) => (
+          <BoardCard
+            key={id}
+            v={cardView(DEMO, 'p1', id, { myTurn: true, rushMode: false, discarding: false })}
+            rot={['-1deg', '0.8deg', '-0.6deg', '1.2deg'][i]}
+            selected={i === 0}
+            discarding={false}
+            clickable={i < 2}
+            blockText={i >= 2 ? 'Too young' : null}
+            rushMode={false}
+          />
+        ))}
+      </div>
+      <div className="flex flex-wrap gap-3">
+        <TrayButton kind="ink">Take it</TrayButton>
+        <TrayButton>Rush to 13</TrayButton>
+        <TrayButton kind="ghost">Undo</TrayButton>
+      </div>
+      <BoardDoorway state={AT_DOOR} playerId="p1" hintAllowed onLock={() => {}} />
+    </main>
+  );
+}
+
+/** v2 Analyst panels (design/v2/screens/Analyst-*.dc.html). */
+function AnalystPieces() {
+  const pos = positionChart(DEMO, DEMO_POINTS);
+  const sc = scoreChart(DEMO, DEMO_POINTS);
+  return (
+    <main className="flex flex-col gap-4 px-4 py-6 text-ink md:px-7" aria-label="Analyst panels">
+      <h2 className="m-0 text-[13px] font-bold tracking-[0.06em] uppercase">Analyst panels (v2)</h2>
+      <TrackRuler
+        state={DEMO}
+        current={currentPlayer(DEMO)}
+        ghost={{ space: 13, label: 'P?' }}
+        queueNow={queueText(DEMO)}
+        queueAfter="Arun 12 → Priya 13 → Meera 13 → Kavi 15"
+      />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+        <PlayersLedger state={DEMO} viewer="p1" />
+        <WhyPanel why={lastBotWhy(DEMO_POINTS)} />
+        <div className="flex flex-wrap items-start gap-2 lg:col-span-4">
+          <AnalystButton>Undo</AnalystButton>
+          <AnalystButton primary>Take PK-Y3</AnalystButton>
+        </div>
+        <LineChart
+          label="Position by turn"
+          title="Position by turn"
+          note="demo"
+          {...pos}
+          gridSteps={4}
+          testId="dc-pos"
+        />
+        <LineChart
+          label="Score if you walked through now"
+          title="Score if you walked through now"
+          note="demo"
+          {...sc}
+          gridSteps={4}
+          testId="dc-score"
+        />
+      </div>
+      <AnalystDoorway state={AT_DOOR} playerId="p1" hintAllowed onLock={() => {}} />
+    </main>
+  );
+}
+
 /** Every component in both views (DESIGN-v2 §1): the same tree under each token set. */
 export default function DesignCheck() {
   return (
@@ -233,6 +376,7 @@ export default function DesignCheck() {
         >
           <p className="m-0 px-4 pt-6 font-mono text-sm text-muted md:px-7">view: {v}</p>
           <DesignCheckBody />
+          {v === 'board' ? <BoardPieces /> : <AnalystPieces />}
         </div>
       ))}
     </>

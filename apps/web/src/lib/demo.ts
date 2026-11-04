@@ -2,7 +2,7 @@
 // Built by playing HIST0 from Analyst-Table.dc.html through the real engine, so it is reachable under the rules.
 
 import { CARDS, DEFAULT_RULESET } from '@doorway/content';
-import { applyInPlace, scenario, type GameState, type Move, type PlayerSetup } from '@doorway/engine';
+import { apply, applyInPlace, scenario, type GameState, type Move, type PlayerSetup } from '@doorway/engine';
 
 /** [seat initial, Q(uest)|R(ush), space after, card] — HIST0 verbatim. */
 export const HIST0: [string, 'Q' | 'R', number, string | null][] = [
@@ -66,4 +66,17 @@ export function demoState(): GameState {
     if (p.position !== to) throw new Error(`demo: ${who} expected on ${to}, is on ${p.position}`);
   }
   return s;
+}
+
+/** Every state of the demo from its base position to turn 22 (for charts and the component check page). */
+export function demoTimeline(): { states: GameState[]; thinkMs: (number | null)[] } {
+  const end = demoState();
+  const states = [demoBase()];
+  const thinkMs: (number | null)[] = [null];
+  let k = 0;
+  for (const pm of end.moves) {
+    states.push(apply(states[states.length - 1], pm.move, pm.playerId).state);
+    thinkMs.push(pm.move.type === 'quest' || pm.move.type === 'rush' ? (DEMO_THINK_MS[k++] ?? null) : null);
+  }
+  return { states, thinkMs };
 }
