@@ -2,10 +2,11 @@
 import { useEffect, useState } from 'react';
 import { CARDS } from '@doorway/content';
 import { BoardHeader, BoardTable } from '@/components/board/board-table';
-import { DoorwaySelect } from '@/components/doorway';
+import { BoardDoorway } from '@/components/board/board-doorway';
+import { BoardPhone } from '@/components/board/board-phone';
+import { BoardResults } from '@/components/board/board-results';
+import { othersLine } from '@/lib/table-model';
 import { useIsPhone } from '@/components/phone';
-import { Button } from '@/components/primitives';
-import { Results } from '@/components/results';
 import { LocalGameClient, type GameClient } from '@/lib/game-client';
 import { findGame, loadCurrent, saveCurrent, type StoredGame } from '@/lib/storage';
 import { demoState, DEMO_SEATS } from '@/lib/demo';
@@ -66,39 +67,24 @@ function Table({ client, stored }: { client: GameClient; stored: StoredGame }) {
   const [view] = useView();
   const phone = useIsPhone();
   const s = t.state;
+  if (view === 'analyst') return <BoardTable t={t} />;
   if (s.phase === 'over')
     return (
       <div className="mx-auto max-w-[1440px] px-4 pb-8 md:px-7">
-        <BoardHeader t={t} />
-        <Results
+        <BoardHeader t={t} compact={phone} />
+        <BoardResults
           state={s}
-          actions={
-            <>
-              <a
-                href="/"
-                className="inline-flex min-h-[48px] items-center rounded-xl bg-door px-5 font-bold text-on-door no-underline"
-              >
-                Play again
-              </a>
-              <a
-                href={`/replay?id=${stored.id}`}
-                className="inline-flex min-h-[48px] items-center rounded-xl border border-line bg-surface px-[18px] text-text no-underline"
-              >
-                Watch the replay
-              </a>
-              <Button variant="ghost" onClick={t.undo} disabled={!t.snap.canUndo}>
-                Undo
-              </Button>
-            </>
-          }
+          replayHref={`/replay?id=${stored.id}`}
+          onUndo={t.undo}
+          canUndo={t.snap.canUndo}
         />
       </div>
     );
   if (t.showDoorwayFor)
     return (
       <div className="mx-auto max-w-[1440px] px-4 pb-8 md:px-7">
-        <BoardHeader t={t} />
-        <DoorwaySelect
+        <BoardHeader t={t} compact={phone} />
+        <BoardDoorway
           key={t.showDoorwayFor}
           state={s}
           playerId={t.showDoorwayFor}
@@ -107,12 +93,22 @@ function Table({ client, stored }: { client: GameClient; stored: StoredGame }) {
             t.submit(t.showDoorwayFor!, { type: 'choose_window', start: a, end: z });
             t.setWindowFor(null);
           }}
+          othersLine={othersLine(s, t.showDoorwayFor)}
         />
+        {t.humanToMove && (
+          <p className="mt-4">
+            <button
+              type="button"
+              className="min-h-[44px] cursor-pointer rounded-xl border-2 border-felt-line bg-transparent px-4 font-bold text-on-felt"
+              onClick={() => t.setWindowFor(null)}
+            >
+              Decide later — back to the table
+            </button>
+          </p>
+        )}
       </div>
     );
-  void view;
-  void phone;
-  return <BoardTable t={t} />;
+  return phone ? <BoardPhone t={t} /> : <BoardTable t={t} />;
 }
 
 /** /play?demo=1 — the shared v2 demo position (turn 22, Priya to move). */

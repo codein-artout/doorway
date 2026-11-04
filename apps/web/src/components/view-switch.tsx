@@ -8,7 +8,7 @@ const ICON: Record<View, string> = {
 };
 
 /** Board | Analyst segmented control (DESIGN-v2 §1). Binds the V key. */
-export function ViewSwitch() {
+export function ViewSwitch({ compact = false }: { compact?: boolean }) {
   const [view, setView] = useView({ keyboard: true });
   const board = view === 'board';
   return (
@@ -33,25 +33,27 @@ export function ViewSwitch() {
             data-testid={`view-${v}`}
             className={
               board
-                ? `inline-flex min-h-[40px] cursor-pointer items-center gap-2 rounded-full border-none px-4 font-extrabold ${on ? 'bg-on-felt text-ink' : 'bg-transparent text-on-felt'}`
+                ? `inline-flex ${compact ? 'min-h-[38px] px-2.5 text-[13px]' : 'min-h-[40px] px-4'} cursor-pointer items-center gap-2 rounded-full border-none font-extrabold ${on ? 'bg-on-felt text-ink' : 'bg-transparent text-on-felt'}`
                 : `inline-flex min-h-[36px] cursor-pointer items-center gap-2 border-none px-3.5 font-semibold ${on ? 'bg-ink text-sheet' : 'bg-transparent text-ink'}`
             }
           >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              style={{
-                fill: 'none',
-                stroke: 'currentColor',
-                strokeWidth: 2.2,
-                strokeLinecap: 'round',
-                strokeLinejoin: 'round',
-              }}
-            >
-              <path d={ICON[v]} />
-            </svg>
+            {!compact && (
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                style={{
+                  fill: 'none',
+                  stroke: 'currentColor',
+                  strokeWidth: 2.2,
+                  strokeLinecap: 'round',
+                  strokeLinejoin: 'round',
+                }}
+              >
+                <path d={ICON[v]} />
+              </svg>
+            )}
             {v === 'board' ? 'Board' : 'Analyst'}
           </button>
         );

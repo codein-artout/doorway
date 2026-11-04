@@ -361,3 +361,16 @@ export function tipsFrom(events: GameEvent[], humans: Set<PlayerId>): TipKind[] 
   }
   return out;
 }
+
+/** "Already through: … Still on the path: …" under the Doorway screens. */
+export function othersLine(state: GameState, pid: PlayerId): string {
+  const ord = (n: number) => `${n}${['st', 'nd', 'rd', 'th'][Math.min(3, n - 1)]}`;
+  const through = state.players
+    .filter((p) => p.id !== pid && p.arrivalOrder !== null)
+    .map(
+      (p) =>
+        `${p.name} (${ord(p.arrivalOrder!)}${p.keptRange ? `, kept ${p.keptRange[1] - p.keptRange[0] + 1} of ${p.tower.length}` : ''})`,
+    );
+  const path = state.players.filter((p) => p.arrivalOrder === null).map((p) => `${p.name} at ${p.position}`);
+  return `${through.length ? `Already through: ${through.join(', ')}. ` : ''}${path.length ? `Still on the path: ${path.join(', ')}.` : 'Everyone else is through.'}`;
+}
