@@ -71,7 +71,7 @@ export default function Cards() {
           onChange={(e) => setFilter(e.target.value)}
           placeholder="Filter"
           aria-label="Filter cards"
-          className="min-h-[44px] rounded-[10px] border border-line bg-ink px-3 text-text"
+          className="min-h-[44px] rounded-[10px] border border-line bg-ground px-3 text-text"
         />
         <button
           type="button"
@@ -149,7 +149,7 @@ export default function Cards() {
                       value={c.years}
                       onChange={(e) => edit(i, { years: Number(e.target.value) })}
                       aria-label={`${c.id} years`}
-                      className="w-14 rounded-md border border-line bg-ink px-1 text-text"
+                      className="w-14 rounded-md border border-line bg-ground px-1 text-text"
                     />
                   </td>
                   <td className="border-b border-[var(--row-line)] px-3">
@@ -160,7 +160,7 @@ export default function Cards() {
                       value={c.points}
                       onChange={(e) => edit(i, { points: Number(e.target.value) })}
                       aria-label={`${c.id} points`}
-                      className="w-14 rounded-md border border-line bg-ink px-1 text-text"
+                      className="w-14 rounded-md border border-line bg-ground px-1 text-text"
                     />
                   </td>
                   <td className="border-b border-[var(--row-line)] px-3">

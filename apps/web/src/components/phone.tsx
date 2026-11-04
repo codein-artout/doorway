@@ -36,7 +36,7 @@ export function OverviewBar({ state, current }: { state: GameState; current: Pla
         {state.players.map((p) => (
           <span
             key={p.id}
-            className={`absolute top-1.5 -ml-[11px] grid h-[22px] w-[22px] place-items-center rounded-full bg-text font-mono text-[10px] font-bold text-ink ${p.id === current ? 'dw-pulse' : ''}`}
+            className={`absolute top-1.5 -ml-[11px] grid h-[22px] w-[22px] place-items-center rounded-full bg-text font-mono text-[10px] font-bold text-ground ${p.id === current ? 'dw-pulse' : ''}`}
             style={{
               left: `${(Math.min(p.position, L) / L) * 100}%`,
               outline: p.isBot ? '2px dashed var(--muted)' : 'none',
@@ -113,7 +113,7 @@ export function NearStrip({
             {stack.length > 2 && <span className="font-mono text-[9px] text-text">+{stack.length - 2}</span>}
             <span
               className="font-mono text-[10px] font-medium"
-              style={{ color: i === L ? 'var(--ink)' : 'var(--muted)' }}
+              style={{ color: i === L ? 'var(--ground)' : 'var(--muted)' }}
             >
               {i}
             </span>
@@ -189,7 +189,7 @@ export function PhoneMarket({
             className="min-h-[40px] flex-1 cursor-pointer rounded-[9px] border-none text-sm"
             style={{
               background: tab === t.age ? 'var(--door)' : 'transparent',
-              color: tab === t.age ? 'var(--ink)' : 'var(--muted)',
+              color: tab === t.age ? 'var(--ground)' : 'var(--muted)',
               fontWeight: tab === t.age ? 700 : 400,
             }}
           >

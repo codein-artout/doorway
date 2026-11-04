@@ -45,7 +45,7 @@ function Box({ title, children }: { title: string; children: React.ReactNode }) 
   );
 }
 
-export default function DesignCheck() {
+function DesignCheckBody() {
   const v = (id: string, o: Partial<{ myTurn: boolean; rushMode: boolean; discarding: boolean }> = {}) =>
     cardView(S, 'p1', id, { myTurn: true, rushMode: false, discarding: false, ...o });
   const q = queue(S);
@@ -216,5 +216,25 @@ export default function DesignCheck() {
         </div>
       </Box>
     </main>
+  );
+}
+
+/** Every component in both views (DESIGN-v2 §1): the same tree under each token set. */
+export default function DesignCheck() {
+  return (
+    <>
+      {(['board', 'analyst'] as const).map((v) => (
+        <div
+          key={v}
+          data-view={v}
+          className="bg-ground"
+          style={{ backgroundImage: 'var(--ground-texture)', backgroundSize: 'var(--ground-texture-size)' }}
+          data-testid={`design-check-${v}`}
+        >
+          <p className="m-0 px-4 pt-6 font-mono text-sm text-muted md:px-7">view: {v}</p>
+          <DesignCheckBody />
+        </div>
+      ))}
+    </>
   );
 }

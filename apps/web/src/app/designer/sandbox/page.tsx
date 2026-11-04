@@ -20,7 +20,7 @@ import {
 } from '@/lib/sandbox';
 import { loadRulesets, saveRuleset } from '@/lib/storage';
 
-const sel = 'min-h-[44px] rounded-[10px] border border-line bg-ink px-2 text-text';
+const sel = 'min-h-[44px] rounded-[10px] border border-line bg-ground px-2 text-text';
 
 export default function Sandbox() {
   const [rulesets, setRulesets] = useState<Ruleset[]>([DEFAULT_RULESET]);
@@ -301,7 +301,7 @@ export default function Sandbox() {
                   type="button"
                   onClick={run}
                   disabled={running || problems.length > 0}
-                  className="min-h-[44px] w-full cursor-pointer rounded-xl border-none bg-door font-bold text-ink disabled:opacity-45"
+                  className="min-h-[44px] w-full cursor-pointer rounded-xl border-none bg-door font-bold text-ground disabled:opacity-45"
                   data-testid="run"
                 >
                   {running ? `Running… ${Math.round(progress * 100)}%` : 'Run baseline and variant'}
@@ -310,7 +310,7 @@ export default function Sandbox() {
             </div>
             {running && (
               <div className="mt-3">
-                <div className="h-2 overflow-hidden rounded bg-ink">
+                <div className="h-2 overflow-hidden rounded bg-ground">
                   <div className="dw-tween h-full bg-door" style={{ width: `${progress * 100}%` }} />
                 </div>
                 <p className="mt-1.5 mb-0 text-xs text-muted">
@@ -373,7 +373,7 @@ export default function Sandbox() {
                 setRulesets([DEFAULT_RULESET, ...loadRulesets().map((x) => x.ruleset)]);
                 setSaved(r.id);
               }}
-              className="min-h-[44px] cursor-pointer rounded-xl border-none bg-door px-4 font-bold text-ink disabled:opacity-45"
+              className="min-h-[44px] cursor-pointer rounded-xl border-none bg-door px-4 font-bold text-ground disabled:opacity-45"
               data-testid="save-ruleset"
             >
               Save as new ruleset

@@ -77,7 +77,7 @@ export function QuestCard({
         </span>
       </span>
       {c.requires && (
-        <span className="self-start rounded-md bg-ink px-2 py-[3px] text-xs">
+        <span className="self-start rounded-md bg-ground px-2 py-[3px] text-xs">
           Needs {c.requires.count} {DOMAIN[c.requires.color].name}
         </span>
       )}

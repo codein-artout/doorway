@@ -75,7 +75,7 @@ export function Analysis({ summary }: { summary: Summary | null }) {
             <span className="font-display text-2xl leading-tight font-extrabold">{a.a.split('. ')[0]}.</span>
             <span className="text-[13px]">{a.a.split('. ').slice(1).join('. ')}</span>
             <span
-              className="self-start rounded-full px-2 py-1 font-mono text-[11px] font-bold text-ink"
+              className="self-start rounded-full px-2 py-1 font-mono text-[11px] font-bold text-ground"
               style={{ background: a.chip === 'HEADLINE' ? 'var(--alert)' : 'var(--door)' }}
             >
               {a.chip}
@@ -119,7 +119,7 @@ export function Analysis({ summary }: { summary: Summary | null }) {
                 </span>,
                 ...r.cells.map((c: { vs: string; v: number | null }) => {
                   const col =
-                    c.v === null ? { bg: 'var(--ink)', fg: 'var(--grey)' } : diverging(c.v, 0.5, 0.35);
+                    c.v === null ? { bg: 'var(--ground)', fg: 'var(--grey)' } : diverging(c.v, 0.5, 0.35);
                   return (
                     <span
                       key={r.id + c.vs}
@@ -156,7 +156,7 @@ export function Analysis({ summary }: { summary: Summary | null }) {
                       any
                     </span>
                   </div>
-                  <div className="relative mt-1 h-4 rounded bg-ink">
+                  <div className="relative mt-1 h-4 rounded bg-ground">
                     <span
                       className="absolute top-0 bottom-0 left-0 rounded"
                       style={{ width: `${(r.tower / max) * 100}%`, background: C.grey }}
@@ -202,7 +202,7 @@ export function Analysis({ summary }: { summary: Summary | null }) {
                 style={{ gridTemplateColumns: '90px minmax(0,1fr) 110px' }}
               >
                 <span>{c.name}</span>
-                <span className="h-3.5 overflow-hidden rounded bg-ink">
+                <span className="h-3.5 overflow-hidden rounded bg-ground">
                   <span
                     className="block h-full"
                     style={{ width: `${(c.share ?? 0) * 100}%`, background: c.color }}
@@ -272,7 +272,7 @@ export function Analysis({ summary }: { summary: Summary | null }) {
                     <td className="border-b border-[var(--row-line)]">
                       {c.flag && (
                         <span
-                          className="rounded-full px-2 py-0.5 font-mono text-[11px] font-bold text-ink"
+                          className="rounded-full px-2 py-0.5 font-mono text-[11px] font-bold text-ground"
                           style={{ background: c.flag === 'strong' ? C.passion : C.fullLife }}
                         >
                           {c.flag.toUpperCase()}
@@ -295,7 +295,7 @@ export function Analysis({ summary }: { summary: Summary | null }) {
             {m.sweeps.map((w) => {
               const max = Math.max(0.4, ...w.values.map((v: any) => v.topWin));
               return (
-                <div key={w.key} className="rounded-xl bg-ink p-3">
+                <div key={w.key} className="rounded-xl bg-ground p-3">
                   <div className="mb-2 font-mono text-xs font-bold">{w.key}</div>
                   <div className="flex h-[92px] items-end gap-2">
                     {w.values.map((v: any) => (
@@ -372,7 +372,7 @@ export function Analysis({ summary }: { summary: Summary | null }) {
                       <span className="text-muted">human playtests</span>
                     ) : (
                       <span
-                        className="rounded-full px-2 py-0.5 font-mono text-[11px] font-bold text-ink"
+                        className="rounded-full px-2 py-0.5 font-mono text-[11px] font-bold text-ground"
                         style={{ background: r.verdict === 'pass' ? C.door : C.passion }}
                       >
                         {r.verdict.toUpperCase()}

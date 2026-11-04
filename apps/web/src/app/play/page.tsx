@@ -18,6 +18,7 @@ import { Results } from '@/components/results';
 import { RulesReference } from '@/components/rules-ref';
 import { ScoreTiles, TowerList } from '@/components/score';
 import { Track } from '@/components/track';
+import { ViewSwitch } from '@/components/view-switch';
 import { QueueCard, TurnBanner } from '@/components/turn';
 import { LocalGameClient, type GameClient } from '@/lib/game-client';
 import { download, exportReplayJson, exportStateJson } from '@/lib/import-export';
@@ -321,7 +322,7 @@ function Table({ client, stored }: { client: GameClient; stored: StoredGame }) {
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <a
           href="/"
-          className="font-display text-[21px] font-extrabold tracking-[-0.01em] text-text no-underline"
+          className="font-wordmark text-[21px] font-normal tracking-[-0.01em] text-text no-underline"
         >
           Doorway
         </a>
@@ -332,6 +333,7 @@ function Table({ client, stored }: { client: GameClient; stored: StoredGame }) {
         </span>
       </div>
       <div className="flex-1" />
+      <ViewSwitch />
       <Button
         variant="pill"
         onClick={() => setRulesOpen(!rulesOpen)}
@@ -394,7 +396,7 @@ function Table({ client, stored }: { client: GameClient; stored: StoredGame }) {
               <>
                 <a
                   href="/"
-                  className="inline-flex min-h-[48px] items-center rounded-xl bg-door px-5 font-bold text-ink no-underline"
+                  className="inline-flex min-h-[48px] items-center rounded-xl bg-door px-5 font-bold text-ground no-underline"
                 >
                   Play again
                 </a>
@@ -588,7 +590,7 @@ function Table({ client, stored }: { client: GameClient; stored: StoredGame }) {
               client.setBotSpeed(e.target.value as BotSpeed);
               saveSettings({ botSpeed: e.target.value as BotSpeed });
             }}
-            className="min-h-8 rounded-lg border border-line bg-ink px-1.5 text-text"
+            className="min-h-8 rounded-lg border border-line bg-ground px-1.5 text-text"
             data-testid="bot-speed"
           >
             {(Object.keys(BOT_SPEEDS) as BotSpeed[]).map((k) => (
@@ -633,7 +635,7 @@ function Table({ client, stored }: { client: GameClient; stored: StoredGame }) {
     return (
       <div className="pb-4">
         <header className="flex items-center gap-2 border-b border-line-soft px-4 py-3">
-          <a href="/" className="font-display text-[17px] font-extrabold text-text no-underline">
+          <a href="/" className="font-wordmark text-[17px] font-normal text-text no-underline">
             Doorway
           </a>
           <span className="font-mono text-[11px] font-medium text-muted">turn {state.turn + 1}</span>

@@ -1,5 +1,6 @@
 'use client';
 import { usePathname } from 'next/navigation';
+import { ViewSwitch } from './view-switch';
 
 const LINKS = [
   { href: '/', label: 'New game' },
@@ -18,7 +19,7 @@ export function SiteNav({ right }: { right?: React.ReactNode }) {
     >
       <a
         href="/"
-        className="mr-2.5 font-display text-[21px] font-extrabold tracking-[-0.01em] text-text no-underline"
+        className="mr-2.5 font-wordmark text-[21px] font-normal tracking-[-0.01em] text-text no-underline"
       >
         Doorway
       </a>
@@ -41,6 +42,7 @@ export function SiteNav({ right }: { right?: React.ReactNode }) {
         );
       })}
       <div className="flex-1" />
+      <ViewSwitch />
       {right}
     </nav>
   );

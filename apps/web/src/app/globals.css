@@ -1,33 +1,132 @@
 @import 'tailwindcss';
 
-/* DESIGN.md §1 tokens — "Dusk table". Components never hard-code hexes; they use these. */
+/*
+ * Doorway v2 tokens (design/v2/DESIGN-v2.md). Two token sets live under [data-view='board'] and
+ * [data-view='analyst']; every component reads tokens, never hexes.
+ *
+ * Semantic tokens shared by all components (v1 names, re-mapped per view):
+ *   --ground (page), --surface, --surface-2, --surface-sunk, --card, --line, --line-soft, --text, --muted,
+ *   --door (primary fill / selection / focus), --on-door (text on it), --alert, age bands, --base (tower plate).
+ * v2 tokens: Board --felt … --stamp-red; Analyst --sheet … --bad. (`--door` keeps its v1 meaning; the
+ * Board door leaf is --door-leaf — DECISIONS V2-5.)
+ */
+:root,
+[data-view='board'] {
+  /* Board — DESIGN-v2 §3 */
+  --felt: #2c3836;
+  --felt-2: #233030;
+  --felt-line: #46534f;
+  --on-felt: #f2e8d5;
+  --on-felt-muted: #c9d2cc;
+  --paper: #f1e7d2;
+  --paper-card: #fbf6ea;
+  --paper-bubble: #fffdf6;
+  --paper-mat: #e9dfcb;
+  --ink: #2b2530;
+  --ink-soft: #5b5262;
+  --lamplight: #f7d47a;
+  --door-leaf: #3a3340;
+  --drop: #1f2826;
+  --sticky: #f6ebc0;
+  --stamp-red: #b2453a;
+  --stage-young: #f6eedb;
+  --stage-middle: #f1e5cf;
+  --stage-old: #ecddcb;
+  --rosette-cell: #f5de9f;
+  --felt-texture: radial-gradient(rgba(242, 232, 213, 0.035) 1px, transparent 1.5px);
+  --ground-texture: var(--felt-texture);
+  --ground-texture-size: 6px 6px;
+
+  /* semantic */
+  --ground: var(--felt);
+  --surface: var(--felt-2);
+  --surface-2: #34433f;
+  --surface-sunk: #233030;
+  --card: #33413e;
+  --line: var(--felt-line);
+  --line-soft: #3b4845;
+  --text: var(--on-felt);
+  --muted: var(--on-felt-muted);
+  --door: var(--lamplight);
+  --on-door: var(--ink);
+  --alert: #8fd6e2;
+  --young: #33464a;
+  --young-rule: #7f9ea6;
+  --middle: #3c4049;
+  --middle-rule: #9c93b8;
+  --old: #48403f;
+  --old-rule: #b39390;
+  --base: #1f2826;
+  --grey: #8a9792;
+  --row-line: #3b4845;
+  --on-domain: var(--ink);
+  --highlight: var(--lamplight);
+
+  --f-display: var(--font-caprasimo), 'Caprasimo', Georgia, serif;
+  --f-body: var(--font-nunito), 'Nunito', system-ui, sans-serif;
+  --f-mono: var(--font-nunito), 'Nunito', system-ui, sans-serif;
+  --f-hand: var(--font-gochi), 'Gochi Hand', cursive;
+}
+
+[data-view='analyst'] {
+  /* Analyst — DESIGN-v2 §4 */
+  --sheet: #f4f0e6;
+  --sheet-grid: #e9e3d5;
+  --panel: #fbf9f4;
+  --panel-border: #cfc6b3;
+  --rule: #e2daca;
+  --rule-strong: #23202a;
+  --ink: #23202a;
+  --highlight: #f6e27a;
+  --highlight-soft: rgba(246, 226, 122, 0.45);
+  --good: #2f7d4f;
+  --bad: #b4443a;
+  --line-priya: #23202a;
+  --line-arun: #4f7290;
+  --line-meera: #9a7a4a;
+  --line-kavi: #6e5a86;
+  --ground-texture:
+    linear-gradient(var(--sheet-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--sheet-grid) 1px, transparent 1px);
+  --ground-texture-size: 24px 24px;
+
+  /* semantic */
+  --ground: var(--sheet);
+  --surface: var(--panel);
+  --surface-2: #efe9dc;
+  --surface-sunk: #eee8db;
+  --card: var(--panel);
+  --line: var(--panel-border);
+  --line-soft: var(--rule);
+  --text: var(--ink);
+  --muted: #6b6475;
+  --door: var(--ink);
+  --on-door: var(--panel);
+  --alert: #1d6476;
+  --young: #e7e2d6;
+  --young-rule: #a79f8e;
+  --middle: #ddd7c9;
+  --middle-rule: #948c7b;
+  --old: #d2cbbc;
+  --old-rule: #827a69;
+  --base: var(--ink);
+  --grey: #8c8496;
+  --row-line: var(--rule);
+  --on-domain: var(--ink);
+
+  --f-display: var(--font-plex-sans), 'IBM Plex Sans', system-ui, sans-serif;
+  --f-body: var(--font-plex-sans), 'IBM Plex Sans', system-ui, sans-serif;
+  --f-mono: var(--font-plex-mono), 'IBM Plex Mono', ui-monospace, monospace;
+  --f-hand: var(--font-plex-sans), 'IBM Plex Sans', system-ui, sans-serif;
+}
+
+/* Domain colours (DESIGN-v2 §2) — never on chrome. */
 :root {
-  --ink: #12131f;
-  --surface: #1b1d2e;
-  --surface-2: #24273b;
-  --surface-sunk: #171928;
-  --card: #1f2134;
-  --line: #34374f;
-  --line-soft: #2c2f45;
-  --text: #ece8df;
-  --muted: #a9a8b8;
-  --door: #f7ebd0;
-  --alert: #5fd3e6;
-  --young: #1f2a44;
-  --young-rule: #3b4a72;
-  --middle: #2a2745;
-  --middle-rule: #4c4478;
-  --old: #352838;
-  --old-rule: #5e4559;
-  --base: #4a4d66;
-  --grey: #6b6e8a;
-  --row-line: #23253a;
-  /* domains (standard) */
-  --love: #f07aa8;
-  --work: #e9b949;
-  --play: #57c785;
-  --family: #f08a3c;
-  --wonder: #a48bff;
+  --love: #eba6b0;
+  --work: #e6b84f;
+  --play: #8db884;
+  --family: #d9733f;
+  --wonder: #a097d6;
   /* score components (charts only) */
   --c-cards: #ece8df;
   --c-fulllife: #6cb6d6;
@@ -35,6 +134,11 @@
   --c-reflection: #8e8fa8;
   --div-blue: #5b8def;
   --div-orange: #f0a04b;
+  /* pawn identities by seat (DESIGN-v2 §2) */
+  --pawn-1: #f6efe0;
+  --pawn-2: #7f97a8;
+  --pawn-3: #c9b28e;
+  --pawn-4: #5f5868;
 }
 
 /* R41: colour-blind palette (Okabe–Ito). Icons and codes never change. */
@@ -47,7 +151,7 @@
 }
 
 @theme inline {
-  --color-ink: var(--ink);
+  --color-ground: var(--ground);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-sunk: var(--surface-sunk);
@@ -57,6 +161,7 @@
   --color-text: var(--text);
   --color-muted: var(--muted);
   --color-door: var(--door);
+  --color-on-door: var(--on-door);
   --color-alert: var(--alert);
   --color-young: var(--young);
   --color-middle: var(--middle);
@@ -68,30 +173,67 @@
   --color-play: var(--play);
   --color-family: var(--family);
   --color-wonder: var(--wonder);
-  --font-display: var(--font-bricolage), 'Bricolage Grotesque', system-ui, sans-serif;
-  --font-body: var(--font-atkinson), 'Atkinson Hyperlegible', system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), 'JetBrains Mono', ui-monospace, monospace;
+  /* board */
+  --color-felt: var(--felt);
+  --color-felt-2: var(--felt-2);
+  --color-felt-line: var(--felt-line);
+  --color-on-felt: var(--on-felt);
+  --color-on-felt-muted: var(--on-felt-muted);
+  --color-paper: var(--paper);
+  --color-paper-card: var(--paper-card);
+  --color-paper-mat: var(--paper-mat);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-lamplight: var(--lamplight);
+  --color-door-leaf: var(--door-leaf);
+  --color-drop: var(--drop);
+  --color-sticky: var(--sticky);
+  --color-stamp: var(--stamp-red);
+  /* analyst */
+  --color-sheet: var(--sheet);
+  --color-panel: var(--panel);
+  --color-panel-border: var(--panel-border);
+  --color-rule: var(--rule);
+  --color-highlight: var(--highlight);
+  --color-good: var(--good);
+  --color-bad: var(--bad);
+  --font-display: var(--f-display);
+  --font-body: var(--f-body);
+  --font-mono: var(--f-mono);
+  --font-hand: var(--f-hand);
+  --font-wordmark: var(--font-caprasimo), 'Caprasimo', Georgia, serif;
 }
 
 @layer base {
   html,
   body {
-    background: var(--ink);
+    background-color: var(--ground);
+    background-image: var(--ground-texture);
+    background-size: var(--ground-texture-size);
+    color: var(--text);
+  }
+  [data-view] {
     color: var(--text);
   }
   body {
     margin: 0;
-    font-family: var(--font-body);
+    font-family: var(--f-body);
     font-size: 15px;
     line-height: 1.45;
+  }
+  [data-view='analyst'] {
+    font-size: 14px;
   }
   a {
     color: var(--door);
     text-decoration: underline;
     text-underline-offset: 2px;
   }
+  [data-view='analyst'] a {
+    color: var(--ink);
+  }
   a:hover {
-    color: #ffffff;
+    color: var(--text);
   }
   button,
   select,
@@ -104,14 +246,14 @@
   input:focus-visible,
   textarea:focus-visible,
   a:focus-visible,
-  [tabindex]:focus-visible {
-    outline: 2px solid var(--door);
-    outline-offset: 2px;
+  [tabindex]:focus-visible,
+  tr:focus-visible {
+    outline: 3px solid var(--door);
+    outline-offset: 3px;
   }
-  h1,
-  h2,
-  h3 {
-    letter-spacing: -0.015em;
+  [data-view='analyst'] :is(button, select, input, textarea, a, [tabindex], tr):focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
   }
 }
 

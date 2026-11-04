@@ -13,14 +13,36 @@ import { gunzipSync } from 'node:zlib';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const FILES = ['games.csv.gz', 'players.csv.gz', 'picks.csv.gz'];
-const ARGS = ['--players', '4', '--games', '1000', '--bots', 'greedy,tempo,specialist,generalist', '--seed', 'v2-regress', '--quiet'];
+const ARGS = [
+  '--players',
+  '4',
+  '--games',
+  '1000',
+  '--bots',
+  'greedy,tempo,specialist,generalist',
+  '--seed',
+  'v2-regress',
+  '--quiet',
+];
 const baselineFile = path.join(root, 'scripts/regression/v2-baseline.json');
 
-const fingerprint = (dir) => Object.fromEntries(FILES.map((f) => [f, createHash('sha256').update(gunzipSync(readFileSync(path.join(dir, f)))).digest('hex')]));
+const fingerprint = (dir) =>
+  Object.fromEntries(
+    FILES.map((f) => [
+      f,
+      createHash('sha256')
+        .update(gunzipSync(readFileSync(path.join(dir, f))))
+        .digest('hex'),
+    ]),
+  );
 
 function runSim(out) {
   rmSync(path.join(root, out), { recursive: true, force: true });
-  const r = spawnSync(process.execPath, ['--import', 'tsx', path.join(root, 'packages/sim/src/cli.ts'), ...ARGS, '--out', out], { cwd: root, encoding: 'utf8' });
+  const r = spawnSync(
+    process.execPath,
+    ['--import', 'tsx', path.join(root, 'packages/sim/src/cli.ts'), ...ARGS, '--out', out],
+    { cwd: root, encoding: 'utf8' },
+  );
   if (r.status !== 0) {
     console.error(r.stdout, r.stderr);
     process.exit(1);
@@ -43,7 +65,9 @@ let ok = true;
 for (const f of FILES)
   if (now[f] !== base[f]) {
     ok = false;
-    console.error(`regression: ${f} differs from the N1 baseline (${now[f].slice(0, 12)} vs ${base[f].slice(0, 12)})`);
+    console.error(
+      `regression: ${f} differs from the N1 baseline (${now[f].slice(0, 12)} vs ${base[f].slice(0, 12)})`,
+    );
   }
 const before = path.join(root, 'reports/runs/v2-before');
 if (existsSync(before))

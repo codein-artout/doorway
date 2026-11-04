@@ -30,7 +30,7 @@ export const DOMAIN: Record<Domain, { name: string; code: string; icon: string; 
 export const DOMAIN_ORDER: Domain[] = ['pink', 'gold', 'green', 'orange', 'purple'];
 
 export const PALETTES = {
-  standard: { pink: '#F07AA8', gold: '#E9B949', green: '#57C785', orange: '#F08A3C', purple: '#A48BFF' },
+  standard: { pink: '#EBA6B0', gold: '#E6B84F', green: '#8DB884', orange: '#D9733F', purple: '#A097D6' },
   colorblind: { pink: '#CC79A7', gold: '#F0E442', green: '#009E73', orange: '#E69F00', purple: '#56B4E9' },
 } as const;
 

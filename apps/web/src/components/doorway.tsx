@@ -114,12 +114,12 @@ function Rows({
               type="button"
               onClick={() => !locked && onJump(i)}
               disabled={locked}
-              className="flex h-[34px] min-w-0 cursor-pointer items-center gap-2 rounded-[17px] border-none px-3.5 text-ink"
+              className="flex h-[34px] min-w-0 cursor-pointer items-center gap-2 rounded-[17px] border-none px-3.5 text-ground"
               style={{
                 background: kept
                   ? DOMAIN[c.color].css
                   : `color-mix(in srgb, ${DOMAIN[c.color].css} 30%, var(--surface))`,
-                color: kept ? 'var(--ink)' : 'var(--text)',
+                color: kept ? 'var(--ground)' : 'var(--text)',
                 boxShadow: 'inset 0 -4px 0 rgba(0,0,0,.18)',
               }}
             >
@@ -222,7 +222,7 @@ export function DoorwaySelect({
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <span className="rounded-[10px] bg-door px-3 py-2 text-sm text-ink">
+          <span className="rounded-[10px] bg-door px-3 py-2 text-sm text-ground">
             <b>
               {state.players.length === 1 ? 'Solo tile' : `${ordinal(p.arrivalOrder ?? 1)} tile`} · {base}
             </b>
@@ -334,7 +334,7 @@ export function DoorwaySelect({
                     <span className="font-mono text-xs font-medium">
                       discs {w.s + 1}–{w.s + keep}
                     </span>
-                    <span className="h-3 overflow-hidden rounded-md bg-ink">
+                    <span className="h-3 overflow-hidden rounded-md bg-ground">
                       <span
                         className="dw-tween block h-full rounded-md"
                         style={{
@@ -355,7 +355,7 @@ export function DoorwaySelect({
                 <button
                   type="button"
                   onClick={lock}
-                  className="min-h-[52px] cursor-pointer rounded-[14px] border-none bg-door px-[26px] text-[17px] font-bold text-ink"
+                  className="min-h-[52px] cursor-pointer rounded-[14px] border-none bg-door px-[26px] text-[17px] font-bold text-ground"
                   data-testid="walk-through"
                 >
                   Walk through with discs {start + 1}–{end + 1}
@@ -385,7 +385,7 @@ export function DoorwaySelect({
           <button
             type="button"
             onClick={lock}
-            className="min-h-[48px] cursor-pointer rounded-xl border-none bg-door px-4 font-bold text-ink"
+            className="min-h-[48px] cursor-pointer rounded-xl border-none bg-door px-4 font-bold text-ground"
           >
             Walk through
           </button>

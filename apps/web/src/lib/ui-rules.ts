@@ -6,7 +6,7 @@ import { ageIndex, ageOf, AGES, type Age, type Ruleset } from '@doorway/engine';
 export function pawnStyle(o: { isBot: boolean; current: boolean; ghost?: boolean }) {
   return {
     background: o.ghost ? 'transparent' : 'var(--text)',
-    color: o.ghost ? 'var(--door)' : 'var(--ink)',
+    color: o.ghost ? 'var(--door)' : 'var(--ground)',
     border: o.ghost ? '2px dashed var(--door)' : 'none',
     outline: o.isBot && !o.ghost ? '2px dashed var(--muted)' : 'none',
     pulse: o.current && !o.ghost,

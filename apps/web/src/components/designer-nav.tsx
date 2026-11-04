@@ -13,7 +13,7 @@ export function DesignerNav({ right }: { right?: React.ReactNode }) {
       aria-label="Designer tools"
       className="flex flex-wrap items-center gap-x-4 gap-y-1.5 border-b border-line-soft px-4 py-3.5 md:px-7"
     >
-      <a href="/" className="mr-2.5 font-display text-[19px] font-extrabold text-text no-underline">
+      <a href="/" className="mr-2.5 font-wordmark text-[19px] font-normal text-text no-underline">
         Doorway · Designer
       </a>
       {links.map((l) => {
