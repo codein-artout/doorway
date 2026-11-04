@@ -1,6 +1,7 @@
 'use client';
 import { usePathname } from 'next/navigation';
 
+/** Designer header, Analyst style (DESIGN-v2 §4): no Board/Analyst switch — /designer is Analyst only. */
 export function DesignerNav({ right }: { right?: React.ReactNode }) {
   const path = usePathname();
   const links = [
@@ -11,30 +12,30 @@ export function DesignerNav({ right }: { right?: React.ReactNode }) {
   return (
     <nav
       aria-label="Designer tools"
-      className="flex flex-wrap items-center gap-x-4 gap-y-1.5 border-b border-line-soft px-4 py-3.5 md:px-7"
+      className="mx-4 flex flex-wrap items-center gap-x-[18px] gap-y-2 border-b-2 border-ink pt-3.5 pb-3 md:mx-7"
     >
-      <a href="/" className="mr-2.5 font-wordmark text-[19px] font-normal text-text no-underline">
-        Doorway · Designer
+      <a href="/" className="mr-1 font-wordmark text-[26px] leading-none font-normal text-ink no-underline">
+        Doorway
       </a>
-      {links.map((l) => {
-        const on = path === l.href;
-        return (
-          <a
-            key={l.href}
-            href={l.href}
-            aria-current={on ? 'page' : undefined}
-            className="inline-flex min-h-[40px] items-center rounded-[10px] px-3 no-underline"
-            style={{
-              background: on ? 'var(--surface-2)' : 'transparent',
-              color: on ? 'var(--text)' : 'var(--muted)',
-              fontWeight: on ? 700 : 400,
-            }}
-          >
-            {l.label}
-          </a>
-        );
-      })}
-      <a href="/" className="inline-flex min-h-[40px] items-center px-3 text-muted no-underline">
+      <span className="font-mono text-[12.5px] text-muted">designer tools</span>
+      <div className="inline-flex overflow-hidden rounded-lg border-[1.5px] border-ink">
+        {links.map((l) => {
+          const on = path === l.href;
+          return (
+            <a
+              key={l.href}
+              href={l.href}
+              aria-current={on ? 'page' : undefined}
+              className={`inline-flex min-h-[36px] items-center px-3.5 font-semibold no-underline ${
+                on ? 'bg-ink text-sheet' : 'bg-transparent text-ink'
+              }`}
+            >
+              {l.label}
+            </a>
+          );
+        })}
+      </div>
+      <a href="/" className="inline-flex min-h-[36px] items-center px-1 text-[13px] text-muted">
         Back to the table
       </a>
       <div className="flex-1" />

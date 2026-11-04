@@ -66,7 +66,7 @@ pnpm verify
 
 ## v2 — Board & Analyst modes
 
-**Current milestone:** N8 — /designer in Analyst style
+**Current milestone:** N9 — quality: e2e in both views, axe, contrast
 
 ### Finished milestones
 | # | What | Commit |
@@ -77,7 +77,8 @@ pnpm verify
 | N4 | Board table (shared `useTable` controller, illustrated board, cards, tray, mats, log drawer) | dbf065f |
 | N5 | Board Doorway, Board results, Board phone layout (360 px) | 010c504 |
 | N6 | Analyst table (ruler, decision table, preview, ledger, tower/projection, Why from explain(), log, charts) | ef00a32 |
-| N7 | Analyst window scorer, game report, replay viewer in both views | (this commit) |
+| N7 | Analyst window scorer, game report, replay viewer in both views | f3a35a6 |
+| N8 | /designer in Analyst style (chart colours mapped, contrast-safe head-to-head) | (this commit) |
 
 ### Next
 - N8 designer → N9 quality → N10 wrap-up → N8 designer → N9 quality → N10 wrap-up.
@@ -103,3 +104,4 @@ pnpm verify
 - 13:29 — N5 pushed (Board Doorway/results/phone; all 12 v1 e2e + 212 unit tests pass).
 - 13:38 — N6 pushed (Analyst table; 224 unit tests).
 - N7 — window scorer, game report, view-aware replay; 232 unit tests, 12/12 v1 e2e.
+- 13:54 — N8 pushed (/designer Analyst style; v1 e2e 12/12).

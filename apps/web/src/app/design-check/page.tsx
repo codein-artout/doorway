@@ -212,7 +212,7 @@ function DesignCheckBody() {
           <Button variant="pill">Rules</Button>
           <Button variant="alert">Something feels off</Button>
           <Chip>HEADLINE</Chip>
-          <Chip bg="var(--alert)">PLACEHOLDER</Chip>
+          <Chip bg="var(--alert)">STUDY</Chip>
         </div>
       </Box>
     </main>
