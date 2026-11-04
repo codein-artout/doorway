@@ -238,6 +238,7 @@ export function roleOf(s: GameState, id: PlayerId, viewer: PlayerId | null): str
     const label = getPolicy(p.botPolicy ?? 'greedy').label;
     return `bot · ${label}`;
   }
+  if (viewer === null) return 'human';
   return id === viewer ? 'you' : 'friend';
 }
 
@@ -283,6 +284,15 @@ export type TurnPoint = {
   state: GameState;
   /** the state the actor faced when choosing (null for the start) */
   before: GameState | null;
+  /** index of the state right after the quest/rush (0 for the start) */
+  at: number;
+};
+
+/** The turn number a timeline state index belongs to. */
+export const turnAt = (points: TurnPoint[], i: number) => {
+  let t = 0;
+  for (const p of points) if (p.at <= i) t = p.turn;
+  return t;
 };
 
 /** One point per quest/rush turn (plus the start), each holding the state after that turn's swaps. */
@@ -300,6 +310,7 @@ export function turnPoints(tl: { states: GameState[]; thinkMs: (number | null)[]
       thinkMs: null,
       state: states[0],
       before: null,
+      at: 0,
     },
   ];
   for (let i = 1; i < states.length; i++) {
@@ -317,6 +328,7 @@ export function turnPoints(tl: { states: GameState[]; thinkMs: (number | null)[]
         thinkMs: thinkMs[i] ?? null,
         state: s,
         before: prev,
+        at: i,
       });
     } else {
       const last = out[out.length - 1];

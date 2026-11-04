@@ -10,7 +10,11 @@ import { useIsPhone } from '@/components/phone';
 import { LocalGameClient, type GameClient } from '@/lib/game-client';
 import { findGame, loadCurrent, saveCurrent, type StoredGame } from '@/lib/storage';
 import { demoBase, demoState, DEMO_SEATS, DEMO_THINK_MS } from '@/lib/demo';
-import { AnalystTable } from '@/components/analyst/analyst-table';
+import { AnalystShell, AnalystTable, gameLine, useTimeline } from '@/components/analyst/analyst-table';
+import { AnalystHeader } from '@/components/analyst/panel';
+import { AnalystDoorway } from '@/components/analyst/analyst-doorway';
+import { AnalystResults } from '@/components/analyst/analyst-results';
+import { allowanceLine } from '@/lib/window-model';
 import { DEFAULT_RULESET } from '@doorway/content';
 import { deserialize, serialize, toReplay } from '@doorway/engine';
 import { seatFromPlayer } from '@/lib/import-export';
@@ -75,10 +79,41 @@ function Table({ client, stored }: { client: GameClient; stored: StoredGame }) {
   const [view] = useView();
   const phone = useIsPhone();
   const s = t.state;
+  const { tl } = useTimeline(t);
+  const analyst = view === 'analyst';
+  const header = analyst ? (
+    <AnalystHeader
+      state={s}
+      setup={t.client.setup}
+      line={
+        s.phase === 'over'
+          ? `game report · seed ${s.seed} · ${s.rulesetId} · ${s.players.length} players · ${s.turn} turns`
+          : t.showDoorwayFor
+            ? allowanceLine(s, t.showDoorwayFor)
+            : gameLine(t)
+      }
+      storedId={stored.id}
+    />
+  ) : (
+    <BoardHeader t={t} compact={phone} />
+  );
   if (s.phase === 'over')
-    return (
+    return analyst ? (
+      <AnalystShell>
+        {header}
+        <AnalystResults
+          state={s}
+          timeline={tl}
+          viewer={t.viewer}
+          replayHref={`/replay?id=${stored.id}`}
+          storedId={stored.id}
+          onUndo={t.undo}
+          canUndo={t.snap.canUndo}
+        />
+      </AnalystShell>
+    ) : (
       <div className="mx-auto max-w-[1440px] px-4 pb-8 md:px-7">
-        <BoardHeader t={t} compact={phone} />
+        {header}
         <BoardResults
           state={s}
           replayHref={`/replay?id=${stored.id}`}
@@ -87,35 +122,60 @@ function Table({ client, stored }: { client: GameClient; stored: StoredGame }) {
         />
       </div>
     );
-  if (t.showDoorwayFor)
-    return (
-      <div className="mx-auto max-w-[1440px] px-4 pb-8 md:px-7">
-        <BoardHeader t={t} compact={phone} />
-        <BoardDoorway
-          key={t.showDoorwayFor}
+  if (t.showDoorwayFor) {
+    const pid = t.showDoorwayFor;
+    const lock = (a: number, z: number) => {
+      t.submit(pid, { type: 'choose_window', start: a, end: z });
+      t.setWindowFor(null);
+    };
+    const later = t.humanToMove && (
+      <p className="mt-4">
+        <button
+          type="button"
+          className={
+            analyst
+              ? 'min-h-[38px] cursor-pointer rounded-lg border-[1.5px] border-ink bg-transparent px-3.5 font-semibold text-ink'
+              : 'min-h-[44px] cursor-pointer rounded-xl border-2 border-felt-line bg-transparent px-4 font-bold text-on-felt'
+          }
+          onClick={() => t.setWindowFor(null)}
+        >
+          Decide later — back to the table
+        </button>
+      </p>
+    );
+    return analyst ? (
+      <AnalystShell>
+        {header}
+        <AnalystDoorway
+          key={pid}
           state={s}
-          playerId={t.showDoorwayFor}
+          playerId={pid}
           hintAllowed={t.hints.bestWindow}
-          onLock={(a, z) => {
-            t.submit(t.showDoorwayFor!, { type: 'choose_window', start: a, end: z });
-            t.setWindowFor(null);
-          }}
-          othersLine={othersLine(s, t.showDoorwayFor)}
+          onLock={lock}
+          othersLine={othersLine(s, pid)}
+          start={t.doorStart(pid)}
+          onStart={(v) => t.setDoorStart(pid, v)}
         />
-        {t.humanToMove && (
-          <p className="mt-4">
-            <button
-              type="button"
-              className="min-h-[44px] cursor-pointer rounded-xl border-2 border-felt-line bg-transparent px-4 font-bold text-on-felt"
-              onClick={() => t.setWindowFor(null)}
-            >
-              Decide later — back to the table
-            </button>
-          </p>
-        )}
+        {later}
+      </AnalystShell>
+    ) : (
+      <div className="mx-auto max-w-[1440px] px-4 pb-8 md:px-7">
+        {header}
+        <BoardDoorway
+          key={pid}
+          state={s}
+          playerId={pid}
+          hintAllowed={t.hints.bestWindow}
+          onLock={lock}
+          othersLine={othersLine(s, pid)}
+          start={t.doorStart(pid)}
+          onStart={(v) => t.setDoorStart(pid, v)}
+        />
+        {later}
       </div>
     );
-  if (view === 'analyst') return <AnalystTable t={t} />;
+  }
+  if (analyst) return <AnalystTable t={t} />;
   return phone ? <BoardPhone t={t} /> : <BoardTable t={t} />;
 }
 

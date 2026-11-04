@@ -373,9 +373,8 @@ export function DecisionTable({ t, rows }: { t: TableController; rows: DecisionR
 
 // ------------------------------------------------------------------ side panels
 
-export function PlayersLedger({ t }: { t: TableController }) {
-  const s = t.state;
-  const { rows, discLines, spread } = ledger(s, t.viewer);
+export function PlayersLedger({ state: s, viewer }: { state: GameState; viewer: string | null }) {
+  const { rows, discLines, spread } = ledger(s, viewer);
   return (
     <Panel label="Players" className="lg:col-span-4" title="Players">
       <table className="w-full text-[12.5px]" data-testid="ledger">
@@ -911,7 +910,7 @@ export function AnalystTable({ t }: { t: TableController }) {
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-12">
         <AnalystSwap t={t} />
         <DecisionTable t={t} rows={rows} />
-        <PlayersLedger t={t} />
+        <PlayersLedger state={s} viewer={t.viewer} />
         <YourTower t={t} points={points} />
         <WhyPanel why={why} />
         <LogPanel t={t} points={points} />

@@ -148,3 +148,19 @@ Every judgement call made while building, with date, decision, why and alternati
 
 ### V2-7 — Demo fixture (2026-11-04)
 - `apps/web/src/lib/demo.ts` plays `HIST0` (Analyst-Table mockup) through the real engine from a scenario whose decks hold the cards in the order they are taken. Milestone swaps on the way are skipped. The result is the shared turn-22 position (Priya 11, Arun 12, Meera 13, Kavi 15, Priya to move), verified by a test.
+
+### V2-8 — Analyst table details (2026-11-04)
+- **Timeline and think time.** `GameClient.timeline()` returns every state with the think time of the move that made it (bots: compute time, not the display delay; people: time from the turn starting to the submit). Think times are UI-only and not persisted; after a reload they show "—". The demo's 21 earlier turns are rebuilt from `demoBase()` and carry the mockup's THINK0 values.
+- **Charts** use one point per quest/rush turn (`turnPoints`), taken after that turn's swaps. The x-axis spans max(turns, 24) so early games do not stretch; the position chart's y-axis is 0–20 and grows in steps of 10.
+- **Bots column** ranks legal cards by the Greedy and Tempo policies' own `explain()` order (G#/T#). L# (Lookahead) is a stretch item and is skipped.
+- **"Why <bot> did that"** shows the four best candidates of the last bot quest/rush plus the played one if it was not in the top four. Positive contributions stack left to right; contributions that count against a move are drawn hatched after them, so a bar's length is the sum of absolute contributions. Features are grouped (pts per year, focus domain, experience, tempo, scoring & other) for colour; the tooltip names each feature.
+- **Phone (Analyst).** Below 768 px the decision table drops Age, Needs, Yrs, Disc., Pts/yr, Next up and Bots; the ruler scrolls inside its panel and starts at the current pawn. The page itself never scrolls sideways.
+- **Once-per-game powers.** A card that needs Old friends / Say yes more is selectable in the table; Confirm stays disabled (and the preview says so) until its power is ticked, matching the Board tray.
+
+### V2-9 — Window scorer and game report (2026-11-04)
+- **Shared Doorway selection.** The stretch being considered lives in the table controller (`doorStart`), so the Board Doorway and the Analyst window scorer show the same window when the view is switched. Both open on the top window (as in v1); the Analyst scores table marks the best one. In a blind test (best-window hints off) the "vs best" column and the allowance sensitivity are hidden.
+- **Allowance sensitivity** "Means" names the arrival positions whose tile (plus this player's own Doorway bonus) gives that allowance; "—" when none does.
+- **Played most like** reruns every study strategy except Random and Lookahead (too slow to rerun in the browser) on each of the player's quest/rush decisions, with the same seeded stream a bot in that seat would use. Moves agree when they are the same quest card, or a rush with the same discard (power flags ignored).
+- **Turning points**: Δ now ≥ 5 or ≤ −5 on a quest; a swap that makes a run of 3+ (and raises the run); a rush discard of a card the next player could take; an arrival that keeps everything; an arrival that loses 3+. Each links to `/replay?id=…&move=N` (the state just after it).
+- **This game vs the study** reads `reports/data/summary.json` through a static route (`/api/study`, built at `next build`), trimmed to the `main-Np` groups. "Winning score" is not in the summary, so the report compares the mean score per player; back-to-back share is the study's `extraTurnShare`; rush share = rushes ÷ turns per player.
+- **Replay viewer** renders in the current view: Board shows the illustrated board, chip towers and the market; Analyst shows the ruler, ledger, towers, log and both charts up to the move, and the game report on the last move. The demo replays from `demoBase()` (it cannot be rebuilt from its seed).

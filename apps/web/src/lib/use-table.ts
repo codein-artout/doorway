@@ -78,6 +78,8 @@ export function useTable(client: GameClient, stored: StoredGame, opts: { keyboar
   const [focusId, setFocusId] = useState<string | null>(null);
   const cardEls = useRef(new Map<string, HTMLElement>());
   const [err, setErr] = useState<string | null>(null);
+  /** the Doorway stretch being considered, per player (shared by both views) */
+  const [doorPick, setDoorPick] = useState<Record<PlayerId, number>>({});
 
   // persist after every change
   useEffect(() => {
@@ -328,6 +330,8 @@ export function useTable(client: GameClient, stored: StoredGame, opts: { keyboar
     setTip,
     err,
     waitingWindow,
+    doorStart: (pid: PlayerId) => doorPick[pid] ?? null,
+    setDoorStart: (pid: PlayerId, start: number) => setDoorPick((d) => ({ ...d, [pid]: start })),
     humanToMove,
     showDoorwayFor,
     pendingMine,

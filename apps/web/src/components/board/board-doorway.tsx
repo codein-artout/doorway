@@ -18,19 +18,30 @@ export function BoardDoorway({
   hintAllowed,
   onLock,
   othersLine,
+  start: startProp,
+  onStart,
 }: {
   state: GameState;
   playerId: PlayerId;
   hintAllowed: boolean;
   onLock: (start: number, end: number) => void;
   othersLine?: string;
+  /** controlled stretch start (shared with the Analyst window scorer so switching views keeps it) */
+  start?: number | null;
+  onStart?: (start: number) => void;
 }) {
   const p = state.players.find((x) => x.id === playerId)!;
   const tower = p.tower;
   const keep = Math.min(p.doorwayAllowance ?? 0, tower.length);
   const maxStart = Math.max(0, tower.length - keep);
   const bw = useMemo(() => bestWindow(state, playerId), [state, playerId]);
-  const [start, setStart] = useState(maxStart);
+  const [own, setOwn] = useState(maxStart);
+  const start = Math.max(0, Math.min(maxStart, startProp ?? own));
+  const setStart = (f: number | ((x: number) => number)) => {
+    const v = typeof f === 'function' ? f(start) : f;
+    setOwn(v);
+    onStart?.(v);
+  };
   const [showHint, setShowHint] = useState(false);
   const [locked, setLocked] = useState(false);
   const end = start + keep - 1;
@@ -57,7 +68,7 @@ export function BoardDoorway({
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [locked, maxStart]);
+  }, [locked, maxStart, start]);
   const jump = (i: number) => {
     if (locked) return;
     let st = Math.max(0, Math.min(maxStart, i));

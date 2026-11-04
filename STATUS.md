@@ -66,7 +66,7 @@ pnpm verify
 
 ## v2 — Board & Analyst modes
 
-**Current milestone:** N6 — Analyst table
+**Current milestone:** N8 — /designer in Analyst style
 
 ### Finished milestones
 | # | What | Commit |
@@ -76,9 +76,11 @@ pnpm verify
 | N3 | Engine hooks (previewMove, windowScores, scoreIfWalkedNow, gameHistory), bot `explain()`, demo fixture; regression identical | 74df5af |
 | N4 | Board table (shared `useTable` controller, illustrated board, cards, tray, mats, log drawer) | dbf065f |
 | N5 | Board Doorway, Board results, Board phone layout (360 px) | 010c504 |
+| N6 | Analyst table (ruler, decision table, preview, ledger, tower/projection, Why from explain(), log, charts) | ef00a32 |
+| N7 | Analyst window scorer, game report, replay viewer in both views | (this commit) |
 
 ### Next
-- N6–N7 Analyst → N8 designer → N9 quality → N10 wrap-up.
+- N8 designer → N9 quality → N10 wrap-up → N8 designer → N9 quality → N10 wrap-up.
 
 ### Blockers
 - none.
@@ -99,3 +101,5 @@ pnpm verify
 - 13:10 — N1: verify green, baseline recorded.
 - N2–N4 committed (see hashes above).
 - 13:29 — N5 pushed (Board Doorway/results/phone; all 12 v1 e2e + 212 unit tests pass).
+- 13:38 — N6 pushed (Analyst table; 224 unit tests).
+- N7 — window scorer, game report, view-aware replay; 232 unit tests, 12/12 v1 e2e.
